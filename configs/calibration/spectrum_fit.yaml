@@ -1,0 +1,27 @@
+fit:
+
+
+  ## fitten? interval?
+  do_fit: false
+  fit_interval_ntracks: 50000
+
+  # normaler gauss
+  use_gauss_fit: false
+  # 1/x-tail
+  use_tail_fit: false
+  # emg
+  use_emg_fit: false
+  # gauss mit 1/x-tail
+  use_gauss_tail_fit: true
+
+
+  ## startwerte der fits
+  start_mean: 365. # startwert mittelwert
+  start_sigma: 0.5 # startwert stdw
+  start_amp: 100 # startwert amplitude (fuer jeden fit)
+  start_eps: 0.5 # startwert eps (1/x-tail)
+  start_lambda: 0.1 # startwert emg-tail
+
+
+  # name des Spektrums (in TQClamTrackProc), an das gefittet werden soll
+  spectrum_name: "ProjSpectrum"

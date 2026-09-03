@@ -1,0 +1,12 @@
+# leangen in mm
+
+# Fokalebene unabh. von y --> z_fokal(x) = a + b*x + c*x*x
+
+
+focalplane:
+  use_quadratic_focal_plane: true
+
+  quadratic_focal_plane_parameter:
+    a: -133.7 # -13.8495
+    b: 0.549 # 0.5537
+    c: -0.000438 #-0.0044

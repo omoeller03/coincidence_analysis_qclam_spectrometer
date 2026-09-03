@@ -1,0 +1,6 @@
+# --- EventBuilder ---
+EventBuilder.minCluster = 
+EventBuilder.maxCluster = 
+EventBuilder. --> welche ebenen sollen geprueft werden (X1,X2 mit/ohne U1/U2)
+
+

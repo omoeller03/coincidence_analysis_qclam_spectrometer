@@ -1,0 +1,12 @@
+unpacker:
+
+  # ordner tdc-Kalibrationstabellen zum Laden
+  # weder zur Beginn noch am Ende '/'
+  # Ordner relativ zum Projektordner
+  folder_tdc_calibration_files: "calibration_files/tdcCalibration"
+
+
+  # zeit-interpolation elb_vfb6 tdc-module
+  elb_vfb6_time_interpolation_random: true
+  elb_vfb6_time_interpolation_linear: false
+  elb_vfb6_time_interpolation_none: false

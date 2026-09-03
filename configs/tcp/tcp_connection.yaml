@@ -1,0 +1,8 @@
+tcp_connection:
+
+  open_tcp_connection: false
+  pause_tcp_connection: false
+
+  host: "192.168.2.8" # experiment@spectrometercontrol
+
+  port: 5050 

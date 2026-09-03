@@ -1,0 +1,12 @@
+trigger:
+
+  mapping:
+    szintPmtUp: {tdc: 0, channel: 1}
+    szintPmtDown: {tdc: 0, channel: 2}
+    cherenkovPmt: {tdc: 0, channel: 3}
+    coincTrig: {tdc: 0, channel: 4} # oder qclamTrig??? TODO
+    accTrig: {tdc: 0, channel: 5}
+    clock: {tdc: 0, channel: 6}
+    livetime: {tdc: 0, channel: 7}
+    mbsLivetime: {tdc: 0, channel: 8}
+    faradayCupChargeCounter: {tdc: 0, channel: 9}

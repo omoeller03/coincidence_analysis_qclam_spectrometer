@@ -1,0 +1,21 @@
+# alle tdc-trigger --> die triggerzeit muss von den rohzeiten abgezogen werden
+
+trigger_tdc-0=0
+trigger_tdc-1=0
+trigger_tdc-2=0
+trigger_tdc-3=0
+trigger_tdc-4=0
+trigger_tdc-5=0
+trigger_tdc-6=0
+trigger_tdc-7=0
+trigger_tdc-8=0
+trigger_tdc-9=0
+trigger_tdc-10=0
+trigger_tdc-11=0
+trigger_tdc-12=0
+trigger_tdc-13=0
+trigger_tdc-14=0
+trigger_tdc-15=0
+trigger_tdc-16=0
+trigger_tdc-17=0
+trigger_tdc-18=0

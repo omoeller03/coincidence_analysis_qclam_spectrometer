@@ -1,0 +1,78 @@
+condition:
+
+  # verwende cluster aus folgenden ebenen
+  allowed_layers_for_track:
+    0: true
+    1: true
+    2: true
+
+  # brauche zwingend cluster aus folgenden ebenen fuer track
+  required_layers_for_track:
+    0: true
+    1: true
+    2: true
+
+  # grenzen fuer x_X1 und phi:
+  min_x_X1: 0.
+  max_x_X1: 1000.
+
+  min_phi_deg: 20.
+  max_phi_deg: 70.
+
+  # verbesserung des Konvergenzprozesses:
+  # phi_new = alpha * phi_ ... + (1-alpha) * 
+  # 0 < alpha <= 1
+  relaxation_alpha: 1.
+
+  # abbruchkriterium der iteration fuer optimierung des tracks
+  # durch verbesserung der track-winkel phi, theta und der kovergenz (chi2)
+  #
+  # if(|phi_last - phi_new| < epsilon_phi
+  #  && |theta_last - theta_new| < epsilon_theta
+  #  && |chi2_last - chi2_new| < epsilon_chi2)
+  #  --> konvergenz ausreichend --> processe track
+  #
+  #  sonst: naechste iteration
+  # aktuell: nur epsilon_phi aktiv
+  # TODO: evtl bergrenzung anzahl iterationen
+  min_iter: 1
+  max_iter: 30
+  epsilon_phi: 1.e-8 #5          # in rad
+  epsilon_rms: 1.5 #1.5
+
+  # falls sich phi zwischen Iterationen kam noch aendert (dphi < epsilon_stagnation_phi),
+  # dann wird die Iteration abgebrochen.
+  # Falls die Konvergenzkriterien erfuellt -> verwende Track
+  # Falle Konvergenzkriterien nicht erfuellt -> verwerfe Track
+  epsilon_stagnation_phi: 1.e-12
+
+  ## abbruchkriterium der phi-iteration via
+  # a) | phi_i - phi_i-1 | < epsilon_phi
+  # b) rms_residual < epsilon_rms
+  # c) both with AND
+  # d) both with OR
+  convergence_criterion_phi: false
+  convergence_criterion_rms: false
+  convergence_criterion_phi_and_rms: true
+  convergence_criterion_phi_or_rms: false
+
+
+  # |residuum/sigma_residuum| < limit
+  # default: 3sigma-umgebung: outlier_rejection_limit = 3
+  use_outlier_rejection: true
+  # aktuell: residual² < upper_outlier_rejection_limit
+  upper_outlier_rejection_limit: 4.0
+
+
+  max_rejected_hits_X1_per_iteration: 2
+  max_rejected_hits_U_per_iteration: 2
+  max_rejected_hits_X2_per_iteration: 2
+
+
+
+
+  # noch nicht implementiert:
+  epsilon_chi2: 1.e-3
+  epsilon_theta: 1.e-3        # in rad
+  # nicht in verwendung:
+  outlier_rejection_limit: 1. # nicht mehr in Verwendung !!!

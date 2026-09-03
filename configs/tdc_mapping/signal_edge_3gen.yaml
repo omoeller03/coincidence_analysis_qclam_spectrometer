@@ -1,0 +1,93 @@
+signalEdge:
+  
+ 
+  # -- Trigger Channel --
+  trig:
+    tdc0: {channel: 0}
+    tdc1: {channel: 0}
+    tdc2: {channel: 0}
+    tdc3: {channel: 0}
+    tdc4: {channel: 0}
+    tdc5: {channel: 0}
+    tdc6: {channel: 0}
+    tdc7: {channel: 0}
+    tdc8: {channel: 0}
+    tdc9: {channel: 0}
+    tdc10: {channel: 0}
+    tdc11: {channel: 0}
+    tdc12: {channel: 0}
+    tdc13: {channel: 0}
+    tdc14: {channel: 0}
+    tdc15: {channel: 0}
+    tdc16: {channel: 0}
+    tdc17: {channel: 0}
+    tdc18: {channel: 0}
+
+
+  # -- Leading Channel --
+  lead:
+    tdc0: {first: 1, last: 48}
+    tdc1: {first: 1, last: 48}
+    tdc2: {first: 1, last: 48}
+    tdc3: {first: 1, last: 48}
+    tdc4: {first: 1, last: 48}
+    tdc5: {first: 1, last: 48}
+    tdc6: {first: 1, last: 48}
+    tdc7: {first: 1, last: 48}
+    tdc8: {first: 1, last: 48}
+    tdc9: {first: 1, last: 48}
+    tdc10: {first: 1, last: 48}
+    tdc11: {first: 1, last: 48}
+    tdc12: {first: 1, last: 48}
+    tdc13: {first: 1, last: 48}
+    tdc14: {first: 1, last: 48}
+    tdc15: {first: 1, last: 48}
+    tdc16: {first: 1, last: 48}
+    tdc17: {first: 1, last: 48}
+    tdc18: {first: 1, last: 48}
+
+
+  # -- Trailing Channel --
+  trail:
+    tdc0: {first: 51, last: 98}
+    tdc1: {first: 51, last: 98}
+    tdc2: {first: 51, last: 98}
+    tdc3: {first: 51, last: 98}
+    tdc4: {first: 51, last: 98}
+    tdc5: {first: 51, last: 98}
+    tdc6: {first: 51, last: 98}
+    tdc7: {first: 51, last: 98}
+    tdc8: {first: 51, last: 98}
+    tdc9: {first: 51, last: 98}
+    tdc10: {first: 51, last: 98}
+    tdc11: {first: 51, last: 98}
+    tdc12: {first: 51, last: 98}
+    tdc13: {first: 51, last: 98}
+    tdc14: {first: 51, last: 98}
+    tdc15: {first: 51, last: 98}
+    tdc16: {first: 51, last: 98}
+    tdc17: {first: 51, last: 98}
+    tdc18: {first: 51, last: 98}
+
+
+  # -- Pairs: Leading Channel <-> Trailing Channel --
+  pairs:
+    tdc0:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc1:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc2:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc3:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc4:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc5:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc6:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc7:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc8:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc9:  {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc10: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc11: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc12: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc13: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc14: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc15: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc16: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc17: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}
+    tdc18: {leading: {first: 1, last: 48}, trailing: {first: 51, last: 98}}

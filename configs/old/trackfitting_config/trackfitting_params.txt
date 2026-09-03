@@ -1,0 +1,22 @@
+
+# waehle TrackFitter aus:
+# Test -> 'Test'
+# Genfit -> 'Genfit'
+# Algorithmus -> 'Algorithm'
+trackFitter=Algorithm
+
+
+//------------------------------------------
+# Config fuer 'Test'-trackFitter
+//------------------------------------------
+
+//------------------------------------------
+# Config fuer 'Algorithm'-trackFitter
+//------------------------------------------
+// Abbruchkriterium Winkeliteration (Differenzwinkel in rad)
+#epsilonPhi=0.00001
+epsilonPhi=0.000001
+
+//------------------------------------------
+# Config fuer 'Genfit'-trackFitter
+//------------------------------------------

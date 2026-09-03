@@ -1,0 +1,9 @@
+# --- unpacker online ---
+InputType = online
+InputFile = ...
+
+
+DeviceIP = 
+Port = 
+Timeout = 
+BufferSize = 

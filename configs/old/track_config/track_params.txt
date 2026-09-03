@@ -1,0 +1,14 @@
+# --- TrackBuilder ---
+MinLayers=2
+AllowedLayers=0-2
+RequiredLayers=0,2
+Tolerance=100000
+
+
+
+#TrackBuilder.fitMethod . kalman
+#TrackBuilder.maxIterations . ... 20
+#TrackBuilder.minCh2Prob . 0.00...
+
+
+

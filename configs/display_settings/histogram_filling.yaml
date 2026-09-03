@@ -1,0 +1,121 @@
+histogram_filling:
+
+  # HitProcessor
+  fill_SzintUpTime: true
+  fill_SzintDownTime: true
+  fill_CherenkovTime: true
+  fill_MeanSzintTime: true
+  fill_DiffSzintTime: true
+  fill_SzintUpVsSzintDownTime: true
+
+  fill_HitsInLayer: true
+  fill_HitsInLayerCut: true
+  fill_HitRateEvtInLayer: true
+  fill_HitRateEvtInLayerCut: true
+  fill_HitRateTimeInLayer: true
+  fill_HitRateTimeInLayerCut: true
+
+  fill_HitsPerWire: true
+  fill_HitsPerWireCut: true
+  fill_HitRateEvtPerWire: true
+  fill_HitRateEvtPerWireCut: true
+  fill_HitRateTimePerWire: true
+  fill_HitRateTimePerWireCut: true
+
+  fill_DrifttimeDist: true
+  fill_DrifttimeDistCut: true
+  fill_DrifttimeDistTimeWalk: true
+  fill_ToTDist: true
+  fill_ToTDistCut: true
+  fill_ToTDistTimeWalk: true
+
+  fill_DrifttimeVsWire: true
+  fill_DrifttimeVsWireCut: true
+  fill_DrifttimeVsWireTimeWalk: true
+  fill_ToTVsWire: true
+  fill_ToTVsWireCut: true
+  fill_ToTVsWireTimeWalk: true
+
+  fill_DrifttimeVsToT: true
+  fill_DrifttimeVsToTCut: true
+  fill_DrifttimeVsToTTimeWalk: true
+
+  fill_FaradayCupCurrent: true
+  fill_ScalerTriggerRate: false
+  fill_SzintUpTrigRate: true
+  fill_SzintDownTrigRate: true
+  fill_CherenkovTrigRate: true
+  fill_CoincTrigRate: true
+  fill_AccTrigRate: true
+  fill_RelDeadtime: true
+  fill_RelMbsDeadtime: true
+
+
+
+  # ClusterProcessor
+  fill_HitNumberInCluster: true
+  fill_WireSpanInCluster: true
+  fill_HitNumberVsWireSpan: true
+  
+  fill_XMidCluster: false
+  fill_XMidClusterCut: false
+
+  fill_WireNumberWithMinDrifttimeInCluster: false
+  fill_WireNumberWithMinDrifttimeInClusterCut: false
+  
+  fill_MinDrifttimeInCluster: true
+  fill_MinDrifttimeInClusterCut: true
+
+  fill_ClusterPropertiesBeforeCut: true
+  fill_ClusterPropertiesAfterCut: true
+  fill_ClusterCoincidences: true
+  fill_ClusterCoincidencesRel: true
+  fill_ClusterEfficiency: true
+
+
+  fill_ClusterRemovedHits: true
+  fill_ClusterSizeBeforeClean: true
+  fill_ClusterSizeAfterClean: true
+  fill_ClusterSizeBeforeVsAfterClean: true
+  fill_ClusterShapeChange: true
+  fill_DrifttimeJump: true
+  fill_DrifttimeResidualAll: true
+  fill_DrifttimeResidualRemoved: true
+
+
+
+  # TrackProcessor
+  fill_XSpectrumX1Plane: true
+  fill_YSpectrumX1Plane: true
+  fill_XSpectrumUPlane: true
+  fill_YSpectrumUPlane: true
+  fill_XSpectrumX2Plane: true
+  fill_USpectrum: true
+  fill_ProjSpectrum: true
+  fill_XCorrSpectrum: true
+  fill_PhiSpectrum: true
+  fill_ThetaSpectrum: true
+  fill_PhiVsX1: true
+  fill_PhiVsX2: true
+  fill_PhiVsXCorr: true
+  fill_ThetaVsY: true
+  fill_Chi2: true
+  fill_Chi2NDF: true
+  fill_MaxResidualSigned: true
+  fill_MaxResidualAbs: true
+  fill_MeanResidual: true
+  fill_Converged: true
+  fill_Iterations: true
+  fill_Rejected: true
+  fill_Pull: true
+  fill_ResidualVsWire: true
+  fill_MeanResidualX1: true
+  fill_MeanResidualU: true
+  fill_MeanResidualX2: true
+  fill_RmsResidualX1: true
+  fill_RmsResidualU: true
+  fill_RmsResidualX2: true
+  fill_ResidualX1: true
+  fill_ResidualU: true
+  fill_ResidualX2: true
+

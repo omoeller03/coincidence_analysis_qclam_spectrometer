@@ -1,0 +1,85 @@
+// Laengen in mm
+// Winkel in °
+
+
+// algemeines
+// falls nur eine Gaskomponente, kann Gas_NComponents weggelassen werden und keine Zahl an Gas_Component, Gas_Z, ...
+Gas_Name=ArCO2
+Gas_NComponents=2
+Gas_Component1=Ar
+Gas_Fraction1=0.80
+Gas_Z1=18
+Gas_A1=39.95
+Gas_Component2=CO2
+Gas_Fraction2=0.20
+// effektives Z, A
+Gas_Z2=7.33
+Gas_A2=14.67
+Gas_Density=1.78e-3
+
+nWirePlanes=4
+
+# X1
+X1_zKoor= 
+// unterster x-Wert der Akzeptanz
+X1_x0=0
+// linke Seite der Akzeptanz
+X1_y0=0
+// Laenge der Akzeptanz in x-Rtg
+X1_xLength=1000
+// Laenge der Akzeptanz in y-Rtg
+X1_yLength=120
+// Drahtabstand in x-Rtg
+X1_DrahtDist=2.5
+// Winkel der Draehte zur y-Achse in der x-y-Ebene
+X1_ang=0
+// Anzahl Draehte
+X1_nD=408
+// Ebenen-ID
+X1_ID=0
+
+
+
+# U1
+U1_zKoor=
+U1_x0=0
+U1_y0=0
+U1_xLength=1000
+U1_yLength=120
+// Drahtabstand in x-Rtg
+U1_DrahtDist=3.40788338808
+// Winkel der Draehte zur y-Achse
+U1_ang=28.32
+U1_nD=352
+U1_ID=1
+
+
+
+# X2
+X2_zKoor=
+// unterste Position der Ebene -> Stacks gegeneinander gedreht
+X2_x0=101
+X2_y0=0
+X2_xLength=1000
+X2_yLength=120
+X2_DrahtDist=2.5 
+X2_ang=0
+X2_nD=408
+X2_ID=2
+
+
+
+# U2
+U2_zKoor=
+// unterste Position der Ebene -> Stacks gegeneinander gedreht
+U2_x0=101
+U2_y0=0
+U2_xLength=1000
+U2_yLength=120
+// Drahtabstand in x-Rtg
+U2_DrahtDist=3.40788338808
+// Winkel der U-Draehte zur y-Achse
+U2_ang=28.32
+U2_nD=352
+U2_ID=3
+

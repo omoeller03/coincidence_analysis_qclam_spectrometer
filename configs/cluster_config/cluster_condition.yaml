@@ -1,0 +1,86 @@
+condition:
+
+  # minimaler/maximaler Span in Cluster = |maxDrahtnummerInCluster - minDrahtnummerInCluster| + 1
+  MinWireSpanInCluster:
+    0: 4
+    1: 3
+    2: 4
+  MaxWireSpanInCluster:
+    0: 300
+    1: 300
+    2: 300
+
+
+  ## erzeuge aus WireSpan-Grenzen eine Go4Condition (Default: 'FlagOnly') ##
+  #------- Condition nicht nutzen (MinWireSpan / MaxWireSpan irrelevant)
+  WireSpanInClusterCondMode_Off: false
+  #------- Setze in Event Flag (Event in Condition / nicht in Condition)
+  WireSpanInClusterCondMode_FlagOnly: false
+  #------- Events ausserhalb Condition werden nicht an naechste Processoren weitergegeben
+  WireSpanInClusterCondMode_Filter: true
+
+
+
+  # minimale/maximale Anzahl Hits in Cluster (nicht gleichbedeutetnd mit Span, wg. Gaps, Doppelhits)
+  MinHitNumberInCluster:
+    0: 4
+    1: 3
+    2: 4
+  MaxHitNumberInCluster:
+    0: 300
+    1: 300
+    2: 300
+
+
+  ## erzeuge aus HitNumber-Grenzen eine Go4Condition (Default: 'FlagOnly') ##
+  #------- Condition nicht nutzen (MinHitNumber / MaxHitNumber irrelevant)
+  HitNumberInClusterCondMode_Off: false
+  #------- Setze in Event Flag (Event in Condition / nicht in Condition)
+  HitNumberInClusterCondMode_FlagOnly: false
+  #------- Events ausserhalb Condition werden nicht an naechste Processoren weitergegeben
+  HitNumberInClusterCondMode_Filter: true
+
+
+
+  # nur Cluster mit V-Form (Driftzeit vs. Drahtnummer)
+  RequireVShape:
+    0: false
+    1: false
+    2: false
+
+  # nur Cluster mit wachsender Driftzeit vs. Drahtnummer
+  RequireAscending:
+    0: false
+    1: false
+    2: false
+
+  # nur Cluster mit fallender Driftzeit vs. Drahtnummer
+  RequireDescending:
+    0: false
+    1: false
+    2: false
+
+  RequireClusterWithoutGaps:
+    0: false
+    1: false
+    2: false
+
+
+
+  CleanCluster:
+    do: true
+    0: # X1
+      max_cleaning_iterations: 10
+      max_removed_hits: 20
+      max_drifttime_jump_neighboring_wires: 150 # in ns
+      max_allowed_gap_size: 5
+    1: # U
+      max_cleaning_iterations: 10
+      max_removed_hits: 20
+      max_drifttime_jump_neighboring_wires: 150 # in ns
+      max_allowed_gap_size: 5
+    2: # X2
+      max_cleaning_iterations: 10
+      max_removed_hits: 20
+      max_drifttime_jump_neighboring_wires: 150 # in ns
+      max_allowed_gap_size: 5

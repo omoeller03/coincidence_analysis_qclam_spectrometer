@@ -1,0 +1,3 @@
+# Verbose-level --> wie viel std::cout soll es geben
+
+verbose=0

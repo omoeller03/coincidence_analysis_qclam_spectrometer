@@ -1,0 +1,1740 @@
+#include "processor/TQClamTrackProc.h"
+
+/** go4-includes */
+#include "TGo4Fitter.h"
+#include "TGo4RuntimeException.h"
+#include "TGo4Log.h"
+#include "TGo4EventElement.h"
+#include "TGo4Picture.h"
+
+/** ROOT-includes */
+#include "TClass.h"
+#include "TVector3.h"
+#include "TH1.h"
+#include "TH2.h"
+
+/** evts */
+#include "evt/TQClamClusterEvent.h"
+#include "evt/TQClamTrackEvent.h"
+
+/** parameter */
+#include "parameter/TQClamTrackConditionParameter.h"
+#include "parameter/TQClamDriftToZOffsetParameter.h"
+#include "parameter/TQClamFocalPlaneParameter.h"
+#include "parameter/TQClamCalibrationParameter.h"
+
+/** conditions */
+
+
+/** geometry */
+#include "geometry/TQClamGeometry.h"
+#include "geometry/TQClamWirePlane.h"
+
+#include <iostream>
+#include <experimental/simd>
+
+
+ClassImp(TQClamTrackProc)
+
+
+
+
+
+TQClamTrackProc::TQClamTrackProc()
+	: TGo4EventProcessor(),
+	fDriftcham(TQClamGeometry::Instance().GetDriftcham())
+{}
+
+
+TQClamTrackProc::TQClamTrackProc(const char* name)
+	: TGo4EventProcessor(name),
+	  fDriftcham(TQClamGeometry::Instance().GetDriftcham())
+{
+	TGo4Log::Info("[TQClamTrackProc] Create %s", name);
+
+
+        //-----------------------------------------------------------
+        // Parameter, Histogramme etc initialisieren
+        //-----------------------------------------------------------
+
+
+	fFitCounter = 0;
+
+        //-----------------------------------------------------------
+        // 1. initialisiere Parameter
+	fTrackConditionPar = (TQClamTrackConditionParameter*) GetParameter("TrackConditionParam");
+	fDriftToZOffsetPar = (TQClamDriftToZOffsetParameter*) (GetParameter("DriftToZOffsetParam"));
+	fFocalPlanePar = (TQClamFocalPlaneParameter*) (GetParameter("FocalPlaneParam"));
+	fCaliPar = (TQClamCalibrationParameter*) (GetParameter("CalibParam"));
+
+
+        //-----------------------------------------------------------
+        // 2. Conditions
+
+
+
+
+        //-----------------------------------------------------------
+	// 3. Histogramme
+
+	/** Spektrum in X1-Ebene */
+	fHXSpectrumX1Plane = MakeTH1('D',"XSpectrumX1Plane","X-Spektrum in X1-Ebene",10000,0,1000);
+	fHXSpectrumX1Plane->GetXaxis()->SetTitle("x-Koordinate");
+	fHXSpectrumX1Plane->GetXaxis()->CenterTitle();
+	fHXSpectrumX1Plane->GetYaxis()->SetTitle("Haeufigkeit");
+	fHXSpectrumX1Plane->GetYaxis()->CenterTitle();
+
+	fHXSpectrumX2Plane = MakeTH1('D',"XSpectrumX2Plane","X-Spektrum in X2-Ebene",10000,0,1000);
+
+	fHUSpectrum = MakeTH1('D',"USpectrum","U-Spektrum",10000,0,1000);
+
+	fHYSpectrumX1Plane = MakeTH1('D',"YSpectrumX1Plane","Y-Spektrum in X1-Ebene",10000,-500,500);
+	fHYSpectrumX1Plane->GetXaxis()->SetTitle("y-Koordinate");
+	fHYSpectrumX1Plane->GetXaxis()->CenterTitle();
+	fHYSpectrumX1Plane->GetYaxis()->SetTitle("Haeufigkeit");
+	fHYSpectrumX1Plane->GetYaxis()->CenterTitle();
+
+	fHPhiSpectrum = MakeTH1('D',"PhiSpectrum","Phi-Spektrum",400,0,100);
+	fHThetaSpectrum = MakeTH1('D',"ThetaSpectrum","Theta-Spektrum",400,-50,50);
+
+	fHX1VsPhi = MakeTH2('D',"X1VsPhi","X1 vs Phi",400,0,100,10000,0,1000);
+
+
+	/** Spektrum in Fokalebene */
+	fHProjSpectrum = MakeTH1('D',"ProjSpectrum","Projektion des Energiespektrums in die Fokalebene", 10000,0,1000);
+	fHProjSpectrum->GetXaxis()->SetTitle("Kanal");
+	fHProjSpectrum->GetXaxis()->CenterTitle();
+	fHProjSpectrum->GetYaxis()->SetTitle("Haeufigkeit");
+	fHProjSpectrum->GetYaxis()->CenterTitle();
+
+	fCaliPar->SetSpectrum(fHProjSpectrum);
+
+	fHFitSrc = MakeTH1('D',"FitSource","Copy of fit data",1000,0.,100.);
+	fHFitRes = MakeTH1('D',"FitTarget","Copy of fit result",1000,0.,100.);
+
+
+
+
+	fHChi2 = MakeTH1('D',"Chi2","Chi2 Distribution",1000,0,1000);
+	fHChi2->GetXaxis()->SetTitle("chi2");
+	fHChi2->GetYaxis()->SetTitle("counts");
+	fHChi2->GetYaxis()->CenterTitle();
+
+	fHChi2NDF = MakeTH1('D',"Chi2NDF","Chi2/NDF Distribution",500,0,50);
+	fHChi2NDF->GetXaxis()->SetTitle("chi2/ndf");
+	fHChi2NDF->GetXaxis()->CenterTitle();
+
+	fHMaxResidualAbs = MakeTH1('D',"MaxResidual","Max Residual",1000,0,20);
+	fHMaxResidualAbs->GetXaxis()->SetTitle("max residual");
+	fHMaxResidualAbs->GetXaxis()->CenterTitle();
+
+	fHMeanResidual = MakeTH1('D',"MeanResidual","Mean Residual",4000,-20,20);
+	fHMeanResidual->GetXaxis()->SetTitle("mean residual");
+	fHMeanResidual->GetXaxis()->CenterTitle();
+
+	fHConverged = MakeTH1('I',"Converged","Spurrekonstruktion konvergiert",2,0,2);
+	fHConverged->GetXaxis()->SetBinLabel(1,"konvergiert");
+	fHConverged->GetXaxis()->SetBinLabel(2,"nicht konvergiert");
+
+	fHIterations = MakeTH1('I',"Iterations","Number of Iterations",100,0,100);
+	fHIterations->GetXaxis()->SetTitle("iterations");
+	fHIterations->GetXaxis()->CenterTitle();
+
+	fHRejected = MakeTH1('I',"RejectedHits","Rejected hits per track",20,0,20);
+	fHRejected->GetXaxis()->SetTitle("rejected");
+	fHRejected->GetXaxis()->CenterTitle();
+
+	fHPull = MakeTH1('D', "Pull", "Pull", 200, -5, 5);
+	fHPull->GetXaxis()->SetTitle("residuum/sigma_residuum");
+	fHPull->GetXaxis()->CenterTitle();
+
+	fHResidualVsWireX1 = MakeTH2('D', "ResidualVsWireX1", "X1", 320,0,320,4000,-20,20);
+	// U, X2, Fill
+
+
+
+        //-----------------------------------------------------------
+	// 4. Pictures 
+	fPSpectra = GetPicture("Spectra");
+	if(!fPSpectra)
+	{
+		fPSpectra = new TGo4Picture("Spectra","Energie-Spektren");
+		fPSpectra->SetDivision(2,3);
+
+		fPSpectra->Pic(1,0)->AddObject(fHXSpectrumX1Plane);
+		fPSpectra->Pic(0,0)->AddObject(fHProjSpectrum);
+		//fPSpectra->Pic(1,1)->AddObject(fHFitSrc);
+		//fPSpectra->Pic(0,1)->AddObject(fHFitRes);
+
+		fPSpectra->Pic(0,1)->AddObject(fHPhiSpectrum);
+		fPSpectra->Pic(1,1)->AddObject(fHThetaSpectrum);
+
+		fPSpectra->Pic(0,2)->AddObject(fHYSpectrumX1Plane);
+		fPSpectra->Pic(1,2)->AddObject(fHX1VsPhi);
+		AddPicture(fPSpectra);
+	}
+
+	fPTrackResiduals = GetPicture("TrackResiduals");
+	if(!fPTrackResiduals)
+	{
+		fPTrackResiduals = new TGo4Picture("TrackResiduals", "Track-Residuen");
+		fPTrackResiduals->SetDivision(3,4);
+
+		fPTrackResiduals->Pic(0,0)->AddObject(fHChi2);
+		fPTrackResiduals->Pic(1,0)->AddObject(fHChi2NDF);
+		fPTrackResiduals->Pic(2,0)->AddObject(fHConverged);
+		
+		fPTrackResiduals->Pic(0,1)->AddObject(fHMaxResidualAbs);
+		fPTrackResiduals->Pic(1,1)->AddObject(fHMeanResidual);
+
+		fPTrackResiduals->Pic(0,2)->AddObject(fHIterations);
+		fPTrackResiduals->Pic(1,2)->AddObject(fHPull);
+		fPTrackResiduals->Pic(1,3)->AddObject(fHRejected);
+
+		AddPicture(fPTrackResiduals);
+	}
+
+
+
+
+        //-----------------------------------------------------------
+	// 5. Fitter
+
+	//fFitter = (TGo4Fitter*) GetObject("Fitter");
+
+	fFitter = fCaliPar->GetFitter();
+	/*
+	if(!fFitter)
+	{
+		fFitter = new TGo4Fitter("Fitter", TGo4Fitter::ff_least_squares, kTRUE);
+		fFitter->AddH1(__DATANAME__, nullptr, kFALSE, 0., 100.);
+		fFitter->AddGauss1(__DATANAME__,"G", 50., 5.);
+		AddObject(fFitter);
+	}
+	*/
+
+
+
+}
+
+
+TQClamTrackProc::~TQClamTrackProc()
+{
+
+	/** Conditions printen */
+	TGo4Log::Info("[TQClamTrackProc] GEBE ALLE CONDITION-STATISTIKEN AUS:");
+
+
+	TGo4Log::Info("[TQClamTrackProc] Delete %s", GetName());
+}
+
+
+
+
+
+//***********************************************************
+// pruefe klasse von output-eventobjekt
+Bool_t TQClamTrackProc::CheckEventClass(TClass* cl)
+{
+	return cl->InheritsFrom(TQClamTrackEvent::Class());
+}
+
+
+
+
+
+//***********************************************************
+// baue output-eventobjekt
+Bool_t TQClamTrackProc::BuildEvent(TGo4EventElement* dest)
+{
+	/** output event */
+	TQClamTrackEvent* evt = dynamic_cast<TQClamTrackEvent*>(dest);
+
+	/** input event */
+	TQClamClusterEvent* i_evt = dynamic_cast<TQClamClusterEvent*>(GetInputEvent());
+
+	std::vector<const TQClamCluster*> cluster_ptrs;
+	cluster_ptrs.reserve(i_evt->clusters.size());
+	for(auto& c : i_evt->clusters) { cluster_ptrs.push_back(&c); }
+
+
+	/** 1) Rohdaten extrahieren */
+	auto layers = ExtractLayerRawData(cluster_ptrs);
+
+	/** 2) Startwerte abschaetzen */
+	auto states = PrepareTrackingStates(layers);
+
+	/** pruefe, welche Cluster vorhanden sind
+	 * --> in erster simpler variante: nur weiter, wenn alle Ebenen Cluster haben */
+	if(i_evt->layerHasCluster.none()) // keine Cluster
+	{
+		return kFALSE;
+	}
+
+	else if(i_evt->layerHasCluster.all())
+	{
+		FitResults R{};
+		auto result = EstimateStartAngles(layers);
+		auto [phi,sigmaPhi] = result.first;
+		auto [theta,sigmaTheta] = result.second;
+
+		R.phi = phi;
+		R.sigmaPhi = sigmaPhi;
+		R.theta = theta;
+		R.sigmaTheta = sigmaTheta;
+
+		/** 4) Iteration/Rekonstruktion */
+		IteratePhiTheta(R,states);
+
+		if(R.valid)
+		{
+			fHConverged->Fill(0);
+		}
+		else
+		{
+			fHConverged->Fill(1);
+		}
+		if(R.valid)
+		{
+			fHChi2->Fill(R.quality.chi2);
+
+			if(std::isfinite(R.quality.chi2ndf))
+			{
+				fHChi2NDF->Fill(R.quality.chi2ndf);
+			}
+
+			if(std::isfinite(R.quality.maxResidualAbs))
+			{
+				fHMaxResidualAbs->Fill(R.quality.maxResidualAbs);
+			}
+
+			if(std::isfinite(R.quality.meanResidual))
+			{
+				fHMeanResidual->Fill(R.quality.meanResidual);
+
+				//fHMeanResidual->Fill( TODO
+			}
+
+			fHIterations->Fill(R.quality.nIterations);
+
+			fHRejected->Fill(R.quality.totalRejected);
+		}
+
+		/** 5) Finale Koordinaten */
+		double xD = states[0].result.intersection;
+		const auto& U = GetULayer(states);
+		double uD = U.result.intersection;
+		double gamma = U.raw->wireAngle;
+		double yD = (uD - xD * std::cos(gamma)) / std::sin(gamma);
+		double zD = states[0].raw->zPosLayer;
+
+		R.X1D = xD;
+		R.Y1D = yD;
+		R.Z1D = zD;
+
+		evt->trackAccepted = R.valid;
+		evt->posAtX1.SetXYZ(xD,yD,zD);
+		evt->phi = R.phi;
+		evt->theta = R.theta;
+
+		/** phi winkel zwischen x und z 
+		 * theta winkel zwischen y und z */
+		TVector3 dir(1.0,std::tan(evt->phi), std::tan(evt->theta));
+		dir.Unit();
+		evt->dirAtX1 = dir;
+
+		evt->xD_X1 = xD;
+		evt->uD = uD;
+
+
+	}
+
+
+	else if(!i_evt->layerHasCluster.all() && i_evt->layerHasCluster.any())
+	{
+		bool hasX1 = i_evt->layerHasCluster[0];
+		bool hasU  = i_evt->layerHasCluster[1];
+		bool hasX2 = i_evt->layerHasCluster[2];
+
+		if(hasX1 && hasX2)
+		{
+			//TODO
+		}
+
+		else if(hasX1 && !hasX2) // TODO
+		{
+			/*
+			IntersectionInput in = MakeSimpleInput(*x1Layer);
+
+			auto res = ComputeRegression(in);
+
+			if(res.valid)
+			{
+				evt->trackAccepted = kTRUE;
+
+				R.phi = res.phi;
+				R.theta = NAN;
+				R.valid = true;
+
+				double xD = res.intersection;
+				double zD = x1Layer->zPosLayer;
+
+				evt->posAtX1.SetXYZ(xD, 0.0, zD); // y unbekannt!
+
+				// Richtung nur in x-z
+				TVector3 dir(1.0, 0.0, std::tan(R.phi));
+				dir.Unit();
+				evt->dirAtX1 = dir;
+
+				return kTRUE;
+			}
+			*/
+
+			return kFALSE;
+		}
+
+
+		else if(hasX2 && !hasX1) // TODO
+		{
+			/*
+			IntersectionInput in = MakeSimpleInput(*x2Layer);
+
+			auto res = ComputeRegression(in);
+
+			if(res.valid)
+			{
+				evt->trackAccepted = kTRUE;
+
+				R.phi = res.phi;
+				R.theta = NAN;
+				R.valid = true;
+
+				double xD = res.intersection;
+				double zD = x2Layer->zPosLayer;
+
+				evt->posAtX1.SetXYZ(xD, 0.0, zD);
+
+				TVector3 dir(1.0, 0.0, std::tan(R.phi));
+				dir.Unit();
+				evt->dirAtX1 = dir;
+
+				return kTRUE;
+			}
+			*/
+
+			return kFALSE;
+		}
+
+
+		
+		return kFALSE;
+	}
+
+
+	else // sonst kein Track-Event
+	{
+		return kFALSE;
+	}
+
+	DoProjection(evt);
+
+	FillHistograms(evt);
+
+
+	/** Counter fuer Fits erhoehen */
+	fFitCounter++;
+
+	/** Pruefen, ob Fit durchgefuehrt werden soll */
+	if(fCaliPar->fDoFit && (fFitCounter%fCaliPar->fFitUpdateEventInterval == 0) && fFitter)
+	{
+		TH1* histo1 = GetHistogram(fCaliPar->fSpectrumName);
+
+		if(histo1)
+		{
+			if(!fFitter->FindData(__DATANAME__)) { fFitter->AddH1(__DATANAME__,histo1,kFALSE); }
+			else { fFitter->SetH1(__DATANAME__,histo1,kFALSE); }
+
+			if(fCaliPar->fUseGaussLineFitter)
+			{
+				fFitter->SetParValue("G.Ampl",histo1->GetMaximum());
+				fFitter->SetParValue("G.Pos",histo1->GetMean());
+				fFitter->SetParValue("G.Width",0.5);
+
+				fFitter->SetParRange("G.Pos",0.,100.);
+				fFitter->SetParRange("G.Width",0.05,10.);
+				fFitter->SetParRange("G.Ampl",0.,1e9);
+
+				fFitter->AssignModelTo("G",__DATANAME__);
+			}
+			else { fFitter->ClearModelAssignmentTo("G",__DATANAME__); }
+
+			if(fCaliPar->fUseEMGLineFitter)
+			{
+				fFitter->SetParValue("EMG.Aemg", histo1->GetMaximum());
+				fFitter->SetParValue("EMG.mu",histo1->GetMean());
+				fFitter->SetParValue("EMG.sigma", 0.5);
+				fFitter->SetParValue("EMG.lambda",0.1);
+
+				fFitter->SetParRange("EMG.Aemg", histo1->GetMaximum()-1000, histo1->GetMaximum()+1000);
+				fFitter->SetParRange("EMG.lambda",0.0,1.);
+				fFitter->SetParRange("EMG.sigma",0.05,1.0);
+				fFitter->SetParRange("EMG.mu",0.,100.);
+
+				fFitter->AssignModelTo("EMG",__DATANAME__);
+			}
+			else { fFitter->ClearModelAssignmentTo("EMG",__DATANAME__); }
+
+			if(fCaliPar->fUseSimpleLineFitter)
+			{
+				fFitter->SetParValue("Tail1OverX.A",   10.);
+				fFitter->SetParValue("Tail1OverX.x0",  histo1->GetMean() + 1.0);
+				fFitter->SetParValue("Tail1OverX.eps", 1.0);
+
+				fFitter->SetParRange("Tail1OverX.A",   1., 1e9);
+				fFitter->SetParRange("Tail1OverX.x0",  0., 200.);
+				fFitter->SetParRange("Tail1OverX.eps", 0., 100.);
+				fFitter->AssignModelTo("Tail1OverX",__DATANAME__);
+			}
+			else { fFitter->ClearModelAssignmentTo("Tail1OverX",__DATANAME__); }
+
+
+			if(fCaliPar->fUseGaussTailLineFitter)
+			{
+				fFitter->SetParValue("GaussTail.A",   10.);
+				fFitter->SetParValue("GaussTail.mu",  histo1->GetMean());
+				fFitter->SetParValue("GaussTail.sigma", 0.3);
+
+				fFitter->SetParValue("GaussTail.TailA",   10.);
+				fFitter->SetParValue("GaussTail.TailX0",  histo1->GetMean() + 0.5);
+				fFitter->SetParValue("GaussTail.TailEps", 1.0);
+
+
+				fFitter->SetParRange("GaussTail.A", histo1->GetMaximum()-1000, histo1->GetMaximum()+1000);
+				fFitter->SetParRange("GaussTail.mu", 0.,100.);
+				fFitter->SetParRange("GaussTail.sigma", 0.05,1.0);
+
+				fFitter->SetParRange("GaussTail.TailA",   1., 1e9);
+				fFitter->SetParRange("GaussTail.TailX0",  0., 200.);
+				fFitter->SetParRange("GaussTail.TailEps", 0., 100.);
+
+
+				fFitter->AssignModelTo("Tail1OverX",__DATANAME__);
+			}
+			else { fFitter->ClearModelAssignmentTo("GaussTail",__DATANAME__); }
+
+			/** fit ausfuehren */
+			fFitter->DoActions();
+
+			fHFitSrc->Reset();
+			fHFitSrc->SetBins(histo1->GetNbinsX(),histo1->GetXaxis()->GetXmin(),histo1->GetXaxis()->GetXmax());
+			fHFitSrc->Add(histo1);
+
+			TH1* histo2 = (TH1*) fFitter->CreateDrawObject("FitResult",__DATANAME__,kTRUE);
+			fHFitRes->Reset();
+			if(histo2)
+			{
+				fHFitRes->SetBins(histo2->GetNbinsX(),histo2->GetXaxis()->GetXmin(),histo2->GetXaxis()->GetXmax());
+				fHFitRes->Add(histo2);
+
+				TString title = TString::Format("Fit Result: Ampl=%f, Mean=%f, Sima=%f.",fFitter->GetParValue("G.Ampl"),fFitter->GetParValue("G.Pos"),fFitter->GetParValue("G.Width"));
+
+				fHFitRes->SetTitle(title.Data());
+
+
+				/** fit-parameter updaten */
+				if(fCaliPar->fUseGaussLineFitter)
+				{
+					fCaliPar->fGauss_Mean = fFitter->GetParValue("G.Pos");
+					fCaliPar->fGauss_Sigma = fFitter->GetParValue("G.Width");
+					fCaliPar->fGauss_Amp = fFitter->GetParValue("G.Ampl");
+				}
+				if(fCaliPar->fUseEMGLineFitter)
+				{
+					fCaliPar->fEMG_Amp = fFitter->GetParValue("EMG.Ampl");
+					fCaliPar->fEMG_Lambda = fFitter->GetParValue("EMG.lambda");
+					fCaliPar->fEMG_Mean = fFitter->GetParValue("EMG.mu");
+					fCaliPar->fEMG_Sigma = fFitter->GetParValue("EMG.sigma");
+				}
+				if(fCaliPar->fUseSimpleLineFitter)
+				{
+					fCaliPar->fTail_Amp = fFitter->GetParValue("Tail1OverX.A");
+					fCaliPar->fTail_Mean = fFitter->GetParValue("Tail1OverX.x0");
+					fCaliPar->fTail_Eps = fFitter->GetParValue("Tail1OverX.eps");
+				}
+				if(fCaliPar->fUseGaussTailLineFitter)
+				{
+					fCaliPar->fGaussTail_TAmp = fFitter->GetParValue("GaussTail.TailA");
+					fCaliPar->fGaussTail_TMean = fFitter->GetParValue("GaussTail.TailX0");
+					fCaliPar->fGaussTail_TEps = fFitter->GetParValue("GaussTail.TailEps");
+	
+					fCaliPar->fGaussTail_GMean = fFitter->GetParValue("G.mu");
+					fCaliPar->fGaussTail_GSigma = fFitter->GetParValue("G.sigma");
+					fCaliPar->fGaussTail_GAmp = fFitter->GetParValue("G.A");
+				}
+				fFitter->PrintLines();
+				fFitter->Print();
+
+				delete histo2;
+			}
+		}
+	}
+
+
+
+	return kTRUE;
+}
+
+
+
+
+
+
+
+
+//***********************************************************
+// 1. X1- und X2-Cluster liegen vor
+//***********************************************************
+
+
+
+
+
+//***********************************************************
+// Extrahiere fuer Tracking benoetigte Rohdaten
+std::vector<LayerRawData> TQClamTrackProc::ExtractLayerRawData(const std::vector<const TQClamCluster*>& clusters) const
+{
+	std::vector<LayerRawData> out;
+
+	for(const auto* c : clusters)
+	{
+		LayerRawData L;
+
+		const TQClamWirePlane* plane = fDriftcham.GetWirePlane(c->layerID);
+
+		L.layerID = c->layerID;
+		L.type = plane->GetType();
+		L.zPosLayer = c->zPos;
+
+		L.hasGaps = c->hasGaps;
+		L.hasVShape = c->hasVShape;
+		L.isAscending = c->ascending;
+		L.isDescending = c->descending;
+
+		L.nHits = c->numHits;
+
+		L.normalWireDist = plane->GetNormalWireDist();
+		L.wireAngle = plane->GetWireAngleRad();
+
+		L.wireNumbers = c->wireNumbers;
+		L.drifttimes = c->drifttimes;
+		L.normalCoords = c->normalCoords;
+
+//		TGo4Log::Info("LayerRawData: layerID=%d, %ld hits.", L.layerID, L.nHits);
+//		for(size_t i=0; i<L.wireNumbers.size(); i++)
+//		{
+//			TGo4Log::Info("LayerRawData: i=%ld, Drahtnummer=%d, drifttime=%f, normalCoord=%f.",i,L.wireNumbers[i],L.drifttimes[i],L.normalCoords[i]);
+//		}
+
+		/** TODO: stdws */
+
+		/** TODO: xMid, uMid First Guess --> evtl nicht noetig... */
+
+		L.normalCoordIntersecFirstGuess = c->meanNormalCoordinate;
+
+
+
+
+		out.push_back(L);
+	}
+
+	return out;
+}
+
+
+
+
+//***********************************************************
+// Berechne den Startwinkel phi fuer Iteration
+std::pair<std::pair<double,double>,std::pair<double,double>> TQClamTrackProc::EstimateStartAngles(const std::vector<LayerRawData>& layers) const
+{
+	double x1 = NAN;
+	double z1 = NAN;
+	double x2 = NAN;
+	double z2 = NAN;
+	double u = NAN;
+	double uWireAngle = NAN;
+
+	for(const auto& L : layers)
+	{
+		if(L.type == WirePlaneType::X)
+		{
+			if(L.layerID == 0)
+			{
+				x1 = L.normalCoordIntersecFirstGuess;
+				z1 = L.zPosLayer;
+			}
+	
+			else if(L.layerID == 2)
+			{
+				x2 = L.normalCoordIntersecFirstGuess;
+				z2 = L.zPosLayer;
+			}
+		}
+
+		else if(L.layerID == 1)
+		{
+			u = L.normalCoordIntersecFirstGuess;
+			uWireAngle = L.wireAngle;
+		}
+	}
+
+	if(std::isnan(x1) || std::isnan(x2)) { return {{NAN,NAN},{NAN,NAN}}; }
+
+	double phi = M_PI - std::atan2((z2-z1),(x2-x1));
+//	double phi2 = -std::atan((z2-z1)/(x2-x1));
+//	TGo4Log::Info("EstimateStartAngles: x1=%f,x2=%f, z1=%f,z2=%f",x1,x2,z1,z2);
+//	TGo4Log::Info("EstimateStartAngles: phi=%f",phi);
+//	TGo4Log::Info("EstimateStartAngles: phi2=%f",phi2);
+	double sigmaPhi = NAN; /** TODO */
+
+	if(std::isnan(u) || std::isnan(uWireAngle)) { return { {phi,sigmaPhi},{NAN,NAN} }; }
+
+	double theta = std::atan2( std::tan(phi) , std::cos(uWireAngle)); // TODO!!
+	double sigmaTheta = NAN; /** TODO */
+
+
+
+	return {{phi,sigmaPhi},{theta,sigmaTheta}};
+}
+
+
+
+
+
+
+
+//***********************************************************
+// bereite schnittpunktsberechnung vor
+std::vector<LayerTrackingState> TQClamTrackProc::PrepareTrackingStates(const std::vector<LayerRawData>& layers) const
+{
+	std::vector<LayerTrackingState> states;
+	states.reserve(layers.size());
+
+	for(const auto& L : layers)
+	{
+		LayerTrackingState S;
+		S.raw = &L;
+		states.push_back(S);
+	}
+
+	return states;
+}
+
+
+
+
+//***********************************************************
+// Iteration zur phi-Winkel Optimierung
+// i) Z-Offsets neu berechnen (neue Winkel) --> ComputeZOffsets()
+// ii) Schnittpunkte mit Ebenen berechnen --> ComputeIntersection()
+// iii) Winkel neu berechnen --> ComputeAngles()
+// iv) Konvergenz pruefen: |phi_i - phi_{i-1}| < Konvergenzkriterium
+void TQClamTrackProc::IteratePhiTheta(FitResults& R, std::vector<LayerTrackingState>& states) const
+{
+	/** iteriere bis max_iter erreicht oder |phi_i - phi_{i-1} < fTrackConditionPar->EpsilonPhi
+	 * --> ergebnise valid, wenn epsilon-schranke unterschritten */
+
+	/** TODO: konfigurierbar */
+	int max_iter = 100;
+
+//	TGo4Log::Info("GLOBAL: phi=%f theta=%f", R.phi, R.theta);
+
+//	TGo4Log::Info("\n\n\nStart new iteration");
+	for(int iter=0; iter<max_iter; iter++)
+	{
+
+		double phi_iter = R.phi;
+		double theta_iter = R.theta;
+
+		/** 1. zOffsets neu berechnen */
+		for(auto& S : states)
+		{
+			IterationSnapshot snapshot;
+
+			//-------------------------------------------------
+			// zOffsets berechnen
+			//-------------------------------------------------
+
+			for(double drifttime : S.raw->drifttimes)
+			{
+				ZOffsetInput in; // in TQClamDriftToZOffsetParameter definiert
+				in.layerID = S.raw->layerID;
+				in.drifttime = drifttime;
+				//in.phi = R.phi;
+				in.phi = phi_iter;
+
+				auto out = fDriftToZOffsetPar->ComputeZOffset(in);
+
+				snapshot.zOffsets.push_back(out.zOffset);
+				snapshot.sigmaZOffsets.push_back(out.sigma_zOffset);
+			}
+
+			//-------------------------------------------------
+			// Snapshot speichern
+			//-------------------------------------------------
+
+			S.iter.history.push_back(snapshot);
+		}
+
+
+		/** schnittpunkte berechnen */
+		for(auto& S : states)
+		{
+			//auto in = MakeInput(S,R);
+			auto in = MakeInput(S,phi_iter, theta_iter);
+
+			auto res = ComputeIntersection(in);
+
+//			TGo4Log::Info(
+//    "INTERSECTION: value=%f sigma=%f valid=%d",
+//    res.intersection,
+//    res.sigmaIntersection,
+//   res.valid
+//);
+
+			S.result.valid = res.valid;
+			S.result.intersection = res.intersection;
+			S.result.sigmaIntersection = res.sigmaIntersection;
+
+			// TODO?
+			S.result.phi = res.phi;
+			S.result.sigmaPhi = res.sigmaPhi;
+			S.result.quality = res.quality;
+
+			auto& current = S.iter.history.back();
+
+			double chi2 = 0.0;
+			int nRejected = 0;
+
+			for(size_t i=0; i<S.raw->nHits; i++)
+			{
+				/** berechne abstand track <-> draht (Spurversatz) zur Residuenberechnung */
+				double trackDistance = ComputeSignedDistanceToWire(
+						S.raw->normalCoords[i],
+						res.intersection,
+						phi_iter);
+						//R.phi);
+
+
+
+
+				double measuredZOffset = current.zOffsets[i];
+
+				// Vorzeichen aus Drahtposition relativ zum Schnittpunkt
+				double sign = (S.raw->normalCoords[i] < S.result.intersection) ? -1.0 : +1.0;
+
+				double signedMeasured = sign * measuredZOffset;
+
+				// echtes Residuum
+				double residual = signedMeasured - trackDistance;
+
+				/** speichere Residuum-Daten */
+				ResidualData RD;
+
+				RD.hitIndex = i;
+				RD.wireCoord = S.raw->normalCoords[i];
+				RD.measuredZOffset = measuredZOffset;
+				RD.trackDistance = trackDistance;
+				RD.residual = residual;
+
+				double sigmaMeasured = current.sigmaZOffsets[i];
+
+				// Berechnung sigma-track
+				double dx = res.intersection - S.raw->normalCoords[i];
+
+				double sigmaX = res.sigmaIntersection;
+				double sigmaPhi = R.sigmaPhi;
+
+				if(!std::isfinite(sigmaX)) { sigmaX = 0.0; }
+				if(!std::isfinite(sigmaPhi)) { sigmaPhi = 0.0; }
+
+				//double term1 = std::cos(R.phi) * sigmaX;
+				double term1 = std::cos(phi_iter) * sigmaX;
+				//double term2 = dx * std::sin(R.phi) * sigmaPhi;
+				double term2 = dx * std::sin(phi_iter) * sigmaPhi;
+
+				double sigmaTrack = std::sqrt(term1*term1 + term2*term2);
+
+				RD.sigmaResidual = std::sqrt(sigmaMeasured*sigmaMeasured + sigmaTrack*sigmaTrack);
+
+				current.residuals.push_back(RD);
+
+
+				// -------------------
+				// chi2 + outlier
+				// -------------------
+
+				constexpr double eps = 1e-12;
+				if(RD.sigmaResidual > eps) /** quasi-0 */
+				{
+
+					double sigma2 = RD.sigmaResidual * RD.sigmaResidual;
+
+					double pull = residual / RD.sigmaResidual;
+					RD.pull = pull;
+					fHPull->Fill(pull);
+					if(std::abs(pull) > fTrackConditionPar->OutlierRejectionLimit)
+					{
+						// optional zaehlen ...
+						nRejected++;
+						continue; // nur aus chi2 raus...
+					}
+
+					chi2 += residual * residual / sigma2;
+				}
+			}
+
+			current.chi2 = chi2; // TODO global aggregieren
+			current.nRejected = nRejected;
+
+			int nUsed = current.residuals.size() - current.nRejected;
+			if(nUsed > 2)
+			{
+				current.chi2ndf = chi2 / (nUsed - 2);
+			}
+
+		}
+
+		// ===============================
+		// FINAL RESIDUAL STATISTICS
+		// ===============================
+
+		double maxResSigned = -1e30;
+		double maxResAbs = 0.0;
+		double sumRes = 0.0;
+		size_t nRes = 0;
+
+		
+		for(const auto& S : states)
+		{
+			if(S.iter.history.empty()) continue;
+
+			const auto& lastIter = S.iter.history.back();
+
+			for(const auto& RD : lastIter.residuals)
+			{
+				double r = RD.residual;
+
+				sumRes += r;
+				nRes++;
+
+				if(r > maxResSigned) { maxResSigned = r; }
+
+				if(std::abs(r) > maxResAbs) { maxResAbs = std::abs(r); }
+			}
+		}
+
+		if(nRes > 0)
+		{
+			R.quality.meanResidual = sumRes / nRes;
+			R.quality.maxResidualSigned = maxResSigned;
+			R.quality.maxResidualAbs = maxResAbs;
+		}
+		else
+		{
+			R.quality.meanResidual = NAN;
+			R.quality.maxResidualSigned = NAN;
+			R.quality.maxResidualAbs = NAN;
+		}
+
+		// Debug
+//		TGo4Log::Info("FINAL: mean=%f maxSigned=%f maxAbs=%f nRes=%zu",
+//				R.quality.meanResidual,
+//				R.quality.maxResidualSigned,
+//				R.quality.maxResidualAbs,
+//				nRes);
+
+
+
+/*
+		IterationSummary summary;
+
+		summary.iteration = iter;
+		summary.phi = phi_iter;
+		summary.theta = theta_iter;
+
+		// global chi2 sammeln
+		double totalChi2 = 0.0;
+		int totalN = 0;
+
+		for(const auto& S : states)
+		{
+			const auto& current = S.iter.history.back();
+			totalChi2 += current.chi2;
+
+			totalN += current.residuals.size() - current.nRejected;
+		}
+
+		summary.chi2 = totalChi2;
+
+		if(totalN > 2) { summary.chindf = totalChi2 / (totalN - 2); }
+
+		else { summary.chindf = NAN; }
+
+		// Residual Stats
+		double sum = 0.0;
+		double maxAbs = 0.0;
+		int count = 0;
+
+		for(const auto& S : states)
+		{
+			const auto& current = S.iter.history.back();
+
+			for(const auto& RD : current.residuals)
+			{
+				sum += RD.residual;
+				maxAbs = std::max(maxAbs, std::abs(RD.residual));
+				count++;
+			}
+		}
+
+		if(count > 0)
+		{
+			summary.meanResidual = sum / count;
+			summary.maxResidual = maxAbs;
+		}
+
+		evt->iterationSummaries.push_back(summary);
+*/
+
+		/** 4. neue winkel */
+		auto result = ComputeAngles(states);
+		auto [phi_new,sigmaPhi_new] = result.first;
+//		std::cout << "phi_old = " << R.phi
+//          << " -> phi_new = " << phi_new << std::endl;
+		auto [theta_new,sigmaTheta_new] = result.second;
+
+		/** Konvergenz */
+		//double totalChi2_prev = R.quality.chi2; // gesetzt???
+		//double dChi2 = std::abs(
+
+		double phi_old = R.phi;
+		double dPhi = std::abs(phi_new - phi_old);
+
+		double theta_old = R.theta;
+		if(fabs(phi_new - phi_old) < fTrackConditionPar->EpsilonPhi) // TODO: Auch && Theta pruefen????, && chi2???? mit &&
+		{
+			//-------------------------------------------------
+			// globale Fit-Qualität berechnen
+			//-------------------------------------------------
+
+			double totalChi2 = 0.0;
+			double maxResidualSigned = 0.0;
+			double maxResidualAbs = 0.0;
+			size_t nResiduals = 0;
+			double residualSum2 = 0.0;
+			int totalRejected = 0;
+
+			for(const auto& S : states)
+			{
+				const auto& current = S.iter.history.back();
+
+				totalChi2 += current.chi2;
+				totalRejected += current.nRejected;
+
+
+				for(const auto& RD : current.residuals)
+				{
+					double absRes = std::abs(RD.residual);
+
+					//residualSum += absRes;
+					residualSum2 += RD.residual * RD.residual;
+
+					if(absRes > maxResidualAbs)
+					{
+						maxResidualAbs = absRes;
+						maxResidualSigned = RD.residual;
+					}
+
+					nResiduals++;
+				}
+			}
+
+			//-------------------------------------------------
+			// FitQuality füllen
+			//-------------------------------------------------
+
+			R.quality.chi2 = totalChi2;
+			R.quality.totalRejected = totalRejected;
+
+			int nFitParams = 2; /** Konfigurieren? TODO */
+			if(nResiduals > nFitParams)
+			{
+				R.quality.chi2ndf = totalChi2 / (nResiduals - nFitParams);
+			}
+			else
+			{
+				R.quality.chi2ndf = NAN;
+			}
+
+
+			if(nResiduals > 0)
+			{
+				//R.quality.meanResidual = residualSum / nResiduals;
+				R.quality.rmsResidual = std::sqrt(residualSum2 / nResiduals);
+				R.quality.maxResidualAbs = maxResidualAbs;
+				R.quality.maxResidualSigned = maxResidualSigned;
+			}
+			else
+			{
+				R.quality.meanResidual = NAN;
+				R.quality.rmsResidual = NAN;
+				R.quality.maxResidualAbs = NAN;
+				R.quality.maxResidualSigned = NAN;
+			}
+
+			R.quality.nIterations = iter + 1;
+			R.quality.converged = true;
+
+			//-------------------------------------------------
+			// finale Trackparameter setzen
+			//-------------------------------------------------
+
+			R.valid = true;
+			R.phi = phi_new; /** endgueltiges phi setzen*/
+			R.theta = theta_new; /** endguelitges theta setzen */
+			R.iterations = iter + 1;
+//			TGo4Log::Info("converged, iter=%d",iter+1);
+			return;
+		}
+
+		/** Relaxation fuer bessere Konvergenz */
+		R.phi = fTrackConditionPar->RelaxationAlpha * phi_new + (1-fTrackConditionPar->RelaxationAlpha) * phi_old;
+		R.theta = fTrackConditionPar->RelaxationAlpha * theta_new + (1-fTrackConditionPar->RelaxationAlpha) * theta_old;
+	}
+
+//	TGo4Log::Info("not converged!");
+
+
+	R.valid = false;
+	R.quality.converged = false;
+	R.quality.nIterations = max_iter;
+	/*
+	R.quality.chi2 = NAN;
+	R.quality.chi2ndf = NAN;
+	R.quality.maxResidualAbs = NAN;
+	R.quality.maxResidualSigned = NAN;
+	R.quality.meanResidual = NAN;
+	*/
+}
+
+
+
+
+
+//***********************************************************
+// Berechne signierten senkrechten Abstand
+// zwischen Track und Draht
+//
+// @param:
+// - wireCoord: Normalkoordinate des Drahts
+// - trackIntersection: rekonstruierter Ebenenschnittpunkt
+// - phi: Trackwinkel in x-z bzw u-z Ebene
+//
+// @return:
+// - signierter Driftabstand
+double TQClamTrackProc::ComputeSignedDistanceToWire(double wireCoord,double trackIntersection,double phi) const
+{
+	//---------------------------------------------------------
+	// Abstand entlang Ebenennormalen
+	//---------------------------------------------------------
+//TGo4Log::Info(
+//    "DIST FUNC: wire=%f intersec=%f phi=%f",
+//    wireCoord,
+//    trackIntersection,
+//   phi
+//);
+	double dx = wireCoord - trackIntersection;
+
+	//---------------------------------------------------------
+	// Abstand von Draht zum Track in z-Richtung (orhtogonal auf der Drahtebene)
+	//
+	// --> Spurversatz (fitted zOffset)
+	//---------------------------------------------------------
+
+	if(std::abs(std::cos(phi)) < 1e-6) { return NAN; } // vorsicht: phi = 90 °
+	double driftDistance = dx * std::tan(phi);
+
+	//---------------------------------------------------------
+	// signed distance
+	//---------------------------------------------------------
+
+	return driftDistance;
+}
+
+
+
+
+std::pair<std::pair<double,double>,std::pair<double,double>> TQClamTrackProc::ComputeAngles(const std::vector<LayerTrackingState>& states) const
+{
+	const LayerTrackingState* s_x1 = nullptr;
+	const LayerTrackingState* s_u  = nullptr;
+	const LayerTrackingState* s_x2 = nullptr;
+
+	for(const auto& S : states)
+	{
+		if(S.raw->layerID == 0)      s_x1 = &S;   // X1
+		else if(S.raw->layerID == 1) s_u  = &S;   // U
+		else if(S.raw->layerID == 2) s_x2 = &S;   // X2
+	}
+
+	if(!s_x1 || !s_x2 || !s_u) { return {{NAN,NAN},{NAN,NAN}}; }
+
+	// Schnittpunkte in den Ebenen (Normalkoordinate)
+	double x1D = s_x1->result.intersection;
+	double x2D = s_x2->result.intersection;
+	double uD  = s_u->result.intersection;
+
+	double z1 = s_x1->raw->zPosLayer;
+	double z2 = s_x2->raw->zPosLayer;
+
+	double gamma = s_u->raw->wireAngle;   // Drahtwinkel der U-Ebene
+
+	// ==========================================
+	// 1. phi aus X-Ebenen
+	// --> nutze Schnittpunkte mit X-Ebenen und z-Abstand der X-Ebenen
+	double dz = (z2 - z1);
+	double dx = (x2D - x1D);
+	double phi = M_PI - std::atan2(dz, dx);
+
+	// ==========================================
+	// 2. phi_u aus U-Ebene holen
+	double phi_u = s_u->result.phi; //* 1/std::cos(gamma);
+
+	// Sicherheitscheck
+	if(!std::isfinite(phi_u) || std::abs(std::tan(phi_u)) < 1e-6)
+	{
+		return {{phi, NAN}, {NAN, NAN}};
+	}
+
+	// ==========================================
+	// 3. theta berechnen aus Steigungen
+	// u = cos(gamma) x - sin(gamma) y
+	// du/dz = cos(gamma) dx/dz - sin(gamma) dy/dz
+	// 1/tan(phi_u) = cos(gamma) 1/tan(phi) - sin(gamma) 1/tan(theta)
+	//
+	// -> 1/tan(theta) = 1/sin(gamma) [ cos(gamma)/tan(phi) - 1/tan(phi_u) ]
+	double tan_phi  = std::tan(phi);
+	double tan_phiu = std::tan(phi_u);
+
+	// Schutz vor Division durch 0
+	if(std::abs(tan_phi) < 1e-6 || std::abs(tan_phiu) < 1e-6 || std::abs(std::sin(gamma)) < 1e-6)
+	{
+		return {{phi, NAN}, {NAN, NAN}};
+	}
+
+	// 1/tan(theta)
+	double inv_tan_theta = (1.0 / tan_phiu - std::cos(gamma) / tan_phi) / std::sin(gamma);
+
+	double theta = std::atan(1.0 / inv_tan_theta);
+	double theta1 = M_PI - theta;
+	double theta2 = theta - M_PI;
+//	TGo4Log::Info("theta: %f, M_PI - theta: %f, theta - M_PI: %f", theta,theta1,theta2);
+
+//	TGo4Log::Info("phi=%f phi_u=%f inv_tan_theta=%f", phi, phi_u, inv_tan_theta);
+
+
+	// y aus U-Ebene rekonstruieren:
+	// u = x*cos(gamma) - y*sin(gamma)
+	//double yD = (x1D*std::cos(gamma) - uD) / std::sin(gamma);
+	double yD = (uD - x1D*std::cos(gamma)) / std::sin(gamma);
+
+	// TODO 
+	double sigmaPhi = NAN;
+	double sigmaTheta = NAN;
+
+/*	
+	// Differenzen entlang der Spur
+	double dz = (z2 - z1);
+	double dx = (x2D - x1D);
+	double dy = (yD - 0.0);   // Referenz: y bei X1 = 0
+
+//    TGo4Log::Info("ANGLES: X1.z=%f X2.z=%f | dz=%f | x1D=%f x2D=%f | dx=%f",
+//              z1, z2, dz, x1D, x2D, dx);
+//TGo4Log::Info("PHI-CHECK: dz=%f dx=%f phi_deg=%f",
+//              dz, dx, (M_PI - std::atan2(dz,dx))*180.0/M_PI);
+
+	// Definition:
+	// tan(phi)   = dz/dx  (Winkel gegen x-Achse)
+	// tan(theta) = dz/dy  (Winkel gegen y-Achse)
+	double phi   = M_PI - std::atan2(dz, dx);
+	double theta = std::atan2(dz, dy); // TODO
+
+	double sigmaPhi   = NAN;   // spaeter in fehlerfortfplanzung einsetzen
+	double sigmaTheta = NAN;
+//    TGo4Log::Info("phi-debug: "
+//              "z1=%f z2=%f dz=%f | x1D=%f x2D=%f dx=%f | dz/dx=%f | phi_deg=%f",
+//              z1, z2, dz,
+//              x1D, x2D, dx,
+//              dz/dx,
+//              (M_PI - std::atan2(dz,dx)) * 180.0/M_PI);
+
+*/
+
+	return {{phi,sigmaPhi},{theta,sigmaTheta}};
+}
+
+
+
+
+//***********************************************************
+// hole U-Ebenen LayerTrackingState
+const LayerTrackingState& TQClamTrackProc::GetULayer(const std::vector<LayerTrackingState>& states) const
+{
+	for(const auto& S : states)
+	{
+		if(S.raw->type == WirePlaneType::U) { return S; }
+	}
+
+	/** ... TODO ...*/
+	return states[0];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------//
+//              Berechnung von Schnittpunkt mit Ebene
+//-------------------------------------------------------------//
+
+
+
+
+//***********************************************************
+// Bilde Input fuer naechse Iteration in Schnittpunktsberechnung
+IntersectionInput TQClamTrackProc::MakeInput(const LayerTrackingState& S, double phi, double theta) const//const FitResults& R) const
+{
+	IntersectionInput in;
+
+	in.layerID = S.raw->layerID;
+	in.type = S.raw->type;
+
+	in.hasVShape = S.raw->hasVShape;
+	in.hasGaps = S.raw->hasGaps;
+	in.isAscending = S.raw->isAscending;
+	in.isDescending = S.raw->isDescending;
+
+	in.nHits = S.raw->nHits;
+	in.normalWireDist = S.raw->normalWireDist;
+
+	in.normalCoords = S.raw->normalCoords;
+	in.drifttimes = S.raw->drifttimes;
+	
+	const auto& current = S.iter.history.back();
+	in.zOffsets = current.zOffsets;
+
+	//in.phi = R.phi;
+	in.phi = phi;
+	//in.theta = R.theta;
+	in.theta = theta;
+
+	/** TODO */
+
+	in.sigmaNormalCoords = S.raw->sigmaNormalCoords;
+	in.sigmaDrifttimes = S.raw->sigmaDrifttimes;
+	in.sigmaZOffsets = current.sigmaZOffsets;
+
+	in.sigmaPhi = 0.;//R.sigmaPhi;
+	in.sigmaTheta = 0.;//R.sigmaTheta;
+
+
+	return in;
+}
+
+
+
+
+IntersectionResult TQClamTrackProc::ComputeIntersection(const IntersectionInput& in) const
+{
+//	std::cout << "ComputeIntersection phi IN = " << in.phi << std::endl;
+	/** weniger als 2 Hits in Cluster --> TODO */
+	if(in.nHits < 2)
+	{
+		TGo4Log::Error("[TQClamTrackProc] Versuche Schnittpunkt eines Clusters mit < 2 Hits zu bestimmen. FEHLER!");
+		TGo4RuntimeException();
+	}
+
+	/** Cluster ohne Drahtluecken */
+	if(!in.hasGaps)
+	{
+		if(in.nHits == 2)
+		{
+			return ComputeRegression(in);
+			//return ComputeCross2(in);
+		}
+
+		else if(in.nHits == 3)
+		{
+			return ComputeRegression(in);
+			//return ComputeMIT(in);
+		}
+
+		/** 3,4 Hits --> TODO */
+
+
+		/** 4 Hits oder mehr benachbarte Hits TODO  */
+
+
+
+		/** sonst: lineare Regression */
+		return ComputeRegression(in);
+	}
+
+	/** falls luecken --> falle auf lin regression zurueck */
+	return ComputeRegression(in);
+
+
+
+	/* TODO: evtl hits rausschmeissen aus cluster etc... */
+}
+
+
+
+
+
+//-------------------------------------------------------------//
+//              Algorithmen zur Schnittpunktsberechnung
+//-------------------------------------------------------------//
+
+/** TODO!!! RESIDUEN BESTIMMUNG !!! */
+
+
+//***********************************************************
+// Schnittpunkts-Berechnung: 2 x benachbarte Hits in Cluster
+IntersectionResult TQClamTrackProc::ComputeCross2(const IntersectionInput& in) const
+{
+	IntersectionResult out;
+
+	/** rechts-links ambiguitaet cluster ... */
+	double slope_minus = (in.zOffsets[0] - in.zOffsets[1]) / in.normalWireDist;
+	double slope_plus = (in.zOffsets[0] + in.zOffsets[1]) / in.normalWireDist;
+
+	double phi_minus = std::atan(slope_minus);
+	double phi_plus = std::atan(slope_plus);
+
+	/** 1. beide Hits auf verschiedenen Seiten der Drahtebene */
+	if(std::abs(slope_plus - std::tan(in.phi)) < std::abs(slope_minus - std::tan(in.phi)))
+	{
+		double x_plusD = in.normalCoords[0] + in.normalWireDist * in.zOffsets[0]/(in.zOffsets[0] + in.zOffsets[1]);
+		
+		out.intersection = x_plusD;
+		out.phi = phi_plus;
+
+		/** TODO */
+		out.sigmaPhi = NAN;
+		out.sigmaIntersection = NAN;
+		out.quality = NAN;
+
+		out.valid = true;
+
+		return out;
+	}
+
+	/** 2. beide Hits auf derselben Drahtebenen-Seite */
+	double x_minusD = in.normalCoords[0] + in.normalWireDist * in.zOffsets[0]/(in.zOffsets[0] - in.zOffsets[1]);
+
+	out.intersection = x_minusD;
+	out.phi = phi_minus;
+
+	/** TODO */
+	out.sigmaPhi = NAN;
+	out.sigmaIntersection = NAN;
+	out.quality = NAN;
+
+	out.valid = true;
+
+	return out;
+}
+
+
+
+
+//***********************************************************
+// Schnittpunkts-Berechnung: 3 x benachbarte Hits in Cluster
+IntersectionResult TQClamTrackProc::ComputeMIT(const IntersectionInput& in) const
+{
+	IntersectionResult out;
+
+	/** 1. Hits verteilt auf 2 Seiten mit VShape => MIT-Algorithmus */
+	if(in.hasVShape)
+	{
+                // x_d = x_i - DeltaX/2 * (z_{i+1} - z_{i-1})/(z_g - z_i)
+                // z_i --> zOffset mit min Driftzeit
+                // z_g --> max(z_{i-1}, z_{i+1})
+
+                //int i = std::min_element(in.drifttimes.begin(), in.drifttimes.end()) - in.drifttimes.begin();
+                int i = 1; // 3 Hits, V-Shape --> mittlere Driftzeit
+
+                double maxZOffset = *std::max_element(in.zOffsets.begin(), in.zOffsets.end());
+                double x_D = in.normalCoords[i] - in.normalWireDist/2 * (in.zOffsets[i+1] - in.zOffsets[i-1])/(maxZOffset - in.zOffsets[i]);
+
+                // lineare Regression ueber alle MIT-Punkte und den berechneten Ebenenschnittpunkt
+                // zur Berechnung der Steigung m
+                // m = (N * [zx] - [z]*[x])/(N * [zz] - [z]^2), mit N = Anzahl Messwerte, [a] = sum_1^N(a_i)
+                double S_xz = 0, S_z = 0, S_x = 0, S_zz = 0;
+                for(int i=0; i<in.nHits; i++)
+                {
+                        S_z += in.zOffsets[i];
+                        S_x += in.normalCoords[i];
+                        S_zz += in.zOffsets[i]*in.zOffsets[i];
+                        S_xz += in.normalCoords[i]*in.zOffsets[i];
+                }
+
+                double m = (in.nHits * S_xz - S_z * S_x)/(in.nHits*S_zz - S_z*S_z);
+                double phi = std::atan(m);
+//		TGo4Log::Info("MIT: m=%f, phi=%f",m,phi);
+
+                out.intersection = x_D;
+
+                // TODO --> gaussche fortpflanzung der S_i...
+                out.sigmaIntersection = NAN;
+                out.sigmaPhi = NAN;
+                out.quality = NAN;
+
+                out.valid = true;
+
+//              std::cout << "Ergebnis MIT x_D=" << std::to_string(x_D) << std::endl;
+
+                return out;
+        }
+
+
+        // 2. zwei weitere moeglichkeiten:
+        // i) alle Hits auf einer Ebenenseite --> steigende/fallende Driftzeiten
+        // ii) zwei Hits auf der einen Seite, letzte auf der anderen, aber trotzdem die kleinste.
+        // => diese Faelle kann ich nicht unterscheiden => beide lin. Regression
+        return ComputeRegression(in);
+}
+
+
+
+
+
+//***********************************************************
+// Schnittpunkts-Berechnung: mind. 4 Driftzeiten mit symmetrischen Vorzeichenwechsel --> VShape TODO
+IntersectionResult TQClamTrackProc::ComputeCross4(const IntersectionInput& in) const
+{
+	IntersectionResult out;
+
+	return ComputeRegression(in);
+
+
+        //return out;
+}
+
+
+
+//***********************************************************
+// Schnittpunkts-Berechnung: Lineare Regression
+IntersectionResult TQClamTrackProc::ComputeRegression(const IntersectionInput& in) const
+{
+	IntersectionResult out;
+
+	if(in.nHits < 2)
+	{
+		out.valid = false;
+		return out;
+	}
+
+	// 1) Grobe Näherung für x_D: Schwerpunkt der Drahtkoordinaten
+	double x_mean = 0.0;
+	for(int i = 0; i < in.nHits; i++)
+	{
+		x_mean += in.normalCoords[i];
+		x_mean /= in.nHits;
+	}
+
+	// 2) Lineare Regression in (x, z) mit einfacher Vorzeichen-Zuordnung
+	double S_x  = 0.0;
+	double S_z  = 0.0;
+	double S_xx = 0.0;
+	double S_xz = 0.0;
+	int N = 0;
+
+	for(int i = 0; i < in.nHits; i++)
+	{
+		double x  = in.normalCoords[i];
+		double z0 = in.zOffsets[i];   // immer positiv (Driftweg)
+
+		// einfache Seiten-Zuordnung relativ zum Schwerpunkt
+		double sign = (x >= x_mean) ? +1.0 : -1.0;
+		double z    = sign * z0;
+
+		S_x  += x;
+		S_z  += z;
+		S_xx += x * x;
+		S_xz += x * z;
+		N++;
+	}
+
+	double denom = N * S_xx - S_x * S_x;
+	if(std::abs(denom) < 1e-12)
+	{
+		out.valid = false;
+		return out;
+	}
+
+	double m = (N * S_xz - S_x * S_z) / denom;  // dz/dx
+	double b = (S_z - m * S_x) / N;
+
+	if(std::abs(m) < 1e-12)
+	{
+		out.valid = false;
+		return out;
+	}
+
+	double x_D = -b / m;
+	//double phi_layer = std::atan(m);   // lokaler Winkel in dieser Ebene
+	double phi_layer = -std::atan(m);   // lokaler Winkel in dieser Ebene TODO
+
+	out.intersection      = x_D;
+	out.phi               = phi_layer;
+	out.sigmaPhi          = NAN;
+	out.sigmaIntersection = NAN;
+	out.valid             = true;
+
+	return out;
+}
+
+
+
+//***********************************************************
+// 2. Nur X1-Cluster liegt vor
+//***********************************************************
+
+
+
+
+
+
+
+
+
+
+//***********************************************************
+// 3. Nur X2-Cluster liegt vor
+//***********************************************************
+
+
+
+
+//***********************************************************
+// 1. X1- und X2-Cluster liegen vor
+//***********************************************************
+
+
+
+//***********************************************************
+// Berechnung Z-Offset
+//***********************************************************
+/*
+ZOffsetResult TQClamTrackProc::ComputeZOffset(const ZOffsetInput& cfg) const
+{
+	return fDriftToZOffsetPar->ComputeZOffset(cfg);
+}
+*/
+
+
+
+
+//***********************************************************
+// Projiziere auf Fokalebene
+void TQClamTrackProc::DoProjection(TQClamTrackEvent* evt)
+{
+	evt->proj_position = fFocalPlanePar->Project(evt->posAtX1, evt->dirAtX1);
+
+	double r = std::sqrt(evt->dirAtX1.X()*evt->dirAtX1.X() + evt->dirAtX1.Y()*evt->dirAtX1.Y() + evt->dirAtX1.Z()*evt->dirAtX1.Z());
+	
+	/*
+	evt->proj_phi_rad = std::atan2(evt->dirAtX1.Y(), evt->dirAtX1.X());
+	evt->proj_theta_rad = std::acos(evt->dirAtX1.Z() / r);
+
+	evt->proj_phi_deg = evt->proj_phi_rad * 180/M_PI;
+	evt->proj_theta_deg = evt->proj_theta_rad * 180/M_PI;
+	*/
+
+	evt->focalPlaneX = evt->proj_position.X();
+	evt->focalPlaneY = evt->proj_position.Y();
+	evt->focalPlaneZ = evt->proj_position.Z();
+
+
+
+	/*
+	TGo4Log::Info("X1: x=%f, z=%f | dir=(%f,%f,%f) | proj_x=%f, proj_z=%f",
+	              evt->posAtX1.X(), evt->posAtX1.Z(),
+	              evt->dirAtX1.X(), evt->dirAtX1.Y(), evt->dirAtX1.Z(),
+	              evt->proj_position.X(), evt->proj_position.Z());
+	*/
+}
+
+
+//***********************************************************
+// Histogramme
+//***********************************************************
+
+
+
+//***********************************************************
+// Fuelle Histogramme
+void TQClamTrackProc::FillHistograms(const TQClamTrackEvent* evt)
+{
+	fHXSpectrumX1Plane->Fill(evt->posAtX1.X());
+	fHYSpectrumX1Plane->Fill(evt->posAtX1.Y());
+	fHXSpectrumX2Plane->Fill(evt->xD_X2);
+	fHUSpectrum->Fill(evt->uD);
+	fHPhiSpectrum->Fill(evt->phi * 180./M_PI);
+	fHThetaSpectrum->Fill(evt->theta * 180./M_PI);
+
+	fHX1VsPhi->Fill(evt->phi * 180./M_PI, evt->posAtX1.X());
+
+	fHProjSpectrum->Fill(evt->proj_position.X());
+}
+
+
+
+
+// TODO
+/*
+IntersectionInput MakeSimpleInput(const LayerRawData& L)
+{
+    IntersectionInput in;
+
+    in.layerID = L.layerID;
+    in.type = L.type;
+
+    in.hasVShape = L.hasVShape;
+    in.hasGaps = L.hasGaps;
+    in.isAscending = L.isAscending;
+    in.isDescending = L.isDescending;
+
+    in.nHits = L.nHits;
+    in.normalWireDist = L.normalWireDist;
+
+    in.normalCoords = L.normalCoords;
+    in.drifttimes = L.drifttimes;
+
+    // hier FIRST GUESS nehmen:
+    in.zOffsets = L.drifttimes; // oder besser: vorher ComputeZOffset!
+
+    return in;
+}
+*/

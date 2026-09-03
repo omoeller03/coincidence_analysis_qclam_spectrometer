@@ -1,0 +1,23 @@
+condition:
+
+  # brauche fuer Hiterzeugung Tdc-Trigger?
+  needTdcTrigger: true
+
+  # Leading <-> Trailing (?)
+  invertSignalEdges: false
+
+
+
+  # welche Trigger fuer Event-Erzeugung noetig?
+  # nur wenn Bedingungen erfuellt werden erzeugte Hits an ClustreProzessor weitergereicht
+  # sonst: naechstes Event --> Hit-Erzeuggung ... 
+  needSzintPmtUp: false
+  needSzintPmtDown: false
+  needCherenkovPmt: false
+  needCoincidenceTrigger: false
+  needAcceptedTrigger: true
+  needClockCounter: false
+  needLivetime: false
+  needMbsLivetime: false
+  needFaradayCupChargeCounter: false
+

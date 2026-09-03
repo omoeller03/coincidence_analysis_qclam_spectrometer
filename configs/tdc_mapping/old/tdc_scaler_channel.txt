@@ -1,0 +1,13 @@
+# Scaler-Kanaele in den TDCs
+# <scaler>=<tdcID>,<kanal>
+
+SzintPMTUp=0,1
+SzintPMTDown=0,2
+CherenkovPMT=0,3
+QCLAMTrigger=0,4
+AcceptedTrigger=0,5
+Clock=0,6
+Deadtime=0,7
+MBSDeadtime=0,8
+FaradayCupChargeCounter=0,9
+

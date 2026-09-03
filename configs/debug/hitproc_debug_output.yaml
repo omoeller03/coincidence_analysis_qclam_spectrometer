@@ -1,0 +1,6 @@
+debug:
+  # schreibe fuer Debug Rohdaten / verarbeitet Daten (von HitProc) in ein file (ASCII)
+  WriteRaw: false
+  WriteProcessed: false
+  OutputFileRaw: "debug_output_raw.txt"
+  OutputFileProcessed: "debug_outpt_processed.txt"

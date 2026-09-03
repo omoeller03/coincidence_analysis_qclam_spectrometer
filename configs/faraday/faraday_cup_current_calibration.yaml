@@ -1,0 +1,4 @@
+faraday_cup:
+  invert: true
+  scalefactorCurrent: 1000
+  offsetCurrent: 0

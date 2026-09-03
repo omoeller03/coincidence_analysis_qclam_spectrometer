@@ -1,0 +1,31 @@
+correction:
+
+  # verwende time-walk korrigierte driftzeiten?
+  use_timewalk_corrected_drifttime: true
+
+  # nutze input-files mit draht-spezifischen time-walk korrekturen
+  use_wire_specific_timewalk: true
+  files:
+    0: "calibration_files/time_walk/time_walk_corrections_X1.txt"
+    1: "calibration_files/time_walk/time_walk_corrections_U.txt"
+    2: "calibration_files/time_walk/time_walk_corrections_X2.txt"
+
+  ###
+  # FALLS: keine timewalk-files verwenden:
+  #
+  #
+  # referenzzeit/ns, auf die der Peak im Driftzeitspektrum geschoben werden soll
+  tref: 38.0 #52.8 #10.0
+
+  # Parameter der FitFunktion drifttime_corr(tot) = p0 + p1*tot + p2*tot*tot + p3*tot*tot*tot - tref
+  # Funktion wird angefittet an die Maxima aus dem geschnittetenen (Go4-Condition) DrifttimeVsToT-Plot
+  # mit dieser Funktion werden dann alle driftzeit-werte gemappt und dadurch "gerade" gezogen
+  # 
+  # Ein Fit an einen DrifttimeVsToT-Plot kann mit makros/timewalkcorr.C durchgefuehrt
+  p0: 37.8757
+
+  p1: 0.229135
+
+  p2: 0.00857005
+
+  p3: -1.39073e-7

@@ -1,0 +1,55 @@
+// fuer jede Monitorklasse gibt es folgende Config-Parameter:
+
+/// i) Monitoring: Soll Monitorklasse laufen -> true/false
+// --> FastMonitoring billig, SlowMonitoring weniger, BatchMonitoring teuer, da mit Analysen
+
+/// ii) Fast-/SlowProcessInterval: Jedes wievielte Event soll in Histogramm geschrieben werden
+// --> jedes n-te Event wird zu Histogramm hinzugefuegt --> alle anderen werden fuer Monitoring nicht verwendet
+// --> reduziere speicherplatz und v.a. Aufwand zu abspeichern (Rechenaktionen...)
+// ----> fuer FastMonitoring muss nichts verworfen werden
+// ----> fuer SlowMonitoring kann was verworfen werden
+
+/// iii) BatchCollectInterval: Wie viele Events werden gebuffert
+// --> 'BatchCollectInterval'-viele gebufferte Events werden gemeinsam ausgewertet
+// und in Histogramm geschrieben
+// --> (nur) hier werden Events gebuffert, da in BatchMonitoring kleine Analysen/Rechnungen/Iterationen
+// druchgefuerht werden
+
+/// iv) WriteInterval: Nach wie vielen HistogrammUpdates sollen TFiles geupdatet werden
+// --> schreibe (mit Events) geupdatete Histogramme in TFile
+// --> BatchMonitoring: 'WriteInterval' oft buffern und Histogramm updaten --> dann in File schreiben
+// --> Fast-/SlowMonitoring: 'WriteInterval' oft Histogramm updaten --> dann in File schreiben
+// --> WriteInterval = 0 --> schreibe nur am Ende --> nur sinnvoll bei offline-analysen
+// ----> schreiben in File ist teuer, da Prozess auf Festplatte
+// ----> schreiben in Histogramm ist schnell, da Prozess auf RAM
+
+
+enableFast=true
+fast.processInterval=1
+fast.writeIntervalEvents=1000
+fast.writeIntervalSeconds=30.
+fast.directoryName=FastMonitoring
+fast.enableHitMaps=true
+fast.enableTrackCount=true
+fast.enableDriftTimes=true
+
+enableSlow=false
+slow.processInterval=1
+slow.writeIntervalEvents=10000
+slow.writeIntervalSeconds=10.
+slow.directoryName=SlowMonitoring
+slow.enableDriftTimes=true
+slow.enableResiduals=false
+slow.enableLayerHistograms=true
+
+enableBatch=false
+batch.collectInterval=1
+batch.writeIntervalEvents=10
+batch.writeIntervalSeconds=10.
+batch.directoryName=BatchMonitoring
+batch.enableDriftTimes=true
+batch.enableRawDriftLengths=true
+batch.enableCorrDriftLengths=false
+batch.enableTrackChi2=false
+batch.enableTOT=false
+

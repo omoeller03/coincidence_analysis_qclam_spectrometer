@@ -1,0 +1,92 @@
+# Laengen in mm
+# Winkel in °
+
+driftcham:
+  id: 3
+  generation: "Third Generation"
+
+
+  # drahtebenen definieren
+  planes:
+    - name: "X1"
+      id: 0
+      z_pos: 0.0 # 0.0 = correct
+      x_offset: 0.0 # 0.0 = correct
+      y_offset: 0.0
+      x_length: 960.0
+      y_length: 80.0
+      wire_dist: 3.0
+      angle_deg: 0.0 #----- winkel draht zur y-achse
+      n_wires: 320
+
+    - name: "U"
+      id: 1
+      z_pos: 24.0 #27.7
+      x_offset: 27.7
+      y_offset: 0.0
+      x_length: 960.0
+      y_length: 80.0
+      wire_dist: 3.0 #03.35220115432
+      angle_deg: 26.5
+      n_wires: 256
+
+    - name: "X2"
+      id: 2
+      z_pos: 97.3 # 97.3 = correc
+      x_offset: 88.0 # 88.0 = correct zuvor 73
+      y_offset: 0.0
+      x_length: 960.0
+      y_length: 8.0
+      wire_dist: 3.0
+      angle_deg: 0.0
+      n_wires: 320
+
+#Driftkammer_ID=3
+#Driftkammer_Generation=3gen
+#nWirePlanes=3
+
+#Plane0_Prefix=X1
+#Plane1_Prefix=U
+#Plane2_Prefix=X2
+
+# X1
+#X1_zKoor=0.0
+#X1_x0=0
+#X1_y0=0
+#X1_xLength=96.0
+#X1_yLength=8.0
+#// x-Abstand benachbarter X-Draehte
+#X1_DrahtDist=0.30
+#// Winkel der Draehte zur y-Achse in der x-y-Ebene
+#X1_ang=0
+#X1_nD=320
+#X1_ID=0
+
+
+
+# U
+#U_zKoor=2.4
+#U_x0=2.77
+#U_y0=0
+#U_xLength=96.0
+#U_yLength=8.0
+#// x-Abstand benachbarter U-Draehte
+#U_DrahtDist=0.335220115432
+#U_ang=26.5
+#U_nD=256
+#U_ID=1
+
+
+
+# X2
+#X2_zKoor=9.73
+#X2_x0=8.8
+#X2_y0=0
+#X2_xLength=96.0
+#X2_yLength=8.0
+#X2_DrahtDist=0.30
+#X2_ang=0
+#X2_nD=320
+#X2_ID=2
+
+

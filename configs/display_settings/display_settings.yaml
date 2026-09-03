@@ -1,0 +1,7 @@
+display_settings:
+  #--------------------------------------------
+  # Histogramme und Grpahen HitProcessor
+
+  # Rolling Graph: FaradayCupCurrent/SzintPmtUp/SzintPmtDown/... (Trigger)
+  # Anzahl an Events, die integriert werden sollen, bis der Grpah geupdatet wird
+  RollingGraph_TriggerIntegrationWindow: 50

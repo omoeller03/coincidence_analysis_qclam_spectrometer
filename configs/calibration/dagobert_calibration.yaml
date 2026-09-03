@@ -1,0 +1,271 @@
+calibration:
+  # Kalibrierfunktion: E(ch) = a + b*ch + c*ch*ch + d*ch*ch*ch + e*ch*ch*ch*ch + f*ch*ch*ch*ch*ch
+  # Energie in MeV
+
+
+  # Fenster-Grenzen fuer Prompt (Koinzidenz-Peak)
+  min_bound_coinc_time_wind_LaBr0: -5.
+  min_bound_coinc_time_wind_LaBr1: -5.
+  min_bound_coinc_time_wind_LaBr2: -5.
+  min_bound_coinc_time_wind_LaBr3: -5.
+  min_bound_coinc_time_wind_LaBr4: -5.
+  min_bound_coinc_time_wind_LaBr5: -5.
+  min_bound_coinc_time_wind_LaBr6: -5.
+  min_bound_coinc_time_wind_LaBr7: -5.
+  min_bound_coinc_time_wind_LaBr8: -5.
+
+  max_bound_coinc_time_wind_LaBr0: 5.
+  max_bound_coinc_time_wind_LaBr1: 5.
+  max_bound_coinc_time_wind_LaBr2: 5.
+  max_bound_coinc_time_wind_LaBr3: 5.
+  max_bound_coinc_time_wind_LaBr4: 5.
+  max_bound_coinc_time_wind_LaBr5: 5.
+  max_bound_coinc_time_wind_LaBr6: 5.
+  max_bound_coinc_time_wind_LaBr7: 5.
+  max_bound_coinc_time_wind_LaBr8: 5.
+
+
+  do_rate_corr: true
+  do_timewalk_corr: true
+  do_tof_corr: true
+
+
+  energy_calibration:
+    
+    # detektor 0 -> Tower1, unten (mod 0 ch 8 -> 8)
+    detector_0:
+      a: 0.011202531583826669 #0.00692377
+      b: 5.7554267184047265e-05 #5.17906e-05
+      c: 6.0736023781174507e-12 #-4.14835e-13
+      d: 0. #7.97351e-18
+      e: 0.
+      f: 0.
+
+    # detektor 1 -> Tower1, mitte (mod 0 ch 9 -> 9)
+    detector_1:
+      a: 0.011689542425433075 #0.0347513
+      b: 5.3410192482702024e-05 #6.48094e-05
+      c: -1.3388816469561515e-11 #1.19139e-10
+      d: 0. #-6.9096e-16
+      e: 0.
+      f: 0.
+
+    # detektor 2 -> Tower1, oben (mod 0 ch 10 -> 10)
+    detector_2:
+      a: 0.0061570159444777062 #0.00222419
+      b: 5.3643042690553052e-05 #5.67635e-05
+      c: 3.3406665199076445e-12 #-1.41098e-11
+      d: 0. #6.64762e-17
+      e: 0.
+      f: 0.
+
+    # detektor 3 -> Tower2, unten (mod 0 ch 11 -> 11)
+    detector_3:
+      a: 0.023002357479068536 #0.00336067
+      b: 5.7816432919487941e-05 #5.75128e-05
+      c: -5.3379353140419191e-12 #-4.01562e-11
+      d: 0. #1.52107e-16
+      e: 0.
+      f: 0.
+
+    # detektor 4 -> Tower2 -> mitte (mod 0 ch 12 -> 12)
+    detector_4:
+      a: 0.026552168319748048 #1.83537e-05
+      b: 5.4550738060602866e-05 #6.14747e-05
+      c: 2.297852447152651e-12 #-5.90791e-11
+      d: 0. #2.75743e-16
+      e: 0.
+      f: 0.
+
+    # detektor 5 -> Tower2 -> oben (mod 0 ch 13 -> 13
+    detector_5:
+      a: 0.018000090968371296 #0.250524
+      b: 6.3372736886791511e-05 #1.78965e-05
+      c: -2.0616026134470199e-11 #1.71253e-10
+      d: 0. #-6.51292e-17
+      e: 0.
+      f: 0.
+
+    # detektor 6 -> Tower3 -> unten (mod 1 ch 8 -> 24)
+    detector_6:
+      a: 0.0093310293702124625 #0.00815476
+      b: 5.7038569466770538e-05 #8.56145e-05
+      c: -1.23693075619125e-11 #-5.49084e-11
+      d: 0. #1.90051e-16
+      e: 0.
+      f: 0.
+
+    # detektor 7 -> Tower3 -> mitte (mod 1 ch 9 -> 25)
+    detector_7:
+      a: 0.016690604984953339 #0.0169532
+      b: 5.8307375092882274e-05 #4.27308e-05
+      c: 2.7677380330973124e-11 #1.70378e-11
+      d: 0. #-2.09392e-18
+      e: 0.
+      f: 0.
+
+    # detektor 8 -> Tower3, oben (mod 1 ch 10 -> 26)
+    detector_8:
+      a: 0.014187655631321405 #0.00272176
+      b: 6.2385504617596061e-05 #6.25957e-05
+      c: 1.5699188242065596e-11 #-4.31148e-11
+      d: 0. #1.7414e-16
+      e: 0.
+      f: 0.
+
+    # detektor 9 -> Vorwaertswinkel (mod 1 ch 11 -> 27)
+    detector_9:
+      a: 0.012576112129826456 #0.019322
+      b: 7.7004814156953426e-05 #5.65363e-05
+      c: -1.4751157095010731e-12 #-1.25869e-11
+      d: 0. #5.59452e-17
+      e: 0.
+      f: 0.
+
+
+  rate_correction:
+
+    # detektor 0 -> Tower1, unten (mod 0 ch 8 -> 8)
+    detector_0:
+      p0: 1.3820759747927764e-07
+      p1: 0.90786041938078699
+      p2: 0.
+      p3: 0.
+
+    # detektor 1 -> Tower1, mitte (mod 0 ch 9 -> 9)
+    detector_1:
+      p0: 5.4401572145230233e-08
+      p1: 1.1800124114656945
+      p2: 0.
+      p3: 0.
+
+    # detektor 2 -> Tower1, oben (mod 0 ch 10 -> 10)
+    detector_2:
+      p0: 7.7797257044473529e-08
+      p1: 0.98277799771920482
+      p2: 0.
+      p3: 0.
+
+    # detektor 3 -> Tower2, unten (mod 0 ch 11 -> 11)
+    detector_3:
+      p0: 1.5571930828276494e-08
+      p1: 0.99297113662133685
+      p2: 0.
+      p3: 0.
+
+    # detektor 4 -> Tower2 -> mitte (mod 0 ch 12 -> 12)
+    detector_4:
+      p0: -1.5090109465251378e-08
+      p1: 1.0595383304392414
+      p2: 0.
+      p3: 0.
+
+    # detektor 5 -> Tower2 -> oben (mod 0 ch 13 -> 13
+    detector_5:
+      p0: 5.5129927076408021e-08
+      p1: 0.82727940944485834
+      p2: 0.
+      p3: 0.
+
+    # detektor 6 -> Tower3 -> unten (mod 1 ch 8 -> 24)
+    detector_6:
+      p0: 5.7065680908623949e-08
+      p1: 1.4813888587847639
+      p2: 0.
+      p3: 0.
+
+    # detektor 7 -> Tower3 -> mitte (mod 1 ch 9 -> 25)
+    detector_7:
+      p0: 1.2725381908399871e-07
+      p1: 0.76039190391803169
+      p2: 0.
+      p3: 0.
+
+    # detektor 8 -> Tower3, oben (mod 1 ch 10 -> 26)
+    detector_8:
+      p0: 6.7430964827698128e-08
+      p1: 1.2775722542776122
+      p2: 0.
+      p3: 0.
+
+    # detektor 9 -> Vorwaertswinkel (mod 1 ch 11 -> 27)
+    detector_9:
+      p0: 1.9984701408602805e-07
+      p1: 1.0062530385026658
+      p2: 0.
+      p3: 0.
+
+
+  timewalk_correction:
+
+    detector_0:
+      c: 2.2656597541871273
+      E1: 0.13330940537127531
+      E2: -0.037313682506871546
+
+    detector_1:
+      c: -0.35807498127251453
+      E1: -0.078776766899216769
+      E2: 0.00047195700972865512
+
+    detector_2:
+      c: -3.0452257450666256
+      E1: -0.10944224906394472
+      E2: 0.0070713389557591566
+
+    detector_3:
+      c: -2.2136966906090749
+      E1: -0.18650863531195494
+      E2: 0.0071549119545220368
+
+    detector_4:
+      c: -0.48392240578910545
+      E1: 0.052040155946900798
+      E2: -0.029534181916965867
+
+    detector_5:
+      c: -2.3096937510916051
+      E1: -0.059838431781174109
+      E2: -0.010122412306076549
+
+    detector_6:
+      c: -2.5564273065548937
+      E1: 0.0017611666741926047
+      E2: -0.013611712312118928
+
+    detector_7:
+      c: -9.5428728957965099
+      E1: -0.17232943878004747
+      E2: -0.0065312801165320136
+
+    detector_8:
+      c: -4.0423461132895158
+      E1: -0.12939284951211719
+      E2: 0.0097750321513946758
+
+    detector_9:
+      c: 0.
+      E1: 0.
+      E2: 0.
+
+
+  # =======================================
+  # Elektronen ToF Korrektur
+  # =======================================
+  tof_correction:
+    c: -26.897910065841867
+    x1: -0.0041456288157222104
+    phi1: 0.22494651479232955
+    phi2: -0.0016928020916205518
+    x1phi1: -3.5144244797357252e-05
+    x2: 0.0
+    phi3: 0.0
+    x1phi2: 2.2647402885263585e-07
+    x2phi1: -4.4202289034916396e-09
+    x3: 0.0
+    phi4: 0.0
+    x2phi2: 1.8333156727133805e-10
+
+
+
+

@@ -1,0 +1,36 @@
+# --- ClusterBuilder
+// min drahtspanne cluster (nicht jeder draht zw. muss feuern) (int)
+ClusterParams.0.minClusterWidth=2
+// max drahtspanne cluster (int)
+ClusterParams.0.maxClusterWidth=20
+// min Hitanzahl cluster (int)
+ClusterParams.0.minHitNumberInCluster=2
+// max Hitanzahl cluster (int)
+ClusterParams.0.maxHitNumberInCluster=20
+// maximale Driftzeit pro Hit (double)
+ClusterParams.0.maxDriftTime=300.0
+// VShape prüfen? (bool)
+ClusterParams.0.requireVShape=true
+
+ClusterParams.1.minClusterWidth=2
+ClusterParams.1.maxClusterWidth=20
+ClusterParams.1.minHitNumberInCluster=2
+ClusterParams.1.maxHitNumberInCluster=20
+ClusterParams.1.maxDriftTime=300.0
+ClusterParams.1.requireVShape=true
+
+ClusterParams.2.minClusterWidth=2
+ClusterParams.2.maxClusterWidth=20
+ClusterParams.2.minHitNumberInCluster=2
+ClusterParams.2.maxHitNumberInCluster=20
+ClusterParams.2.maxDriftTime=300.0
+ClusterParams.2.requireVShape=true
+
+#ClusterParams.3.minClusterWidth=
+#ClusterParams.3.maxClusterWidth=
+#ClusterParams.3.minHitNumberInCluster=
+#ClusterParams.3.maxHitNumberInCluster=
+#ClusterParams.3.maxDriftTime= 
+#ClusterParams.3.requireVShape=
+
+

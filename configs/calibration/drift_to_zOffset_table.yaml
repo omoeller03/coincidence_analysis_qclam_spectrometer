@@ -1,0 +1,42 @@
+table:
+
+
+  # correction_type: 
+  # 0 -> nehme txt-tabelle, wie sie von QCLAMon erzeugt wird
+  # 1 -> nehme mit Garfield++ simulierte Tabelle
+  type: 0
+
+  # suche zOffset fuer (drifttime,phi)
+  # 0 -> nearest neighbour
+  # 1 -> slice-linear interpolation
+  # 2 -> slice-linear safe interpolation
+  # 3 -> bilinear interpolation TODO
+  # 4 -> bicubic interpolation TODO
+  # 5 -> spline TODO
+  interpolation_mode: 5
+
+  # '/' am ende!
+  #folder: "/d/d04-1/ag_pi/spektrometer/QCLAM/tracking-data/driftwegkorrekturen/txt/"
+
+  folder: "/home/qclam/user/oskar/tracking_go4/comm_beamtime_2026/go4analyseqclam/calibration_files/driftlength_relation/"
+
+  #folder: "/home/qclam/user/oskar/tracking_go4/comm_beamtime_2026/go4analyseqclam/calibration_files/driftlength_relation/extrapolated_driftlength_relation/"
+  #folder: "/home/qclam/user/oskar/tracking_go4/comm_beamtime_2026/go4analyseqclam/calibration_files/driftlength_relation/interpolate_simulation_to_measurement/improved/"
+
+
+
+  files_txt:
+    # ebenen_id: file in ordner 'folder'
+    0: "driftlength_relation_X1.txt"
+    
+    1: "driftlength_relation_U.txt"
+
+    2: "driftlength_relation_X2.txt"
+
+
+  files_sim:
+    0: "Driftkorrekturen_DriftkammerGen_3_Ar_80.000000_CO2_20.000000_O2_0.000000_HV_-4300.000000_AnzahlSimDraehte_10_AnzahlSimulierterWinkel_451_AnzahlSimulierterDatenProWinkel_91441.root"
+
+    1: "Driftkorrekturen_DriftkammerGen_3_Ar_80.000000_CO2_20.000000_O2_0.000000_HV_-4300.000000_AnzahlSimDraehte_10_AnzahlSimulierterWinkel_451_AnzahlSimulierterDatenProWinkel_91441.root"
+
+    2: "Driftkorrekturen_DriftkammerGen_3_Ar_80.000000_CO2_20.000000_O2_0.000000_HV_-4300.000000_AnzahlSimDraehte_10_AnzahlSimulierterWinkel_451_AnzahlSimulierterDatenProWinkel_91441.root"

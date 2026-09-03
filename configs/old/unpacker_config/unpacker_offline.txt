@@ -1,0 +1,10 @@
+# --- offline-unpacker ---
+
+InputType = offline
+InputFile = data/run...dat
+
+HeaderSize = 
+WordSize = 
+SwapEndian = 
+ClockFrequency = 
+TDCResolution =

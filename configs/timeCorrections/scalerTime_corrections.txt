@@ -1,0 +1,24 @@
+# Scalerzeit-Korrekturen
+
+# <name>=<offset>
+# gerhart:
+#GlobalOffset=-200
+# bastian:
+GlobalOffset=-800
+
+
+
+# <name>-<tdcID>=<offset>
+ScalerTDCOffset-0=0
+# <name>-<tdcID>,<Kanal>=<offset>
+ScalerChannelOffset-0,1=0
+ScalerChannelOffset-0,2=0
+ScalerChannelOffset-0,3=0
+ScalerChannelOffset-0,4=0
+ScalerChannelOffset-0,5=0
+ScalerChannelOffset-0,6=0
+ScalerChannelOffset-0,7=0
+ScalerChannelOffset-0,8=0
+ScalerChannelOffset-0,9=0
+# invertieren --> *(-1)
+invert=false

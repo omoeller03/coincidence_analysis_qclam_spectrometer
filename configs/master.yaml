@@ -1,0 +1,33 @@
+configs:
+  source: "configs/source/source_modi_and_files.yaml"
+  geometry: "configs/geometry/geom_3gen.yaml"
+  tdc_mapping: "configs/tdc_mapping/tdc_mapping_leading_3gen_4x1.yaml"
+  trigger_mapping: "configs/tdc_mapping/trigger_3gen.yaml"
+  trigger_condition: "configs/trigger_config/trigger_condition_4x1.yaml"
+  signal_edge: "configs/tdc_mapping/signal_edge_3gen.yaml"
+  drifttime: "configs/timeCorrections/drifttime_offsets_3gen.yaml"
+  time_walk_corr: "configs/timeCorrections/drifttime_timewalkcorr.yaml"
+  hit_condition: "configs/hit_config/hit_condition.yaml"
+  hitproc_debug_output: "configs/debug/hitproc_debug_output.yaml"
+  display_settings: "configs/display_settings/display_settings.yaml"
+  faraday_cup_current_calibration: "configs/faraday/faraday_cup_current_calibration.yaml"
+  cluster_condition: "configs/cluster_config/cluster_condition.yaml"
+  track_condition: "configs/track_config/track_condition.yaml"
+  drift_to_zOffset_table: "configs/calibration/drift_to_zOffset_table.yaml"
+  focal_plane: "configs/geometry/focal_plane.yaml"
+  spectrum_fit: "configs/calibration/spectrum_fit.yaml"
+  spectrum_calibration: "configs/calibration/spectrum_calibration.yaml"
+  drifttime_calibration: "configs/calibration/drifttime_offset_calibration.yaml"
+  unpack_config: "configs/unpacker/unpack_config.yaml"
+
+
+  tcp_connection: "configs/tcp/tcp_connection.yaml"
+  dagobert_calibration: "configs/calibration/dagobert_calibration.yaml"
+
+  store: "configs/store/store.yaml"
+  histogram_filling: "configs/display_settings/histogram_filling.yaml"
+
+
+# konfigurierbar:
+# aktivieren/deaktivieren von stores (nach bau von stores)
+# aktivieren/deaktivieren von histogrammen ... hmm vllt nicht?

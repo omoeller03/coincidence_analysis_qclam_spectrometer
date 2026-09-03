@@ -1,0 +1,23 @@
+# Scaler-Kanaele in den TDCs
+# <scaler>=<tdcID>,<kanal>
+
+SzintPMTUp_Lead=0,1
+SzintPMTDown_Lead=0,2
+CherenkovPMT_Lead=0,3
+QCLAMTrigger_Lead=0,4
+AcceptedTrigger_Lead=0,5
+Clock_Lead=0,6
+Deadtime_Lead=0,7
+MBSDeadtime_Lead=0,8
+FaradayCupChargeCounter_Lead=0,9
+
+SzintPMTUp_Trail=0,1
+SzintPMTDown_Trail=0,2
+CherenkovPMT_Trail=0,3
+QCLAMTrigger_Trail=0,4
+AcceptedTrigger_Trail=0,5
+Clock_Trail=0,6
+Deadtime_Trail=0,7
+MBSDeadtime_Trail=0,8
+FaradayCupChargeCounter_Trail=0,9
+

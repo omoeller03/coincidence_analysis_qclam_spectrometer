@@ -1,0 +1,9 @@
+# --- Old Unpacker ---
+InputType = old
+InputFile = data/...
+
+
+HeaderSize = 
+WordSize = 
+SwapEndian = 
+ChannelOffset = 

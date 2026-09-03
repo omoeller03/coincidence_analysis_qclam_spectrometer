@@ -1,0 +1,342 @@
+source:
+  
+
+
+  # fuer filelists
+  file_directory: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+  store_directory: "/home/qclam/user/oskar/store/"
+
+
+
+
+
+  # SourceType:
+  # 0 --> TQClamOfflineRootSource (lese entpackte Root-Files) ----------------- Nur moeglich falls QCLAM_SINGLE_ROOT
+  # 1 --> TQClamOfflineLmdSource (lese Lmd-Files) ----------------------------- Nur moeglich falls QCLAM_SINGLE
+  # 2 --> TQClamMbsStreamSource oder so (MbsStream, online-Analyse) ----------- Nur moeglich falls QCLAM_SINGLE
+  # 3 --> TQClamDagobertOfflineLmdSource (lese Lmd-Files) --------------------- Nur moeglich falls QCLAM_DAGOBERT
+  # 4 --> TQClamDagobertMbsStreamSource oder so (MbsStream, online-Analyse) --- Nur moeglich falls QCLAM_DAGOBERT
+  source_type: 3
+
+  # Stream-Server fuer MbsStream
+  StreamServer: "LIPC-5"
+
+  # fuer QCLAM_SINGLE wie fuer QCLAM_DAGOBERT:
+  #
+  #
+  # fuer OFFLINE_LMD Daten --> hier keine ROOT_FILES
+  # aktuell koennen bis zu 100 files uebergeben werden. falls mehr uebergeben werden sollen,
+  # so in include/TQClamConstants.h 'QCLAM_MAX_FILES' anpassen
+
+
+  # filesource_lmd
+  # benutzung:
+  # 
+  # filename:
+  # <prefix>_<3stellig_filenummer>_<4stellig_runnummer>.lmd
+  #
+  # 1. entweder:
+  # - folder: "<folder>"
+  #   use: true/false
+  #   prefix: "<prefix>
+  #   runs:
+  #     - <runnummer_1>
+  #     - <runnummer_2>
+  #     ...
+  #
+  # 2. oder:
+  # - folder: "<folder>"
+  #   use: true/false
+  #   files:
+  #     0: "kompletten filename angeben"
+  filesource_lmd:
+
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 179
+
+
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 146
+        - 147
+        - 148
+        - 149
+        - 150
+        - 151
+        - 152
+        - 153
+        - 154
+        - 155
+        - 156
+        - 157
+        - 158
+        - 159
+        - 160
+        - 161
+        - 162
+        - 163
+        - 164
+        - 165
+        - 166
+        - 167
+        - 168
+        - 169
+        - 170
+
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: true
+      prefix: "qclam_dago"
+      runs:
+        - 95
+
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 80
+        - 81
+        - 82
+        - 83
+        - 84
+        - 85
+        - 86
+        - 87
+        - 88
+        - 89
+        - 90
+        - 91
+        
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 113
+        - 114
+        - 115
+        - 116
+        - 117
+        - 118
+        - 119
+        - 120
+     
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 121
+        - 122
+        - 123
+        - 124
+        - 125
+        - 126
+        - 127
+        - 128
+        - 129
+        - 130
+     
+
+
+    - folder: "/d/d02-1/ag_vnc/QCLAM/DAQ_tests_4x1_system/"
+      use: false
+      prefix: "threhsold_test"
+      runs:
+        - 4
+
+
+
+
+
+
+
+    - folder: "/d/d02-1/ag_vnc/QCLAM/DAQ_tests_4x1_system/"
+      use: false
+      files: 
+        0: "cosmics_039_0000.lmd"
+        1: "cosmics_039_0001.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files: 
+        0: "qclam_dago_850_0000.lmd"
+        1: "qclam_dago_850_0001.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files: 
+        0: "qclam_dago_675_0000.lmd"
+        1: "qclam_dago_675_0001.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/" # single_pass, 19. MeV
+      use: false
+      files: 
+        0: "qclam_dago_524_0000.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files: 
+        0: "qclam_dago_726_0000.lmd"
+        1: "qclam_dago_726_0001.lmd"
+        2: "qclam_dago_726_0002.lmd"
+        3: "qclam_dago_726_0003.lmd"
+        4: "qclam_dago_726_0004.lmd"
+        5: "qclam_dago_726_0005.lmd"
+        6: "qclam_dago_726_0006.lmd"
+        7: "qclam_dago_726_0007.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_591_0000.lmd"
+        1: "qclam_dago_591_0001.lmd"
+        2: "qclam_dago_591_0002.lmd"
+        3: "qclam_dago_591_0003.lmd"
+        4: "qclam_dago_591_0004.lmd"
+        5: "qclam_dago_591_0005.lmd"
+        6: "qclam_dago_591_0006.lmd"
+        7: "qclam_dago_591_0007.lmd"
+        8: "qclam_dago_591_0008.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_592_0000.lmd"
+        1: "qclam_dago_592_0001.lmd"
+        2: "qclam_dago_592_0002.lmd"
+        3: "qclam_dago_592_0003.lmd"
+        4: "qclam_dago_592_0004.lmd"
+        5: "qclam_dago_592_0005.lmd"
+        6: "qclam_dago_592_0006.lmd"
+        7: "qclam_dago_592_0007.lmd"
+        8: "qclam_dago_592_0008.lmd"
+        9: "qclam_dago_592_0009.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_593_0000.lmd"
+        1: "qclam_dago_593_0001.lmd"
+        2: "qclam_dago_593_0002.lmd"
+        3: "qclam_dago_593_0003.lmd"
+        4: "qclam_dago_593_0004.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_594_0000.lmd"
+        1: "qclam_dago_594_0001.lmd"
+        2: "qclam_dago_594_0002.lmd"
+        3: "qclam_dago_594_0003.lmd"
+        4: "qclam_dago_594_0004.lmd"
+        5: "qclam_dago_594_0005.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_595_0000.lmd"
+        1: "qclam_dago_595_0001.lmd"
+        2: "qclam_dago_595_0002.lmd"
+        3: "qclam_dago_595_0003.lmd"
+        4: "qclam_dago_595_0004.lmd"
+        5: "qclam_dago_595_0005.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_596_0000.lmd"
+        1: "qclam_dago_596_0001.lmd"
+        2: "qclam_dago_596_0002.lmd"
+        3: "qclam_dago_596_0003.lmd"
+        4: "qclam_dago_596_0004.lmd"
+        5: "qclam_dago_596_0005.lmd"
+        6: "qclam_dago_596_0006.lmd"
+        7: "qclam_dago_596_0007.lmd"
+        8: "qclam_dago_596_0008.lmd"
+        9: "qclam_dago_596_0009.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_597_0000.lmd"
+        1: "qclam_dago_597_0001.lmd"
+        2: "qclam_dago_597_0002.lmd"
+        3: "qclam_dago_597_0003.lmd"
+        4: "qclam_dago_597_0004.lmd"
+        5: "qclam_dago_597_0005.lmd"
+        6: "qclam_dago_597_0006.lmd"
+        7: "qclam_dago_597_0007.lmd"
+        8: "qclam_dago_597_0008.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_598_0000.lmd"
+        1: "qclam_dago_598_0001.lmd"
+        2: "qclam_dago_598_0002.lmd"
+        3: "qclam_dago_598_0003.lmd"
+        4: "qclam_dago_598_0004.lmd"
+        5: "qclam_dago_598_0005.lmd"
+        6: "qclam_dago_598_0006.lmd"
+        7: "qclam_dago_598_0007.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_726_0000.lmd"
+        1: "qclam_dago_599_0001.lmd"
+        2: "qclam_dago_599_0002.lmd"
+        3: "qclam_dago_599_0003.lmd"
+        4: "qclam_dago_599_0004.lmd"
+        5: "qclam_dago_599_0005.lmd"
+        6: "qclam_dago_599_0006.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_600_0000.lmd"
+        1: "qclam_dago_600_0001.lmd"
+        2: "qclam_dago_600_0002.lmd"
+        3: "qclam_dago_600_0003.lmd"
+        4: "qclam_dago_600_0004.lmd"
+        5: "qclam_dago_600_0005.lmd"
+        6: "qclam_dago_600_0006.lmd"
+        7: "qclam_dago_600_0007.lmd"
+        8: "qclam_dago_600_0008.lmd"
+        9: "qclam_dago_600_0009.lmd"
+        10: "qclam_dago_600_00010.lmd"
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
+      use: false
+      files:
+        0: "qclam_dago_601_0000.lmd"
+        1: "qclam_dago_601_0001.lmd"
+        2: "qclam_dago_601_0002.lmd"
+        3: "qclam_dago_601_0003.lmd"
+        4: "qclam_dago_601_0004.lmd"
+        5: "qclam_dago_601_0005.lmd"
+        6: "qclam_dago_601_0006.lmd"
+    - folder: "/d/d02-1/ag_vnc/QCLAM/DAQ_tests_4x1_system/"
+      use: false
+      files:
+        0: "cosmics_015_0000.lmd"
+
+    # test gamma-rates
+    - folder: "/d/d01-3/ag_pi/eepg/raw_data/DAQ_tests/gamma/"
+      use: false
+      files:
+        0: "2026_calibration_039_0000.lmd"
+        1: "2026_calibration_039_0001.lmd"
+
+
+
+
+  # fuer OFFLINE_ROOT DATEN
+  #
+  # ---> HIER KEINE LMD-FILES
+  filesource:
+    - folder: "/d/d04-1/ag_pi/spektrometer/QCLAM/tracking-data/unpacked_qclam_data_for_testing/"
+      use: false
+      files:
+        #1: "qclam_dago_726_0000.root"
+        1: "qclam_dago_599_0000.root"
+    - folder:
+      use: false
+    - folder: # "/d/d04-1/ag_pi/spektrometer/QCLAM/tracking-data/unpacked_qclam_data_for_testing/4x1/"
+        use: false
+        #1: "noise2026_068_0000.root"
+

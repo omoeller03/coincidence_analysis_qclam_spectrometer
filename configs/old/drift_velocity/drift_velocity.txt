@@ -1,0 +1,12 @@
+#globale,
+
+#fuer verschiedene ebenen..
+#--> später fuer verschiedene ebenen moeglich --> damit verschiedene hv, gas 
+
+
+
+# bsp: 50 µm/ns (wird mit Driftzeit in ns verrechnet)
+# DriftVelocity-<layerID>=<v>
+DriftVelocity-0=0.007
+DriftVelocity-1=0.007
+DriftVelocity-2=0.007

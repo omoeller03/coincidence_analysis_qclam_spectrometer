@@ -1,0 +1,57 @@
+calibration:
+
+  # -- Zentrierung y-Spektrum um 0 --
+  # verschiebe u-Koordinaten um Ursprung, um y-Spektrum um 0 zu zentrieren
+  u_org: -78.0
+
+  # -- X-Phi Korrektur --
+  
+  # phi_lin(x) = a + b * x + c * x*x
+  # phi_korr(phi_meas, x) = phi_meas - phi(x)
+  a_phi_corr: 37.32796213447277
+  b_phi_corr: 0.012547570087870632
+  c_phi_corr: 0.
+
+
+  # x-phi korrektur, entkopplung
+  # x_corr(x,phi_corr) = sum a_i,j * x^i + phi_corr^j
+
+  # 0. Ordnung
+  a_0_0: 26.289138817198165 # a_0,0
+  # 1. Ordnung
+  a_1_0: 0.8890738908832313 # a_1,0
+  a_0_1: -4.0217114543550743 # a_0,1
+  a_1_1: 0.016908949041516456 # a_1,1
+  # 2. Ordnung
+  a_2_0: 8.4462609113895545e-05 # a_2,0
+  a_2_1: -1.3581755052894683e-05 # a_2,1
+  a_0_2: 0.053407240202225176 # a_0_2
+  a_1_2: -0.00024846883397186943 # a_1_2
+  a_2_2: 2.4082315611268304e-07 #a_2_2
+
+
+
+  # -- Energiekorrektur --
+  # E0 = Sollstrahlenergie 
+  # E(x_corr) = E0 * ( 1 + a + b * x_corr + c * x_corr * x_corr )
+
+  e0_corr: 22.0 #56.4 #25. #56.4. # # E0 (Soll-Strahlenergie --> anpassen)
+  eS_corr: 25. #65. # 23.4 #65. # 56.4 # E0 (Soll-Strahlenergie --> anpassen)
+
+  # 65 MeV 2025
+  #a_e_corr: 0.292313 #40.   # a
+  #b_e_corr: -0.000394464 #0.2   # b
+  #c_e_corr: 3.70613e-08 #0.01  # c
+
+  # 26.6 MeV 2026 (single pass)
+  a_e_corr: 0.344944   # a
+  b_e_corr: -0.000423447 #0.2   # b
+  c_e_corr: 5.38152e-08 #0.01  # c
+
+
+  # 19 MeV 2025 (single pass)
+  #a_e_corr: 0.300365   # a
+  #b_e_corr: -0.000422062 #0.2   # b
+  #c_e_corr: 5.51047e-08 #0.01  # c
+
+

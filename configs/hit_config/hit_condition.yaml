@@ -1,0 +1,49 @@
+### -- parameter fuer Gates/Fenster -- ###
+condition:
+
+## -- time-over-threshold fenster (ns) -- ##
+  minToT_ns:
+    0: 10 # fuer 1. Ebene
+    1: 10 # fuer 2. Ebene
+    2: 10 # fuer 3. Ebene
+  maxToT_ns:
+    0: 400
+    1: 400
+    2: 400
+
+## erzeuge aus ToT-Grenzen eine Go4Condition (Default: 'FlagOnly') ##
+  #------- Condition nicht nutzen (minToT_ns / max_ToT_ns irrelevant)
+  ToTCondMode_Off: false
+  #------- Setze in Event Flag (Event in Condition / nicht in Condition)
+  ToTCondMode_FlagOnly: false
+  #------- Events ausserhalb Condition werden nicht an naechste Processoren weitergegeben
+  ToTCondMode_Filter: true
+
+  
+## -- driftzeit fenster (ns) -- ##
+  minDrifttime_ns:
+    0: 0.
+    1: 0.
+    2: 0.
+  maxDrifttime_ns:
+    0: 350
+    1: 350
+    2: 350
+
+## erzeuge aus ToT-Grenzen eine Go4Condition (Default: 'FlagOnly') ##
+  #------- Condition nicht nutzen (minToT_ns / max_ToT_ns irrelevant)
+  DrifttimeCondMode_Off: false
+  #------- Setze in Event Flag (Event in Condition / nicht in Condition)
+  DrifttimeCondMode_FlagOnly: false
+  #------- Events ausserhalb Condition werden nicht an naechste Processoren weitergegeben
+  DrifttimeCondMode_Filter: true
+
+
+## -- bedingungen an hit -- ##
+  #------- analysiere nur hits mit tdc-trigger
+  requireTdcTrig: true
+  #------- analysiere nur hits mit leading zeit
+  requireLead: true
+  #------- analysiere nur hits mit trailing zeit
+  requireTrail: true
+

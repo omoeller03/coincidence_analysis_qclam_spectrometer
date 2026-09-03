@@ -1,0 +1,90 @@
+calibration:
+
+
+  # update interval in events fuer driftzeit fit
+  # --> am ende werden dann alle spektren noch einmal gefittet und die daten weggeschrieben
+  update_event_interval: 50000
+
+  # plotte jeden fit an die driftzeit-verteilung (je Draht)
+  do_plot_fit: true
+
+  num_wires:
+    0: 320
+    1: 256
+    2: 320
+
+  do_calibration:
+    any: false # soll ueberhaupt kalibriert/gefittet werden
+    0: true # wenn gefittet werden soll -> soll an X1 gefittet werden?
+    1: true # ... analog
+    2: true
+
+  use_fermi_dirac_fit: false
+  use_skewed_fit: true
+
+  ## parameter fuer fit an driftzeit-spektrum flanke (fermi-dirac plot)
+  # fit-funktion:
+  # f(t) = A / ( 1 + exp(-1 * (t - (t0 - tau)) / T ) )
+  #
+  start_amp: 100. # startwert: amplitude (normierung
+  start_t0: 10. # startwert: start flanke
+  start_tau: 2. # startwert: abstand t0 zu mitte flanke 
+  start_T: 2. # startwert: fermi-temperatur
+
+  # schranken fuer fit
+  min_amp: 10.
+  max_amp: 1.e9
+  min_t0: 0.1
+  max_t0: 100
+  min_tau: 0.001
+  max_tau: 50.
+  min_T: 0.
+  max_T: 50.
+
+
+  ## parameter fuer fit an gesamtes driftzeit-spektrum (skewed)
+  # fit-funktion:
+  # f(x) = skewed1(x) + skewed2(x)
+  #
+  # mit:
+  # skewed(x) = norm * exp_part(x) * erf_part(x)
+  #
+  # mit:
+  # norm = A / (sqrt(2 * pi) * sigma)
+  # exp_part(x) = exp( - ( (x-mu)*(x-mu) ) / (2*sigma*sigma) )
+  # erf_part(x) = erf( 1 + s * (x-mu) / (sqrt(2) * sigma) )
+
+  # startparameter skewed 0:
+  start_amp0: 1000.
+  start_mu0: 10.
+  start_sigma0: 10.
+  start_s0: 0.5
+
+  # startwerte skewed1
+  start_amp1: 1000.
+  start_mu1: 10.
+  start_sigma1: 10.
+  start_s1: 0.5
+
+  # schranken skewed0
+  min_amp0: 10.
+  max_amp0: 1.e9
+  min_mu0: -50.
+  max_mu0: 200.
+  min_sigma0: 0.01
+  max_sigma0: 100.
+  min_s0: 0.01
+  max_s0: 10.
+
+
+  # schranken skewed1
+  min_amp1: 10.
+  max_amp1: 1.e9
+  min_mu1: -50.
+  max_mu1: 200.
+  min_sigma1: 0.01
+  max_sigma1: 100.
+  min_s1: 0.01
+  max_s1: 10.
+
+
