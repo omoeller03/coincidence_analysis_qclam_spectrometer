@@ -154,7 +154,7 @@ Int_t TQClamTrackStore::Store(TGo4EventElement* event)
 		fxTree->Branch("fBX1", &b_fBX1);
 		fxTree->Branch("fBU", &b_fBU);
 		fxTree->Branch("fBX2", &b_fBX2);
-		fxTree->Branch("converged", &b_converged);
+		//fxTree->Branch("converged", &b_converged);
 		fxTree->Branch("nConvergedTracks",&b_nConvergedTracks);
 		fxTree->Branch("nNotConvergedTracks",&b_nNotConvergedTracks);
 		/*
@@ -169,6 +169,7 @@ Int_t TQClamTrackStore::Store(TGo4EventElement* event)
 		fxTree->Branch("maxResidualAbs", &b_maxResidualAbs);
 		*/
 
+		// rekonstruierte Koordinaten
 		fxTree->Branch("xD_X1", &b_xD_X1);
 		fxTree->Branch("xD_U", &b_xD_U);
 		fxTree->Branch("xD_X2", &b_xD_X2);
@@ -177,15 +178,37 @@ Int_t TQClamTrackStore::Store(TGo4EventElement* event)
 		fxTree->Branch("yD_U_corr", &b_yD_U_corr);
 		fxTree->Branch("phi", &b_phi);
 		fxTree->Branch("theta", &b_theta);
+
+		// targetkoordinaten
 		fxTree->Branch("scattX", &b_scatteringX);
 		fxTree->Branch("scattY", &b_scatteringY);
 		fxTree->Branch("scattPhi", &b_scatteringPhi);
 		fxTree->Branch("scattTheta", &b_scatteringTheta);
+
+		// fokalebenenkoordinaten
 		fxTree->Branch("focalX", &b_focalPlaneX);
 		fxTree->Branch("focalY", &b_focalPlaneY);
 		fxTree->Branch("focalZ", &b_focalPlaneZ);
 		fxTree->Branch("channel", &b_channel);
 		fxTree->Branch("energyMeVCali", &b_energyMeVCali);
+
+		// aufloesung der rekonstruierten Bildkoordinaten
+		fxTree->Branch("xResolution_X1", &b_xResolution_X1);
+		fxTree->Branch("xResolution_U", &b_xResolution_U);
+		fxTree->Branch("xResolution_X2", &b_xResolution_X2);
+		fxTree->Branch("uResolution_U", &b_uResolution_U);
+		fxTree->Branch("yResolution_U", &b_yResolution_U);
+
+		// unsicherheiten aus regression
+		fxTree->Branch("sigmaReg_xD_X1", &b_sigmaReg_xD_X1);
+		fxTree->Branch("sigmaReg_uD_U", &b_sigmaReg_uD_U);
+		fxTree->Branch("sigmaReg_yD_U", &b_sigmaReg_yD_U);
+		fxTree->Branch("sigmaReg_xD_X2", &b_sigmaReg_xD_X2);
+
+		fxTree->Branch("sigmaReg_phi", &b_sigmaReg_phi);
+		fxTree->Branch("sigmaReg_theta", &b_sigmaReg_theta);
+
+
 
 		/*
 		fxTree->Branch("res_layerID", &b_res_layerID);
@@ -334,7 +357,7 @@ Int_t TQClamTrackStore::Store(TGo4EventElement* event)
 	b_fBU = evt->fBU;
 	b_fBX2 = evt->fBX2;
 
-	b_converged = evt->trackAccepted;
+	//b_converged = evt->trackAccepted;
 	b_nConvergedTracks = evt->fConvergedTrackCounter;
 	b_nNotConvergedTracks = evt->fNotConvergedTrackCounter;
 
@@ -359,6 +382,22 @@ Int_t TQClamTrackStore::Store(TGo4EventElement* event)
 
 	b_channel = evt->channel;
 	b_energyMeVCali = evt->energyMeVCali;
+
+	b_xResolution_X1 = evt->xResolution_X1;
+	b_xResolution_U = evt->xResolution_U;
+	b_xResolution_X2 = evt->xResolution_X2;
+	b_uResolution_U = evt->uResolution_U;
+	b_yResolution_U = evt->yResolution_U;
+
+	b_sigmaReg_xD_X1 = evt->sigmaReg_xD_X1;
+	b_sigmaReg_uD_U = evt->sigmaReg_uD_U;
+	b_sigmaReg_yD_U = evt->sigmaReg_yD_U;
+	b_sigmaReg_xD_X2 = evt->sigmaReg_xD_X2;
+
+	b_sigmaReg_phi = evt->sigmaReg_phi;
+	b_sigmaReg_theta = evt->sigmaReg_theta;
+
+
 
 	/*
 	for(const auto& r : evt->residualEntries)

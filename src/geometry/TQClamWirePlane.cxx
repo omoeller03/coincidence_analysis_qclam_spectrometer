@@ -1,13 +1,10 @@
-// TQClamWirePlane.cc
+// TQClamWirePlane
 #include "geometry/TQClamWirePlane.h"
 
 #include "geometry/TQClamWire.h"
 
 #include <iostream>
 
-/** ClassImp(TQClamWirePlane) die geometrie eher nicht linken, ggf. hier entkommentieren */
-
-//                        Konstruktor
 
 TQClamWirePlane::TQClamWirePlane(WirePlaneType type, double z_position, double x_offset, double y_offset, double x_length, double y_length, double wire_dist, double wire_angle, int n_wires, int id)//, const VerboseLevel& verbose)
 	: layerType(type),

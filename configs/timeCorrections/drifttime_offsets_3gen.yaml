@@ -20,13 +20,15 @@ offsets:
 
 
   # -- globaler offset --
-  global: -0.0
+  global: 0.0
 
   # -- offset fuer drahtebene --
   layer:
-    0: -946.8145
-    1: -945.4859
-    2: -949.9556
+    0: -943.0 #5.58270 # -946.8145
+    1: -945.16750 # -945.4859
+    2: -949.48580 # -949.9556
+
+
     ## falls keine time-walk korrektur aktiviert:
     #0: -984.8647
     #1: -982.942

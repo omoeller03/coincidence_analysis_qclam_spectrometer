@@ -269,6 +269,7 @@ public:
                           size_t start,
                           size_t end,
                           std::array<std::array<std::vector<StruckSis3316Unpacker::Sis3316Data>, StruckSis3316Unpacker::nChannels>,StruckSis3316Unpacker::nModules> &dataList,
+			  bool doTrace=false,
                           bool verbose=false);
 
 

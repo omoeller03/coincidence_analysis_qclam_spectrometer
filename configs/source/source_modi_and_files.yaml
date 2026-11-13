@@ -3,8 +3,8 @@ source:
 
 
   # fuer filelists
-  file_directory: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
-  store_directory: "/home/qclam/user/oskar/store/"
+  file_directory: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2026/raw/"
+  store_directory: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2026/ana/unpacked_data/electron/"
 
 
 
@@ -19,7 +19,7 @@ source:
   source_type: 3
 
   # Stream-Server fuer MbsStream
-  StreamServer: "LIPC-5"
+  StreamServer: "LIPC-5" #"ldas01"
 
   # fuer QCLAM_SINGLE wie fuer QCLAM_DAGOBERT:
   #
@@ -52,11 +52,54 @@ source:
   filesource_lmd:
 
 
-    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+
+
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2026/raw/"
       use: false
       prefix: "qclam_dago"
       runs:
-        - 179
+        - 254
+
+
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 388
+        - 389
+        - 390
+        - 391
+        - 392
+        - 393
+        - 394
+        - 395
+        - 396
+        - 397
+        #- 330
+          #- 349
+
+    - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2026/raw/"
+      use: false
+      prefix: "qclam_dago"
+      runs:
+        - 245
+        - 246
+        - 247
+        - 248
+        - 249
+        - 250
+        - 251
+        - 252
+
+
+
+
+    - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
+      use: true
+      prefix: "qclam_dago"
+      runs:
+        - 95
+          #- 184 #sieve
 
 
 
@@ -92,10 +135,10 @@ source:
 
 
     - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
-      use: true
+      use: false
       prefix: "qclam_dago"
       runs:
-        - 95
+        - 80
 
 
     - folder: "/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/"
@@ -164,11 +207,25 @@ source:
       files: 
         0: "cosmics_039_0000.lmd"
         1: "cosmics_039_0001.lmd"
+
+
+
     - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
       use: false
-      files: 
-        0: "qclam_dago_850_0000.lmd"
-        1: "qclam_dago_850_0001.lmd"
+      prefix: "qclam_dago"
+      runs:
+        - 45
+        - 46
+        - 47
+        - 48
+        - 49
+        - 50
+        - 51
+        - 52
+        - 53
+
+
+
     - folder: "/d/d04-1/ag_pi/QCLAM_EEPG_CE140_2025/raw/"
       use: false
       files: 

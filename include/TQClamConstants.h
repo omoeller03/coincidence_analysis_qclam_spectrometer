@@ -53,6 +53,8 @@ static constexpr size_t QCLAM_MBS_STREAM = 2; /** --> MbsStream im QCLAM_SINGLE 
 static constexpr size_t QCLAM_DAGOBERT_OFFLINE_LMD = 3; /** --> TQClamOfflineLmdSource */
 static constexpr size_t QCLAM_DAGOBERT_MBS_STREAM = 4; /** MbsStream im QCLAM_DAGOBERT Modus */
 
+static constexpr size_t QCLAM_DAGOBERT_DABC_STREAM = 5; /** DabcStream im QCLAM_DAGOBERT Modus */
+
 static constexpr size_t QCLAM_OFFLINE_ROOT_DEBUG = 10; /** --> TQClamOfflineRootSource */
 static constexpr size_t QCLAM_OFFLINE_LMD_DEBUG = 11; /** --> TQClamOfflineLmdSource */
 

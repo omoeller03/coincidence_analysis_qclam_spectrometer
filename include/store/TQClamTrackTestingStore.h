@@ -65,7 +65,7 @@ class TQClamTrackTestingStore : public TGo4EventStore
 
 
 
-		bool b_converged = false;
+		//bool b_converged = false;
 		int b_nConvergedTracks = 0;
 		int b_nNotConvergedTracks = 0;
 
@@ -104,6 +104,30 @@ class TQClamTrackTestingStore : public TGo4EventStore
 
 		int b_channel = -1;
 		double b_energyMeVCali = NAN;
+
+		double b_zResolution_X1 = NAN;
+		double b_zResolution_U = NAN;
+		double b_zResolution_X2 = NAN;
+		double b_xResolution_X1 = NAN;
+		double b_xResolution_U = NAN;
+		double b_xResolution_X2 = NAN;
+		double b_uResolution_U = NAN;
+		double b_yResolution_U = NAN;
+
+		double b_sigmaReg_phi_X1 = NAN;
+		double b_sigmaReg_phi_U = NAN;
+		double b_sigmaReg_phi_X2 = NAN;
+
+		double b_sigmaReg_xD_X1 = NAN;
+		double b_sigmaReg_uD_U = NAN;
+		double b_sigmaReg_xD_X2 = NAN;
+		double b_sigmaReg_xD_U = NAN;
+		double b_sigmaReg_yD_U = NAN;
+
+		double b_sigmaReg_phi = NAN; // track phi
+		double b_sigmaReg_theta = NAN; // track theta
+
+
 
 		std::vector<double> b_drifttimes;
 		std::vector<double> b_tot;

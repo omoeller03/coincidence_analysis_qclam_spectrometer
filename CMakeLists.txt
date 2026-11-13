@@ -130,6 +130,7 @@ list(APPEND QCLAM_HEADERS
 	parameter/TQClamHistogramParameter.h
 	parameter/TQClamSpectrumCalibrationParameter.h
 	parameter/TQClamSieveSlitCalibParameter.h
+	parameter/TQClamImageMatrixParameter.h
 	#	include/fitmodels/TQClamFitModelDrifttimeDist.h
 	#	include/fitmodels/TQClamFitModelEMG.h
 	#	include/fitmodels/TQClamFitModelFermiDirac.h
@@ -182,6 +183,7 @@ list(APPEND QCLAM_SOURCES
 	src/parameter/TQClamHistogramParameter.cxx
 	src/parameter/TQClamSpectrumCalibrationParameter.cxx
 	src/parameter/TQClamSieveSlitCalibParameter.cxx
+	src/parameter/TQClamImageMatrixParameter.cxx
 
 
 

@@ -2,7 +2,6 @@
 #ifndef TQCLAMWIREPLANE_h
 #define TQCLAMWIREPLANE_h
 
-//#include <configs/VerboseLevel.hh>
 
 #include <vector>
 #include <map>
@@ -15,7 +14,6 @@ enum class WirePlaneType;
 class TQClamWirePlane
 {
 	public:
-		// Kontruktor
 		TQClamWirePlane(WirePlaneType type, // U-/X-Ebene (enum class EbeneTyp ist in Draht.hh definiert)
 				double zPosition, // z-Koordinate der Ebene
 				double x_offset, // unterster x-Wert der Drahtakzeptanz dieser Ebene
@@ -28,7 +26,6 @@ class TQClamWirePlane
 				int id);//, // Drahtebenen ID
 				//const VerboseLevel& verbose);
 
-		// Destruktor
 		~TQClamWirePlane() = default;
 
 	
@@ -49,9 +46,7 @@ class TQClamWirePlane
 		const std::vector<TQClamWire>& GetWires() const; // Draehte ausgeben
 		const TQClamWire* GetWireByWireNumber(int wireNumber) const;
 
-		// Geometrie
 		TVector3 GetWirePoint(const TQClamWire* wire) const;
-		//TVector3 GetWirePoint(const TQClamWire& wire) const;
 
 		// Bauen
 		void BuildWires();
@@ -87,7 +82,6 @@ class TQClamWirePlane
 		std::map<int, std::size_t> mapWireIDToWireListIndex; // mapping: DrahtID --> Index in 'layerWires'
 
 
-/*	ClassDef(TQClamWirePlane,1); geometrie linken, ggf auskommentieren */
 };
 
 

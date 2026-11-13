@@ -26,7 +26,6 @@ class TQClamWire
 
 		
 		/* Methoden */
-		// Getter
 		// x = normalcoordinate * cos(angle)
 		// y = normalcoordinate * sin(angle)
 		WirePlaneType GetType() const;
@@ -38,13 +37,11 @@ class TQClamWire
 		int GetWireNumber() const;
 		int GetLayerID() const;
 
-		// Geometrie
 		TVector3 GetDirection() const;
 
 		// Debug
 		void Print() const;
 
-	// Variablen
 	private:
 		WirePlaneType wireLayerType; // U-/X-Ebene
 
@@ -58,7 +55,6 @@ class TQClamWire
 		int layerID; // Ebenen-ID
 
 
-/*	ClassDef(TQClamWire,1); geometrie linken ggf auskommentieren */
 };
 
 

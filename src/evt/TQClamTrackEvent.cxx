@@ -49,16 +49,53 @@ void TQClamTrackEvent::Clear(Option_t* opt)
 
 	posAtX1 = {NAN,NAN,NAN};
 	dirAtX1 = {NAN,NAN,NAN};
+
 	phi = NAN;
 	phi_deg = NAN;
 	theta = NAN;
 	theta_deg = NAN;
+	sigmaReg_theta = NAN;
+
 	xD_X1 = NAN;
 	xD_U = NAN;
 	xD_X2 = NAN;
 	yD_X1 = NAN;
 	yD_U = NAN;
 	yD_U_corr = NAN;
+
+	/** unsicherheit aus regression */
+	sigmaReg_xD_X1 = NAN;
+	sigmaReg_uD_U = NAN;
+	sigmaReg_xD_X2 = NAN;
+	sigmaReg_xD_U = NAN;
+	sigmaReg_yD_U = NAN;
+
+
+
+	phi_X1 = NAN;
+	phi_U = NAN;
+	phi_X2 = NAN;
+
+	/** unsicherheit aus regression */
+	sigmaReg_phi_X1 = NAN;
+	sigmaReg_phi_U = NAN;
+	sigmaReg_phi_X2 = NAN;
+
+	sigmaReg_phi = NAN;
+
+
+
+	zResolution_X1 = NAN;
+	zResolution_U = NAN;
+	zResolution_X2 = NAN;
+
+	xResolution_X1 = NAN;
+	xResolution_X2 = NAN;
+
+	uResolution_U = NAN;
+	yResolution_U = NAN;
+
+	phiResolution = NAN;
 
 	x_corr = NAN;
 	sigma_x_corr = NAN;
@@ -93,5 +130,16 @@ void TQClamTrackEvent::Clear(Option_t* opt)
 	scatteringPhi = NAN;
 	scatteringX = NAN;
 	scatteringY = NAN;
+
+
+	xTargetResolution = NAN;
+	yTargetResolution = NAN;
+	phiTargetResolution = NAN;
+	thetaTargetResolution = NAN;
+
+	sigmaReg_xTarget = NAN;
+	sigmaReg_yTarget = NAN;
+	sigmaReg_phiTarget = NAN;
+	sigmaReg_thetaTarget = NAN;
 
 }

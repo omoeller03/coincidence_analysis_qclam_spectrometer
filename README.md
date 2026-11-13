@@ -4,7 +4,10 @@
 
 ## Installation
 
-Projekt bauen:
+* install ROOT
+* install Go4
+
+make sure both are sourced.
 
 ```bash
 mkdir build && cd build
@@ -12,32 +15,11 @@ cmake ..
 make -j
 ```
 
+(see also IKP-Wiki)
+
 ## Nutzung
 
-SIEHE IKP-WIKI
-
-Die Analyse kann in verschiedenen Modi laufen:
-
-- QCLAM_SINGLE: Analysiere nur die QCLAM-Daten.
-- QCLAM_DAGOBERT: Analysiere QCLAM und DAGOBERT Daten und bilde am Ende Koinzidenz.
-- DAGOBERT_SINGLE: TODO
-- QCLAM_SINGLE_ROOT: Analysiere nur QCLAM-Daten, nutze entpackte Root-Daten als Input.
-
-
-Um moeglichst wenig zu streamen und die Analyse dadurch schnell zu halten, muessen diese Modi vor dem Kompilieren festgelegt werden.
-Alle kompilierten Schritte koennen beim Ausfuehren zusaetzlich aktiviert/deaktiviert werden, sodass es im QCLAM_DAGOBERT-Modus auch moeglich ist,
-nur QCLAM-Daten zu analysieren.
-
-Der Modus muss in der CMakeLists.txt eingestellt werden:
-
-```bash
-# modus QCLAM_SINGLE (kein Dagobert, DEFERA etc)
-option(QCLAM_SINGLE "Build QCLAM_SINGLE" OFF)
-# modus QCLAM_SINGLE (kein Dagobert, DEFERA etc)
-option(QCLAM_DAGOBERT "Build QCLAM_DAGOBERT" ON)
-# modus QCLAM_SINGLE_ROOT (nur QCLAM, mit Root-Input)
-option(QCLAM_SINGLE_ROOT "Build QCLAM_SINGLE_ROOT" OFF)
-```
+see IKP-Wiki
 
 
 ## Getting started
@@ -102,158 +84,6 @@ On some READMEs, you may see small images that convey metadata, such as whether 
 Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-Es muessen Root, Genfit und Go4 installiert sein. Falls noch nicht installiert (siehe auch im IKP-Wiki http://ikpweb/mediawiki/index.php/QCLAM#Installation_von_Software):
-Beginne mit Root, da Go4 und Genfit es brauchen:
-* ROOT:
- Root  v6-30-04 habe ich getestet. Neuere Root-Versionen wurden nicht getestet
-
- i) Abhaengigkeiten:
-
-	sudo apt install -y git cmake g++ gcc binutils \
-	libx11-dev libxpm-dev libxft-dev libxext-dev \  
-	python3-dev libssl-dev libpcre3-dev \  
-	libglu1-mesa-dev libglew-dev libftgl-dev \  
-	libmysqlclient-dev libfftw3-dev \
-	libgraphviz-dev libavahi-compat-libdnssd-dev \  
-	libldap2-dev python3-numpy libxml2-dev \  
-	libkrb5-dev libgsl-dev libqt5websockets5-dev
-	
-	In manchen Linux-Versionen 'sudo apt install libmysqlclient-dev libfftw3-dev' durch 'sudo apt install default-libmysqlclient-dev' ersetzt werden. 
-
- ii) Klone Projekt:
-
-	git clone https://github.com/root-project/root.git
-	cd root
-	git checkout v6-30-04
-
- iii) baue Root:
-
-	cmake ../root -DCMAKE_INSTALL_PREFIX=/home/.../root/root-install
-	make -j$(nproc)
-	sudo make install (falls gewuenscht)
-
- iv) Umgebung setzen:
-
-	source /home/.../root/root-install/bin/thisroot.sh
-
-* Genfit:
-
- i) Abhaengigkeiten:
-
-	Root -> installiert
-
-	sudo apt install libgtest-dev
-	cd /usr/src/getest
-	sudo cmake .
-	sudo make
-	sudo cp lib/*.a /usr/lib
-
- ii) Klone Projekt:
-
-	git clone https://github.com/GenFit/GenFit.git
-
- iii) Bauen:
-
-	Root sourcen
-	cd GenFit
-	mkdir build && cd build
-	cmake .. -DBUILD_SHARED_LIBS=ON
-	make
-	make doc
-	make tests
-	sudo make install (falls gewuenscht)
-
-	ggf. muss 'TESTING' in der CMakeLists (Ende) auskommentiert werden:
-	
-	INCLUDE(CTEST)
-	...
-	IF(DEFINED REAVE)
-	...
-	ENDIF
-	IF(BUILD_TESTING)
-	...
-	ENDIF()
-
-* Go4:
-
- i) Abhaengigkeiten:
-
-	Root -> installiert
-
-	sudo apt update && sudo install git cmake g++ qtbase5-dev qt5-qmake libqt5widgets5 
-
- ii) Klone Projekt (hier fuer v6.4.99):
-
-	git clone https://github.com/gsi-ee/go4.git
-
- iii) Bauen:
-
-	Root sourcen
-	
-	cd go4/build 
-	cmake ../ \
- 	-DCMAKE_INSTALL_PREFIX=$HOME/<Pfad zu go4>/go4-install \
- 	-DCMAKE_CXX_STANDARD=17
-	make -j
-	sudo make install
-
- iv) Umgebung setzen:
-
-	source /home/.../go4-install/go4login
-
-Wenn Root, Genfit und Go4 eingerichtet sind, kann dieses Projekt gebaut werden.
-Das Projekt ist aufgeteilt in die eigentliche Analyse und die Uebergabe dieser an Go4. Beides muss einzeln kompiliert werden:
-
-Klone Projekt:
-
-	git clone http://gitlab.ikp.physik.tu-darmstadt.de/omoeller/trajektorienrekonstruktion.git
-
-Zuerst die Analyse kompilieren:
-
-	cd trajektorienrekonstruktion/build
-	rm -rf *
-	cmake ..
-	make -j
-
-Dann die Uebergabe an go4:
-
-	cd trajektorienrekonstruktion/go4/build
-	rm -rf *
-	cmake ..
-	make
-
-Nun kann das Programm - etwa ueber Go4 - gestartet werden. Die in go4 zu ladende library liegt hier:
-
-	trajektorienrekonstruktion/go4/build/libGo4UserAnalysis.so
-
-
-
-## Usage
-- trackingprogramm Driftkammer 
-- evtl TODO: Bsps
-
-## Support
-- ...
-
-## Roadmap
-- TrackFitting implementieren -> verschiedene moeglichkeiten (Genfit KlamanFitter, ...; 'alter' Algorithmus)
-- auch TrackFitting konfigurierbar machen
-- RootBrowser-Analyse wieder hinkriegen -> konfigurierbar machen, ob RooTBrowser/Go4
-- online DataReader schreiben --> nutze elderPT/Go4MBSReader??
-- stream-Reader schreiben --> nutze stream?
-- koinzidenten branch zu e- tracking schreiben (gammas) -> speichere in jedem branch eventID -> fuehre darueber spaeter zusammen
-- fuer koinz. branch: konfigurierbar machen, welche(n) benutzen; Reader + RawEvent muessen erweitert werden
-- output klassen schreiben -> fuer spektrum etc
-- in config histogramme definieren koennen -> brauche einlese-klasse
-- alles ordnen, dokumentieren, kommentieren...
-- mit joern & michael sprechen --> habe ich mist verzapft?
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
 
 ## Authors and acknowledgment
 Show your appreciation to those who have contributed to the project.

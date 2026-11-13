@@ -7,6 +7,7 @@
 #include <fstream>
 
 #include "elb_vfb6_unpacker.h"
+#include "struck_sis3316_unpacker.h"
 
 class TQClamDagobertRawEvent;
 class TQClamUnpackParameter;
@@ -41,6 +42,9 @@ class TQClamDagobertUnpackProc : public TGo4EventProcessor
 		static constexpr size_t nVFB6_TDCs = 19;   // du hast 19 Module
 		std::array<std::unique_ptr<ElbVfb6Unpacker>,nVFB6_TDCs> fVfb6TdcUnpacker;
 		std::array<std::array<ElbVfb6Unpacker::CALIBRATION_TABLE,ElbVfb6Unpacker::nChannels>,nVFB6_TDCs> calibTables;
+
+		StruckSis3316Unpacker fDagobertUnpacker;
+		std::array<std::array<std::vector<StruckSis3316Unpacker::Sis3316Data>,StruckSis3316Unpacker::nChannels>,StruckSis3316Unpacker::nModules> tmpDagobert;
 
 		std::array<std::vector<std::vector<double>>, nVFB6_TDCs> timeCalibrationTableFPGA;
 		std::array<std::array<ElbVfb6Unpacker::CALIBRATION_TABLE, ElbVfb6Unpacker::nChannels>,

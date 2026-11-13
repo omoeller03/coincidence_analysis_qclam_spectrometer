@@ -361,38 +361,38 @@ TQClamHitProc::TQClamHitProc(const char* name)
 
 
 	/** Zeiten Trigger-Detektoren */
-	fHSzintUpTime = MakeTH1('D',"SzintUpTime","Triggerzeit Szintillator Pmt Up",1200,0,1200);
+	fHSzintUpTime = MakeTH1('D',"SzintUpTime","Triggerzeit Szintillator Pmt Up",4800,0,1200);
 	fHSzintUpTime->GetXaxis()->SetTitle("Zeit/ns");
 	fHSzintUpTime->GetXaxis()->CenterTitle();
 	fHSzintUpTime->GetYaxis()->SetTitle("Haeufigkeit/(1ns)");
 	fHSzintUpTime->GetYaxis()->CenterTitle();
 
-	fHSzintDownTime = MakeTH1('D',"SzintDownTime","Triggerzeit Szintillator Pmt Down",1200,0,1200);
+	fHSzintDownTime = MakeTH1('D',"SzintDownTime","Triggerzeit Szintillator Pmt Down",4800,0,1200);
 	fHSzintDownTime->GetXaxis()->SetTitle("Zeit/ns");
 	fHSzintDownTime->GetXaxis()->CenterTitle();
 	fHSzintDownTime->GetYaxis()->SetTitle("Haeufigkeit/(1ns)");
 	fHSzintDownTime->GetYaxis()->CenterTitle();
 
-	fHMeanSzintTime = MakeTH1('D',"MeanSzintUpDownTime","Triggerzeit (SzintPmtUp + SzintPmtDown)/2",1200,0,1200);
+	fHMeanSzintTime = MakeTH1('D',"MeanSzintUpDownTime","Triggerzeit (SzintPmtUp + SzintPmtDown)/2",4800,0,1200);
 	fHMeanSzintTime->GetXaxis()->SetTitle("Zeit/ns");
 	fHMeanSzintTime->GetXaxis()->CenterTitle();
 	fHMeanSzintTime->GetYaxis()->SetTitle("Haeufigkeit/(1ns)");
 	fHMeanSzintTime->GetYaxis()->CenterTitle();
 
-	fHDiffSzintTime = MakeTH1('D',"DiffSzintUpDownTime","Triggerzeit (SzintPmtUp-SzintPmtDown)",1200,-600,600);
+	fHDiffSzintTime = MakeTH1('D',"DiffSzintUpDownTime","Triggerzeit (SzintPmtUp-SzintPmtDown)",4800,-600,600);
 	fHDiffSzintTime->GetXaxis()->SetTitle("Zeit/ns");
 	fHDiffSzintTime->GetXaxis()->CenterTitle();
 	fHDiffSzintTime->GetYaxis()->SetTitle("Haeufigkeit/(1ns)");
 	fHDiffSzintTime->GetYaxis()->CenterTitle();
 
-	fHCherenkovTime = MakeTH1('D',"CherenkovTime","Triggerzeit Cherenkov",1200,0,1200);
+	fHCherenkovTime = MakeTH1('D',"CherenkovTime","Triggerzeit Cherenkov",4800,0,1200);
 	fHCherenkovTime->GetXaxis()->SetTitle("Zeit/ns");
 	fHCherenkovTime->GetXaxis()->CenterTitle();
 	fHCherenkovTime->GetYaxis()->SetTitle("Haeufigkeit/(1ns)");
 	fHCherenkovTime->GetYaxis()->CenterTitle();
 
 	fHSzintUpVsSzintDown = MakeTH2('D',"TimeSzintUpVsSzintDown","Triggerzeit Szintillator Pmt Up vs. Szintillator Pmt Down",
-			1200,0,1200,1200,0,1200);
+			4800,0,1200,4800,0,1200);
 	fHSzintUpVsSzintDown->GetXaxis()->SetTitle("Szint Down Zeit/ns");
 	fHSzintUpVsSzintDown->GetXaxis()->CenterTitle();
         fHSzintUpVsSzintDown->GetYaxis()->SetTitle("Szint Up Zeit/ns");
@@ -1823,6 +1823,7 @@ Bool_t TQClamHitProc::CheckEventClass(TClass* cl)
 //***********************************************************
 Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 {
+//	TGo4Log::Info("new event\n\n");
 	/** output event */
 	TQClamHitEvent* evt = dynamic_cast<TQClamHitEvent*>(dest);
 
@@ -1843,6 +1844,22 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 
 	/// HEADER
 	evt->header = raw->header;
+	/*
+	evt->header.file_name = raw->header.file_name;
+	evt->header.file_number = raw->header.file_number;
+	evt->header.run_number = raw->header.run_number;
+
+	evt->header.user = raw->header.user;
+	evt->header.time = raw->header.time;
+	evt->header.label = raw->header.label;
+
+	evt->header.mbs_event_count = raw->header.mbs_event_count;
+	evt->header.mbs_trigger = raw->header.mbs_trigger;
+	evt->header.mbs_buffer_number = raw->header.mbs_buffer_number;
+	evt->header.mbs_evts_in_buffer = raw->header.mbs_evts_in_buffer;
+	evt->header.mbs_time_sec = raw->header.mbs_time_sec;
+	evt->header.mbs_time_subsec = raw->header.mbs_time_subsec;
+	*/
 
 	double eventTime = evt->header.mbs_time_sec + evt->header.mbs_time_subsec * 1e-9;
 
@@ -1854,9 +1871,10 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 
 	fGraphTime = (eventTime - fStartTime) / 60.; // in Min
 
-	// hole und aktualisiere EvtCounter
 	evt->fEvtCounter = raw->fEvtCounter;
+
 	fEvtCounter++;
+
 	evt->fEventNumber = raw->eventNumber;
 
 #ifdef QCLAM_SINGLE_ROOT
@@ -1868,7 +1886,7 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 	{
 		ProcessScaler(raw,evt);
 
-		// scaler holen
+		//auto& sc = raw->scalers[0];
 		auto& sc = raw->scaler;
 
 
@@ -1959,12 +1977,12 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 			}
 		}
 	}
+//	else
+//	{
+//		TGo4Log::Warn("[TQClamHitProc] Keine Scaler aus TQClamRawEvent uebergeben worden! Ueberspringe Auswertung der Scaler.");
+//		return kFALSE;
+//	}
 
-
-
-	/**
-	 * Erzeuge Driftkammer-Hits (falls Rohdaten vorhanden...)
-	 */
 	if(!raw->hits.empty())
 	{
 		ProcessSingleEvent(raw, evt);
@@ -1988,11 +2006,7 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 	}
 	else
 	{
-		/**
-		 * keine Rohdaten zu Driftkammer-Hits
-		 * --> beende Analyse des aktuellen Evts
-		 */
-		TGo4Log::Info("[TQClamHitProc] Keine Hits aus TQClamRawEvent uebergeben worden! Beende Step und Analyse fuer aktuelles Evt.");
+		TGo4Log::Info("[TQClamHitProc Keine Hits aus TQClamRawEvent uebergeben worden! Ueberspringe Auswertung der Hits!");
 		return kFALSE;
 	}
 
@@ -2027,10 +2041,7 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 
 
 
-	/**
-	 * alle noetigen trigger vorhanden?
-	 * (noetige Trigger konfigurierbar)
-	 * */
+	/** alle noetigen trigger vorhanden? */
 	bool eventValid = fTriggerCaliPar->ProofEvent(
 			evt->trigSzUp.fired,
 			evt->trigSzDown.fired,
@@ -2042,8 +2053,7 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 			evt->trigMbsLive.fired,
 			evt->trigFaraday.fired);
 
-	/** evt nicht valid
-	 * --> beende Analyse des aktuellen Evts */
+	/** evt nicht ok */
 	if(!eventValid)
 	{
 		evt->SetValid(kFALSE);
@@ -2051,9 +2061,11 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 	}
 
 
+	/** TODO Daten in output-evt schreiben */
 
-	/** alle Fenster ok
-	 * --> gebe Driftkammer-Hits weiter. */
+
+	/** -- baue hits -- */
+	/** alle Fenster ok */
 	evt->SetValid(kTRUE);
 	return kTRUE;
 
@@ -2069,7 +2081,7 @@ Bool_t TQClamHitProc::BuildEvent(TGo4EventElement* dest)
 
 
 //***********************************************************
-// uebernehme aus RawEvent (input-evt) Scalerwerte
+// lese Scalerwerte
 #if defined(QCLAM_SINGLE) || defined(QCLAM_SINGLE_ROOT)
 void TQClamHitProc::ProcessScaler(TQClamRawEvent* raw, TQClamHitEvent* evt)
 #endif
@@ -2077,6 +2089,7 @@ void TQClamHitProc::ProcessScaler(TQClamRawEvent* raw, TQClamHitEvent* evt)
 void TQClamHitProc::ProcessScaler(TQClamDagobertRawEvent* raw, TQClamHitEvent* evt)
 #endif
 {
+	//evt->scaler.clear();
 
 	evt->scaler.accepted = raw->scaler.accepted;
 	evt->scaler.timeMicroSeconds = raw->scaler.timeMicroSeconds;
@@ -2106,6 +2119,42 @@ void TQClamHitProc::ProcessScaler(TQClamDagobertRawEvent* raw, TQClamHitEvent* e
 
 	fTimeInMicroSeconds = evt->scaler.timeMicroSeconds;
 
+
+
+	/*
+	for(const auto& s : raw->scalers)
+	{
+		TQClamScaler sc;
+		sc.accepted = s.accepted;
+		sc.timeMicroSeconds = s.timeMicroSeconds;
+
+		sc.tdcTrigger = s.TDCTrigger;
+		sc.szintillatorPmtUp = s.scintillatorPMTUp;
+		sc.szintillatorPmtDown = s.scintillatorPMTDown;
+		sc.cherenkovPmt = s.cherenkovPMT;
+		sc.coincidenceTrigger = s.coincidenceTrigger;
+		sc.acceptedTrigger = s.acceptedTrigger;
+		sc.clockCounter = s.clockCounter;
+		sc.livetimeCounter = s.livetimeCounter;
+		sc.mbsLivetimeCounter = s.mbsLivetimeCounter;
+		sc.faradayCupChargeCounter = s.faradayCupChargeCounter;
+
+		sc.errorTdcTrigger = s.errorTDCTrigger;
+		sc.errorSzintillatorPmtUp = s.errorScintillatorPMTUp;
+		sc.errorSzintillatorPmtDown = s.errorScintillatorPMTDown;
+		sc.errorCherenkovPmt = s.errorCherenkovPMT;
+		sc.errorCoincidenceTrigger = s.errorCoincidenceTrigger;
+		sc.errorAcceptedTrigger = s.errorAcceptedTrigger;
+		sc.errorClockCounter = s.errorClockCounter;
+		sc.errorLivetimeCounter = s.errorLivetimeCounter;
+		sc.errorMbsLivetimeCounter = s.errorMBSLivetimeCounter;
+		sc.errorFaradayCupChargeCounter = s.errorFaradayCupChargeCounter;
+
+		evt->scaler.push_back(sc);
+
+		fTimeInMicroSeconds = sc.timeMicroSeconds;
+	}
+	*/
 }
 
 
@@ -2285,6 +2334,46 @@ void TQClamHitProc::ProcessSingleEvent(TQClamDagobertRawEvent* raw, TQClamHitEve
 			/** time-over-threshold & korrigierte leading-zeit */
 			double tot = std::abs(tTrail - tLead); // TODO
 			double tLeadCorr = tLead - tTdcTrigger;
+
+
+			/*
+			if(fTriggerCaliPar->IsSzintPmtUp(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigSzUp,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsSzintPmtDown(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigSzDown,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsCherenkovPmt(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigCher,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsCoincTrig(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigCoinc,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsAccTrig(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigAcc,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsClock(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigClock,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsLivetime(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigLive,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsMbsLivetime(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigMbsLive,tdc,leadCh,tLeadCorr,tot);
+			}
+			else if(fTriggerCaliPar->IsFaradayCupChargeCounter(tdc,leadCh))
+			{
+				AddTriggerHit(evt->trigFaraday,tdc,leadCh,tLeadCorr,tot);
+			}
+			*/
 
 
 

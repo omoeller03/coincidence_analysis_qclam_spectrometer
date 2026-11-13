@@ -18,7 +18,7 @@ table:
   # '/' am ende!
   #folder: "/d/d04-1/ag_pi/spektrometer/QCLAM/tracking-data/driftwegkorrekturen/txt/"
 
-  folder: "/home/qclam/user/oskar/tracking_go4/comm_beamtime_2026/go4analyseqclam/calibration_files/driftlength_relation/"
+  folder: "/home/qclam/user/oskar/tracking_go4/go4analyseqclam/calibration_files/driftlength_relation/corrections_2025/"
 
   #folder: "/home/qclam/user/oskar/tracking_go4/comm_beamtime_2026/go4analyseqclam/calibration_files/driftlength_relation/extrapolated_driftlength_relation/"
   #folder: "/home/qclam/user/oskar/tracking_go4/comm_beamtime_2026/go4analyseqclam/calibration_files/driftlength_relation/interpolate_simulation_to_measurement/improved/"
@@ -27,11 +27,11 @@ table:
 
   files_txt:
     # ebenen_id: file in ordner 'folder'
-    0: "driftlength_relation_X1.txt"
+    0: "driftlength_relation_X1.txt" #_isotonic.txt"
     
-    1: "driftlength_relation_U.txt"
+    1: "driftlength_relation_U.txt" #_isotonic.txt"
 
-    2: "driftlength_relation_X2.txt"
+    2: "driftlength_relation_X2.txt" #_isotonic.txt"
 
 
   files_sim:

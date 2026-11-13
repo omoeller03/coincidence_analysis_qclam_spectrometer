@@ -87,7 +87,7 @@
 #include "parameter/TQClamStoreParameter.h"
 #include "parameter/TQClamHistogramParameter.h"
 #include "parameter/TQClamSieveSlitCalibParameter.h"
-
+#include "parameter/TQClamImageMatrixParameter.h"
 
 /** geometry */
 #include "geometry/TQClamGeometry.h"
@@ -280,6 +280,7 @@ TQClamAnalysis::TQClamAnalysis(int argc, char **argv)
 	AddParameter(new TQClamStoreParameter("StoreParam"));
 	AddParameter(new TQClamHistogramParameter("HistoParam"));
 	AddParameter(new TQClamSieveSlitCalibParameter("SieveSlitCalibParam"));
+	AddParameter(new TQClamImageMatrixParameter("ImageMatrixParam"));
 
 #ifdef QCLAM_DAGOBERT
 	AddParameter(new TQClamTcpParameter("TcpParam"));
@@ -319,6 +320,7 @@ TQClamAnalysis::TQClamAnalysis(int argc, char **argv)
 	InitStoreParameter();
 	InitHistogramParameter();
 	InitSieveSlitCalibParameter();
+	InitImageMatrixParameter();
 
 #ifdef QCLAM_DAGOBERT
 	InitTcpParameter();
@@ -4098,8 +4100,20 @@ void TQClamAnalysis::InitHistogramParameter()
 void TQClamAnalysis::InitSieveSlitCalibParameter()
 {
 	auto* sieve = dynamic_cast<TQClamSieveSlitCalibParameter*>(GetParameter("SieveSlitCalibParam","TQClamSieveSlitCalibParameter"));
+	// TODO
 
 }
+
+
+//***********************************************************
+// Konfiguriere Sieve-Slit Parameter
+void TQClamAnalysis::InitImageMatrixParameter()
+{
+	auto* matrix = dynamic_cast<TQClamImageMatrixParameter*>(GetParameter("ImageMatrixParam","TQClamImageMatrixParameter"));
+
+}
+
+
 
 
 

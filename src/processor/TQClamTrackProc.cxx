@@ -82,6 +82,7 @@
 #include "parameter/TQClamClusterConditionParameter.h"
 #include "parameter/TQClamHistogramParameter.h"
 #include "parameter/TQClamSieveSlitCalibParameter.h"
+#include "parameter/TQClamImageMatrixParameter.h"
 
 /** conditions */
 
@@ -158,6 +159,7 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 	fClusterPar = (TQClamClusterConditionParameter*) (GetParameter("ClusterConditionParam"));
 	fHistoPar = (TQClamHistogramParameter*) (GetParameter("HistoParam"));
 	fSieveSlitCalibParam = (TQClamSieveSlitCalibParameter*) (GetParameter("SieveSlitCalibParam"));
+	fImageMatrixParam = (TQClamImageMatrixParameter*) (GetParameter("ImageMatrixParam"));
 
 
         //-----------------------------------------------------------
@@ -337,13 +339,13 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 
 
 	/// 2D  Detektorkoordinaten/-winkel
-	fHPhiVsX1 = MakeTH2('D',"PhiVsX1","Phi vs X1",1000,0,1000,400,0,100);
+	fHPhiVsX1 = MakeTH2('D',"PhiVsX1","Phi vs X1",1000,0,1000,800,0,100);
 	fHPhiVsX1->GetXaxis()->SetTitle("x / mm (X1)");
 	fHPhiVsX1->GetXaxis()->CenterTitle();
 	fHPhiVsX1->GetYaxis()->SetTitle("#phi / deg");
 	fHPhiVsX1->GetYaxis()->CenterTitle();
 
-	fHPhiCorrVsX1Corr = MakeTH2('D',"PhiCorrVsX1Corr","Phi vs X1 - korrigiert",1000,0,1000,400,-100,100);
+	fHPhiCorrVsX1Corr = MakeTH2('D',"PhiCorrVsX1Corr","Phi vs X1 - korrigiert",1000,0,1000,800,-50,50);
 	fHPhiCorrVsX1Corr->GetXaxis()->SetTitle("x / mm (X1)");
 	fHPhiCorrVsX1Corr->GetXaxis()->CenterTitle();
 	fHPhiCorrVsX1Corr->GetYaxis()->SetTitle("#phi / deg");
@@ -364,14 +366,14 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 	fHThetaVsY->GetYaxis()->CenterTitle();
 
 
-	fHPhiVsY = MakeTH2('D',"PhiVsY","Phi vs Y",400,-100,100,800,0,100);
+	fHPhiVsY = MakeTH2('D',"PhiVsY","Phi vs Y",1600,-100,100,800,0,100);
 	fHPhiVsY->GetXaxis()->SetTitle("y / mm (U)");
 	fHPhiVsY->GetXaxis()->CenterTitle();
 	fHPhiVsY->GetYaxis()->SetTitle("#phi / deg");
 	fHPhiVsY->GetYaxis()->CenterTitle();
 
 
-	fHPhiCorrVsY = MakeTH2('D',"PhiCorrVsY","PhiCorr vs Y",400,-100,100,1600,-100,100);
+	fHPhiCorrVsY = MakeTH2('D',"PhiCorrVsY","PhiCorr vs Y",1600,-100,100,800,-50,50);
 	fHPhiCorrVsY->GetXaxis()->SetTitle("y / mm (U)");
 	fHPhiCorrVsY->GetXaxis()->CenterTitle();
 	fHPhiCorrVsY->GetYaxis()->SetTitle("#phi / deg");
@@ -451,7 +453,7 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 	fHPhiVsTheta->GetYaxis()->CenterTitle();
 
 	/// 2D-Hists mit Streuwinkeln
-	fHScattPhiVsScattTheta = MakeTH2('D',"ScattPhi_Vs_ScattTheta","Horiz. Streuwinkel #phi_\{scatt} Vert. Streuwinkel #theta_\{scatt}",200,-10,10,200,-10,10);
+	fHScattPhiVsScattTheta = MakeTH2('D',"ScattPhi_Vs_ScattTheta","Horiz. Streuwinkel #phi_\{scatt} Vert. Streuwinkel #theta_\{scatt}",800,-20,20,800,-20,20);
 	fHScattPhiVsScattTheta->GetXaxis()->SetTitle("#theta_\{scatt} / (0.10 deg)");
 	fHScattPhiVsScattTheta->GetXaxis()->CenterTitle();
 	fHScattPhiVsScattTheta->GetYaxis()->SetTitle("#phi_\{scatt} / (0.10 deg)");
@@ -485,13 +487,13 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 	fHScattThetaVsXCorr->GetYaxis()->CenterTitle();
 
 	// Streuwinkel vs Y
-	fHScattPhiVsY = MakeTH2('D',"ScattPhi_Vs_Y","Horiz. Streuwinkel #phi_\{scatt} vs. Y-Spektrum",200,-100,100,200,-10,10);
+	fHScattPhiVsY = MakeTH2('D',"ScattPhi_Vs_Y","Horiz. Streuwinkel #phi_\{scatt} vs. Y-Spektrum",800,-100,100,200,-10,10);
 	fHScattPhiVsY->GetXaxis()->SetTitle("y / mm");
 	fHScattPhiVsY->GetXaxis()->CenterTitle();
 	fHScattPhiVsY->GetYaxis()->SetTitle("#phi_\{scatt} / (0.10 deg)");
 	fHScattPhiVsY->GetYaxis()->CenterTitle();
 
-	fHScattThetaVsY = MakeTH2('D',"ScattTheta_Vs_Y","Vert. Streuwinkel #theta_\{scatt} vs. Y-Spektrum",200,-100,100,200,-10,10);
+	fHScattThetaVsY = MakeTH2('D',"ScattTheta_Vs_Y","Vert. Streuwinkel #theta_\{scatt} vs. Y-Spektrum",800,-100,100,200,-10,10);
 	fHScattThetaVsY->GetXaxis()->SetTitle("y / mm");
 	fHScattThetaVsY->GetXaxis()->CenterTitle();
 	fHScattThetaVsY->GetYaxis()->SetTitle("#theta_\{scatt} / (0.10 deg)");
@@ -662,51 +664,189 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 	fHRmsResidual_X2->GetYaxis()->CenterTitle();
 
 
+	// berechnete Aufloesung
 	fHZResolution_X1 = MakeTH1('D',"ZResolution_X1","z-Aufloesung in X1",500,0.,5.);
-	fHZResolution_X1->GetXaxis()->SetTitle("#sigma_{z} / mm");
+	fHZResolution_X1->GetXaxis()->SetTitle("#sigma(z_{X1}) / mm");
 	fHZResolution_X1->GetXaxis()->CenterTitle();
 	fHZResolution_X1->GetYaxis()->SetTitle("Haeufigkeit");
 	fHZResolution_X1->GetYaxis()->CenterTitle();
 
 	fHZResolution_U = MakeTH1 ('D',"ZResolution_U","z-Aufloesung in U",500,0.,5.);
-	fHZResolution_U->GetXaxis()->SetTitle("#sigma_{z} / mm");
+	fHZResolution_U->GetXaxis()->SetTitle("#sigma(z_{U}) / mm");
 	fHZResolution_U->GetXaxis()->CenterTitle();
 	fHZResolution_U->GetYaxis()->SetTitle("Haeufigkeit");
 	fHZResolution_U->GetYaxis()->CenterTitle();
 
 	fHZResolution_X2 = MakeTH1('D',"ZResolution_X2","z-Aufloesung in X2",500,0.,5.);
-	fHZResolution_X2->GetXaxis()->SetTitle("#sigma_{z} / mm");
+	fHZResolution_X2->GetXaxis()->SetTitle("#sigma(z_{X2}) / mm");
 	fHZResolution_X2->GetXaxis()->CenterTitle();
 	fHZResolution_X2->GetYaxis()->SetTitle("Haeufigkeit");
 	fHZResolution_X2->GetYaxis()->CenterTitle();
 
 
 	fHXResolution_X1 = MakeTH1('D',"XResolution_X1","x-Aufloesung in X1",500,0.,5.);
-	fHXResolution_X1->GetXaxis()->SetTitle("#sigma_{x} / mm");
+	fHXResolution_X1->GetXaxis()->SetTitle("#sigma(x_{X1}) / mm");
 	fHXResolution_X1->GetXaxis()->CenterTitle();
 	fHXResolution_X1->GetYaxis()->SetTitle("Haeufigkeit");
 	fHXResolution_X1->GetYaxis()->CenterTitle();
 
+	fHXResolution_U = MakeTH1('D',"XResolution_U","x-Aufloesung in U (geschaetzt aus X1 & X2)",500,0.,5.);
+	fHXResolution_U->GetXaxis()->SetTitle("#sigma(x_{U}) / mm");
+	fHXResolution_U->GetXaxis()->CenterTitle();
+	fHXResolution_U->GetYaxis()->SetTitle("Haeufigkeit");
+	fHXResolution_U->GetYaxis()->CenterTitle();
+
 	fHXResolution_X2 = MakeTH1('D',"XResolution_X2","x-Aufloesung in X2",500,0.,5.);
-	fHXResolution_X2->GetXaxis()->SetTitle("#sigma_{x} / mm");
+	fHXResolution_X2->GetXaxis()->SetTitle("#sigma(x_{X2}) / mm");
 	fHXResolution_X2->GetXaxis()->CenterTitle();
 	fHXResolution_X2->GetYaxis()->SetTitle("Haeufigkeit");
 	fHXResolution_X2->GetYaxis()->CenterTitle();
 
 	fHUResolution_U = MakeTH1('D',"UResolution_U","u-Aufloesung in U",500,0.,5.);
-	fHUResolution_U->GetXaxis()->SetTitle("#sigma_{u} / mm");
+	fHUResolution_U->GetXaxis()->SetTitle("#sigma(u_{U}) / mm");
 	fHUResolution_U->GetXaxis()->CenterTitle();
 	fHUResolution_U->GetYaxis()->SetTitle("Haeufigkeit");
 	fHUResolution_U->GetYaxis()->CenterTitle();
 
 	fHYResolution_U = MakeTH1('D',"YResolution_U","y-Aufloesung in U",500,0.,5.);
-	fHYResolution_U->GetXaxis()->SetTitle("#sigma_{y} / mm");
+	fHYResolution_U->GetXaxis()->SetTitle("#sigma(y_{U}) / mm");
 	fHYResolution_U->GetXaxis()->CenterTitle();
 	fHYResolution_U->GetYaxis()->SetTitle("Haeufigkeit");
 	fHYResolution_U->GetYaxis()->CenterTitle();
 
 
+	fHPhiResolution = MakeTH1('D',"PhiResolution","#varphi-Aufloesung (Track)",500,0.,1.);
+	fHPhiResolution->GetXaxis()->SetTitle("#sigma(#varphi_{track}) / deg");
+	fHPhiResolution->GetXaxis()->CenterTitle();
+	fHPhiResolution->GetYaxis()->SetTitle("Haeufigkeit");
+	fHPhiResolution->GetYaxis()->CenterTitle();
 
+
+	/** Aufloesung abgebildet auf Targetkoordinaten */
+	fHXTargetResolution = MakeTH1('D',"XTargetResolution","x_{target} Aufloesung",500,0,10);
+	fHXTargetResolution->GetXaxis()->SetTitle("#sigma(x_{target}) / mm");
+	fHXTargetResolution->GetXaxis()->CenterTitle();
+	fHXTargetResolution->GetYaxis()->SetTitle("Haefigkeit");
+	fHXTargetResolution->GetYaxis()->CenterTitle();
+
+	fHYTargetResolution = MakeTH1('D',"YTargetResolution","y_{target} Aufloesung",500,0,5);
+	fHYTargetResolution->GetXaxis()->SetTitle("#sigma(y_{target}) / mm");
+	fHYTargetResolution->GetXaxis()->CenterTitle();
+	fHYTargetResolution->GetYaxis()->SetTitle("Haefigkeit");
+	fHYTargetResolution->GetYaxis()->CenterTitle();
+
+	fHPhiTargetResolution = MakeTH1('D',"PhiTargetResolution","#varphi_{target} Aufloesung",500,0,1);
+	fHPhiTargetResolution->GetXaxis()->SetTitle("#sigma(#varphi_{target}) / deg");
+	fHPhiTargetResolution->GetXaxis()->CenterTitle();
+	fHPhiTargetResolution->GetYaxis()->SetTitle("Haefigkeit");
+	fHPhiTargetResolution->GetYaxis()->CenterTitle();
+
+	fHThetaTargetResolution = MakeTH1('D',"ThetaTargetResolution","#vartheta_{target} Aufloesung",500,0,1);
+	fHThetaTargetResolution->GetXaxis()->SetTitle("#sigma(#vartheta_{target}) / deg");
+	fHThetaTargetResolution->GetXaxis()->CenterTitle();
+	fHThetaTargetResolution->GetYaxis()->SetTitle("Haefigkeit");
+	fHThetaTargetResolution->GetYaxis()->CenterTitle();
+
+
+	/** Aufloesung Targetkoordinaten (aus Regressionsunsicherheit) */
+	fHXTargetUncertReg = MakeTH1('D',"XTargetUncertReg","x_{target} Unsicherheit (Regression)",500,0,10);
+	fHXTargetUncertReg->GetXaxis()->SetTitle("#sigma(x_{target}) / mm");
+	fHXTargetUncertReg->GetXaxis()->CenterTitle();
+	fHXTargetUncertReg->GetYaxis()->SetTitle("Haeufigkeit");
+	fHXTargetUncertReg->GetYaxis()->CenterTitle();
+
+	fHYTargetUncertReg = MakeTH1('D',"YTargetUncertReg","y_{target} Unsicherheit (Regression)",500,0,5);
+	fHYTargetUncertReg->GetXaxis()->SetTitle("#sigma(y_{target}) / mm");
+	fHYTargetUncertReg->GetXaxis()->CenterTitle();
+	fHYTargetUncertReg->GetYaxis()->SetTitle("Haeufigkeit");
+	fHYTargetUncertReg->GetYaxis()->CenterTitle();
+
+	fHPhiTargetUncertReg = MakeTH1('D',"PhiTargetUncertReg","#varphi_{target} Unsicherheit (Regression)",500,0,1);
+	fHPhiTargetUncertReg->GetXaxis()->SetTitle("#sigma(#varphi_{target}) / deg");
+	fHPhiTargetUncertReg->GetXaxis()->CenterTitle();
+	fHPhiTargetUncertReg->GetYaxis()->SetTitle("Haeufigkeit");
+	fHPhiTargetUncertReg->GetYaxis()->CenterTitle();
+
+	fHThetaTargetUncertReg = MakeTH1('D',"ThetaTargetUncertReg","#vartheta_{target} Unsicherheit (Regression)",500,0,1);
+	fHThetaTargetUncertReg->GetXaxis()->SetTitle("#sigma(#vartheta_{target}) / deg");
+	fHThetaTargetUncertReg->GetXaxis()->CenterTitle();
+	fHThetaTargetUncertReg->GetYaxis()->SetTitle("Haeufigkeit");
+	fHThetaTargetUncertReg->GetYaxis()->CenterTitle();
+
+
+
+	/** Unsicherheiten aus Regression (bzw weiterpropagiert) */
+	fHPhiUncertReg_X1 = MakeTH1('D',"PhiUncertReg_X1","#varphi_{X1} Unsicherheit (Regression)",500,0.,10.);
+	fHPhiUncertReg_X1->GetXaxis()->SetTitle("#sigma(#varphi_{X1}) / deg");
+	fHPhiUncertReg_X1->GetXaxis()->CenterTitle();
+	fHPhiUncertReg_X1->GetYaxis()->SetTitle("Haeufigkeit");
+	fHPhiUncertReg_X1->GetYaxis()->CenterTitle();
+
+	fHPhiUncertReg_U = MakeTH1('D',"PhiUncertReg_U","#varphi_{U} Unsicherheit (Regression)",500,0.,10.);
+	fHPhiUncertReg_U->GetXaxis()->SetTitle("#sigma(#varphi_{U}) / deg");
+	fHPhiUncertReg_U->GetXaxis()->CenterTitle();
+	fHPhiUncertReg_U->GetYaxis()->SetTitle("Haeufigkeit");
+	fHPhiUncertReg_U->GetYaxis()->CenterTitle();
+
+	fHPhiUncertReg_X2 = MakeTH1('D',"PhiUncertReg_X2","#varphi_{X2} Unsicherheit (Regression)",500,0.,10.);
+	fHPhiUncertReg_X2->GetXaxis()->SetTitle("#sigma(#varphi_{X2}) / deg");
+	fHPhiUncertReg_X2->GetXaxis()->CenterTitle();
+	fHPhiUncertReg_X2->GetYaxis()->SetTitle("Haeufigkeit");
+	fHPhiUncertReg_X2->GetYaxis()->CenterTitle();
+
+
+	fHPhiUncertReg_Track = MakeTH1('D',"PhiUncertReg_Track","#varphi_{track} Unsicherheit (Regression)",500,0.,1.);
+	fHPhiUncertReg_Track->GetXaxis()->SetTitle("#sigma(#varphi_{track}) / deg");
+	fHPhiUncertReg_Track->GetXaxis()->CenterTitle();
+	fHPhiUncertReg_Track->GetYaxis()->SetTitle("Haeufigkeit");
+	fHPhiUncertReg_Track->GetYaxis()->CenterTitle();
+
+	fHThetaUncertReg_Track = MakeTH1('D',"ThetaUncertReg_Track","#vartheta_{track} Unsicherheit (Regression)",300,0.,30.);
+	fHThetaUncertReg_Track->GetXaxis()->SetTitle("#sigma(#vartheta_{track}) / deg");
+	fHThetaUncertReg_Track->GetXaxis()->CenterTitle();
+	fHThetaUncertReg_Track->GetYaxis()->SetTitle("Haeufigkeit");
+	fHThetaUncertReg_Track->GetYaxis()->CenterTitle();
+
+
+	fHXUncertReg_X1 = MakeTH1('D',"XUncertReg_X1","x_{X1} Unsicherheit (Regression)",500,0.,5.);
+	fHXUncertReg_X1->GetXaxis()->SetTitle("#sigma(x_{X1}) / mm");
+	fHXUncertReg_X1->GetXaxis()->CenterTitle();
+	fHXUncertReg_X1->GetYaxis()->SetTitle("Haeufigkeit");
+	fHXUncertReg_X1->GetYaxis()->CenterTitle();
+
+	fHUUncertReg_U = MakeTH1('D',"UUncertReg_U","u_{U} Unsicherheit (Regression)",500,0.,5.);
+	fHUUncertReg_U->GetXaxis()->SetTitle("#sigma(u_{U}) / mm");
+	fHUUncertReg_U->GetXaxis()->CenterTitle();
+	fHUUncertReg_U->GetYaxis()->SetTitle("Haeufigkeit");
+	fHUUncertReg_U->GetYaxis()->CenterTitle();
+
+	fHXUncertReg_X2 = MakeTH1('D',"XUncertReg_X2","x_{X2} Unsicherheit (Regression)",500,0.,5.);
+	fHXUncertReg_X2->GetXaxis()->SetTitle("#sigma(x_{X2}) / mm");
+	fHXUncertReg_X2->GetXaxis()->CenterTitle();
+	fHXUncertReg_X2->GetYaxis()->SetTitle("Haeufigkeit");
+	fHXUncertReg_X2->GetYaxis()->CenterTitle();
+
+
+
+	fHXUncertReg_U = MakeTH1('D',"XUncertReg_U","x_{U} Unsicherheit (Regression, aus X1&X2 geschaetzt)",500,0.,5.);
+	fHXUncertReg_U->GetXaxis()->SetTitle("#sigma(x_{U}) / mm");
+	fHXUncertReg_U->GetXaxis()->CenterTitle();
+	fHXUncertReg_U->GetYaxis()->SetTitle("Haeufigkeit");
+	fHXUncertReg_U->GetYaxis()->CenterTitle();
+
+
+
+	fHYUncertReg_U = MakeTH1('D',"YUncertReg_U","y_{U} Unsicherheit (Regression)",500,0.,5.);
+	fHYUncertReg_U->GetXaxis()->SetTitle("#sigma(y_{U}) / mm");
+	fHYUncertReg_U->GetXaxis()->CenterTitle();
+	fHYUncertReg_U->GetYaxis()->SetTitle("Haeufigkeit");
+	fHYUncertReg_U->GetYaxis()->CenterTitle();
+
+
+
+
+
+	// Residuen je Ebene
 	fHResidual_X1 = MakeTH1('D',"Residuals_X1", "Residuen X1", 1000,-5.,5.);
 	fHResidual_X1->GetXaxis()->SetTitle("Residuum X1 / mm");
 	fHResidual_X1->GetXaxis()->CenterTitle();
@@ -1250,7 +1390,7 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 	fPTrackResolution = GetPicture("TrackResolution");
 	if(!fPTrackResolution)
 	{
-		fPTrackResolution = new TGo4Picture("TrackResolution","Rekonstruktionsgenauigkeit");
+		fPTrackResolution = new TGo4Picture("TrackResolution","Rekonstruktionsgenauigkeit (Cluster/Track)");
 		fPTrackResolution->SetDivision(3,3);
 
 		fPTrackResolution->Pic(0,0)->AddObject(fHZResolution_X1);
@@ -1259,12 +1399,79 @@ TQClamTrackProc::TQClamTrackProc(const char* name)
 
 		fPTrackResolution->Pic(0,1)->AddObject(fHXResolution_X1);
 		fPTrackResolution->Pic(1,1)->AddObject(fHXResolution_X2);
+		fPTrackResolution->Pic(2,1)->AddObject(fHPhiResolution);
 
 		fPTrackResolution->Pic(0,2)->AddObject(fHUResolution_U);
-		fPTrackResolution->Pic(1,2)->AddObject(fHYResolution_U);
+		fPTrackResolution->Pic(1,2)->AddObject(fHXResolution_U);
+		fPTrackResolution->Pic(2,2)->AddObject(fHYResolution_U);
 
 		AddPicture(fPTrackResolution);
 	}
+
+
+
+	fPRegressionUncertainty = GetPicture("RegressionUncertainty");
+	if(!fPRegressionUncertainty)
+	{
+		fPRegressionUncertainty = new TGo4Picture("RegressionUncertainty","Unsicherheiten aus Regression (Cluster/Track)");
+		fPRegressionUncertainty->SetDivision(3,4);
+
+		fPRegressionUncertainty->Pic(0,0)->AddObject(fHPhiUncertReg_X1);
+		fPRegressionUncertainty->Pic(1,0)->AddObject(fHPhiUncertReg_U);
+		fPRegressionUncertainty->Pic(2,0)->AddObject(fHPhiUncertReg_X2);
+
+		fPRegressionUncertainty->Pic(0,1)->AddObject(fHXUncertReg_X1);
+		fPRegressionUncertainty->Pic(1,1)->AddObject(fHUUncertReg_U);
+		fPRegressionUncertainty->Pic(2,1)->AddObject(fHXUncertReg_X2);
+
+		fPRegressionUncertainty->Pic(0,2)->AddObject(fHXUncertReg_U);
+		fPRegressionUncertainty->Pic(1,2)->AddObject(fHYUncertReg_U);
+
+		fPRegressionUncertainty->Pic(0,3)->AddObject(fHPhiUncertReg_Track);
+		fPRegressionUncertainty->Pic(1,3)->AddObject(fHThetaUncertReg_Track);
+		//fPRegressionUncertainty->Pic(2,3)->AddObject();
+
+		AddPicture(fPRegressionUncertainty);
+	}
+
+
+
+
+	fPTargetResolution = GetPicture("TargetResolution");
+	if(!fPTargetResolution)
+	{
+		fPTargetResolution = new TGo4Picture("TargetResolution","Aufloesung (Target)");
+		fPTargetResolution->SetDivision(2,2);
+
+		fPTargetResolution->Pic(0,0)->AddObject(fHXTargetResolution);
+		fPTargetResolution->Pic(1,0)->AddObject(fHYTargetResolution);
+
+		fPTargetResolution->Pic(0,1)->AddObject(fHPhiTargetResolution);
+		fPTargetResolution->Pic(1,1)->AddObject(fHThetaTargetResolution);
+
+		AddPicture(fPTargetResolution);
+	}
+
+
+
+
+	fPTargetRegressionUncertainty = GetPicture("TargetRegressionUncertainty");
+	if(!fPTargetRegressionUncertainty)
+	{
+		fPTargetRegressionUncertainty = new TGo4Picture("TargetRegressionUncertainty","Unsicherheiten aus Regression (Target)");
+		fPTargetRegressionUncertainty->SetDivision(2,2);
+
+		fPTargetRegressionUncertainty->Pic(0,0)->AddObject(fHXTargetUncertReg);
+		fPTargetRegressionUncertainty->Pic(1,0)->AddObject(fHYTargetUncertReg);
+
+		fPTargetRegressionUncertainty->Pic(0,1)->AddObject(fHPhiTargetUncertReg);
+		fPTargetRegressionUncertainty->Pic(1,1)->AddObject(fHThetaTargetUncertReg);
+
+		AddPicture(fPTargetRegressionUncertainty);
+	}
+
+
+
 
 
 
@@ -1417,6 +1624,7 @@ Bool_t TQClamTrackProc::BuildEvent(TGo4EventElement* dest)
 	// -------------------------
 	DoProjection(evt);
 	CalibrateSpectrum(evt);
+	CalculateTargetResolution(evt);
 		
 	if(fHistoPar->fBFillHistos) { FillHistograms(evt); }
 
@@ -1733,6 +1941,7 @@ void TQClamTrackProc::IteratePhiTheta(FitResults& R, std::vector<LayerTrackingSt
 			// TODO?
 			S.result.phi = res.phi;
 			S.result.sigmaPhi = res.sigmaPhi;
+			S.result.SSE = res.SSE;
 			S.result.quality = res.quality;
 
 			auto& current = S.iter.history.back();
@@ -1776,7 +1985,7 @@ void TQClamTrackProc::IteratePhiTheta(FitResults& R, std::vector<LayerTrackingSt
 				/// TODO entscheide, was am sinnvollsten...
 				// phi_plane bewirkt natuerlich super MeanResiduum (wahres Track-Fit Residuum),
 				// aber vielleicht interessiert eher, wie gut der Track-Fit eines Clusters zum Track-Winkel phi aus X1 und X2 Schnittpunkt passt?
-				//		phi_iter);
+						//phi_iter);
 						//R.phi);
 
 
@@ -2082,7 +2291,9 @@ void TQClamTrackProc::IteratePhiTheta(FitResults& R, std::vector<LayerTrackingSt
 		summary.iteration = iter;
 
 		summary.phi = phi_new;
+		summary.sigmaReg_phi = sigmaPhi_new;
 		summary.theta = theta_new;
+		summary.sigmaReg_theta = sigmaTheta_new;
 
 		summary.dPhi = dPhi;
 		summary.rmsResidual = rms;
@@ -2284,14 +2495,17 @@ void TQClamTrackProc::IteratePhiTheta(FitResults& R, std::vector<LayerTrackingSt
 
 			R.valid = true;
 			R.phi = phi_new; /** endgueltiges phi setzen*/
+			R.sigmaPhi = sigmaPhi_new;
 
 			if(mode == ETrackingMode::X1_U_X2 && std::isfinite(theta_new))
 			{
 				R.theta = theta_new; /** endguelitges theta setzen */
+				R.sigmaTheta = sigmaTheta_new;
 			}
 			else
 			{
 				R.theta = NAN;
+				R.sigmaTheta = NAN;
 			}
 
 
@@ -2375,6 +2589,9 @@ double TQClamTrackProc::ComputeSignedDistanceToWire(double wireCoord,double trac
 
 
 
+// ==========================================
+// Berechne Track-Winkel phi & theta
+// ==========================================
 std::pair<std::pair<double,double>,std::pair<double,double>> TQClamTrackProc::ComputeAngles(
 		const std::vector<LayerTrackingState>& states,
 		ETrackingMode mode) const
@@ -2415,6 +2632,20 @@ std::pair<std::pair<double,double>,std::pair<double,double>> TQClamTrackProc::Co
 
 	double sigmaPhi = NAN;
 
+	// phi = pi - arctan(dz/dx)
+	//
+	// --> sigma_phi = |dz| / ( dx^2 + dz^2 ) sqrt( sigma_X1^2 + sigma_X2^2 )
+	if(std::isfinite(s_x1->result.sigmaIntersection) && std::isfinite(s_x2->result.sigmaIntersection))
+	{
+		double denom = dx*dx + dz*dz;
+
+		if(denom > 0.0)
+		{
+			sigmaPhi = std::abs(dz) / denom * std::sqrt(std::pow(s_x1->result.sigmaIntersection, 2) + std::pow(s_x2->result.sigmaIntersection, 2));
+		}
+	}
+
+
 	//--------------------------------------------------
 	// X1+X2 Modus
 	//--------------------------------------------------
@@ -2438,6 +2669,7 @@ std::pair<std::pair<double,double>,std::pair<double,double>> TQClamTrackProc::Co
 	// ==========================================
 	// 2. phi_u aus U-Ebene holen
 	double phi_u = std::abs(s_u->result.phi);
+	double sigmaPhi_u = std::abs(s_u->result.sigmaPhi); /** unsicherheit aus regression */
 
 	// Korrigiere phi_u.
 	// Problem: Es gibt immer einen generellen Offset zwischen den Cluster-Winkeln
@@ -2490,7 +2722,26 @@ std::pair<std::pair<double,double>,std::pair<double,double>> TQClamTrackProc::Co
 
 
 
-	double sigmaTheta = NAN; // TODO
+	// 4. berechne theta-unsicherheit, indem regressionsunsicherheiten propagiert werden
+	// --> gausssche fortpflanzung der unsicherheiten
+	double sigmaTheta = NAN;
+
+	if(std::isfinite(sigmaPhi) && std::isfinite(sigmaPhi_u))
+	{
+		double sin_gamma = std::sin(gamma);
+		double cos_gamma = std::cos(gamma);
+
+		double dtheta_dphi = 
+			-cos_gamma / (sin_gamma * std::pow(std::sin(phi), 2.0) * (1.0 + tan_theta * tan_theta));
+
+		double dtheta_dphiu =
+			1.0 / (sin_gamma * std::pow(std::sin(phi_u), 2.0) * (1.0 + tan_theta * tan_theta));
+
+		sigmaTheta =
+			std::sqrt( std::pow(dtheta_dphi * sigmaPhi, 2.0) + std::pow(dtheta_dphiu * sigmaPhi_u, 2.0) );
+	}
+
+
 
 	return {{phi,sigmaPhi},{theta,sigmaTheta}};
 }
@@ -2676,11 +2927,14 @@ IntersectionResult TQClamTrackProc::ComputeIntersection(const IntersectionInput&
 
 
 		/** sonst: lineare Regression */
-		return ComputeRegression(in);
+		return ComputeRegressionWithCandidateSearch(in);
+	
+		//return ComputeRegression(in);
 	}
 
 	/** falls luecken --> falle auf lin regression zurueck */
-	return ComputeRegression(in);
+	return ComputeRegressionWithCandidateSearch(in);
+	//return ComputeRegression(in);
 
 
 
@@ -2868,7 +3122,7 @@ IntersectionResult TQClamTrackProc::ComputeRegression(const IntersectionInput& i
 		double x  = in.normalCoords[i];
 		double z0 = in.zOffsets[i];   // immer positiv (Driftweg)
 
-		// einfache Seiten-Zuordnung relativ zum Schwerpunkt
+		// Seiten-Zuordnung relativ zu Referenz
 		double sign = (x >= reference) ? +1.0 : -1.0;
 		double z = sign * z0;
 
@@ -2879,8 +3133,9 @@ IntersectionResult TQClamTrackProc::ComputeRegression(const IntersectionInput& i
 		N++;
 	}
 
+	// 3) Regressionsparameter m und b 
 	double denom = N * S_xx - S_x * S_x;
-	if(std::abs(denom) < 1e-12)
+	if(std::abs(denom) < 1e-12) // nicht durch 0 teilen!!
 	{
 		out.valid = false;
 		return out;
@@ -2889,25 +3144,351 @@ IntersectionResult TQClamTrackProc::ComputeRegression(const IntersectionInput& i
 	double m = (N * S_xz - S_x * S_z) / denom;  // dz/dx
 	double b = (S_z - m * S_x) / N;
 
-	if(std::abs(m) < 1e-12)
+
+
+	// 4) berechnung Residuen und SSE (summe der residuenquadrate)
+	double SSE = 0.0;
+
+	for(int i = 0; i < in.nHits; ++i)
+	{
+		double x = in.normalCoords[i];
+
+		double z0 = in.zOffsets[i];
+		double sign = (x >= reference) ? +1.0 : -1.0;
+		double z = sign * z0;
+
+		double residual = z - (m*x + b);
+
+		SSE += residual * residual;
+	}
+
+
+	// keine horizontale Trajektorie moeglich (entspraeche von oben nach unten durch Driftkammer)
+	if(std::abs(m) < 1e-12) // nicht durch 0 teilen
 	{
 		out.valid = false;
 		return out;
 	}
 
+	// 5) Schnittpunkt und Ebenenwinkel
 	double x_D = -b / m;
-	//double phi_layer = std::atan(m);   // lokaler Winkel in dieser Ebene
-	double phi_layer = -std::atan(m);   // lokaler Winkel in dieser Ebene TODO
+	double phi_layer = -std::atan(m);   // lokaler Winkel in dieser Ebene
 
+
+	// 6) Unsicherheit der Regression
+
+	// S_xx = sum_i (x_i - x_mean)^2     --> streuung um mittelwert --> gibt steigung (grosses S_xx -> kleine unsicherheit)
+	// sigma_z = SSE / (N-2)             --> SSE analog --> N Messwerte, 2 Parameter zu bestimmen (b,m) --> N-2 Freiheitsgrade
+	//
+	// -> sigma_m^2 = sigma_z^2 / S_xx
+	//
+	// -> sigma_b^2 = sigma_z^2 ( 1/N + x_mean^2/S_xx)
+	//
+	// -> Cov(m,b) = -sigma_z^2 x_mean/S_xx (wichtig, da x_D = -b/m ... korreliert)
+	//
+	//
+	// x_D & phi unsicherheit:
+	//
+	// x_D = -b/m
+	// -> sigma_x^2 = (dx/db)^2 sigma_b + (dx/dm)^2 sigma_m + 2 dx/db dx/dm Cov(b,m)
+	// -> sigma_x^2 = sigma_b^2/m^2 + b^2/m^4 sigma_m^2 - 2b/m^3 Cov(b,m)
+	//
+	// sigma_phi = - arctan(m)
+	// -> sigma_phi = sigma_m / (1 + m^2)           (in rad)
+
+	// Mittelwert der x-Koordinaten
+	double x_mean = S_x / N;
+
+	// Summe der quadrierten Abweichungen von x_mean
+	//
+	// Sxx_centered = sum (x_i - x_mean)^2
+	//
+	double Sxx_centered = S_xx - (S_x * S_x) / N;
+
+
+	// Für eine lineare Regression mit zwei
+	// Fitparametern m und b:
+	//
+	// sigma_z^2 = SSE / (N - 2)
+	//
+	if(N > 2 && Sxx_centered > 0.0)
+	{
+		double sigma_z2 = SSE / (N - 2);
+
+		// Unsicherheit der Steigung m
+		double sigma_m2 = sigma_z2 / Sxx_centered;
+
+		// Unsicherheit des Achsenabschnitts b
+		double sigma_b2 = sigma_z2 * (1.0 / N + (x_mean * x_mean) / Sxx_centered);
+
+		// Kovarianz zwischen b und m
+		double cov_bm = -sigma_z2 * x_mean / Sxx_centered;
+
+
+		// --------------------------------------------------
+		// Unsicherheit des Schnittpunktes
+		//
+		// x_D = -b/m
+		// --------------------------------------------------
+
+		double sigma_xD2 = sigma_b2 / (m * m) + (b * b / std::pow(m, 4)) * sigma_m2 - (2.0 * b / std::pow(m, 3)) * cov_bm;
+
+
+		// numerische Rundungsfehler verhindern
+		if(sigma_xD2 < 0.0 && sigma_xD2 > -1e-12)
+		{
+			sigma_xD2 = 0.0;
+		}
+
+
+		// --------------------------------------------------
+		// Unsicherheit des Winkels
+		//
+		// phi = -atan(m)
+		// --------------------------------------------------
+
+		double sigma_phi = std::sqrt(sigma_m2) / (1.0 + m * m);
+
+
+		// Ergebnisse speichern
+
+		out.sigmaIntersection = (sigma_xD2 >= 0.0) ? std::sqrt(sigma_xD2) : NAN;
+
+		out.sigmaPhi = sigma_phi;
+	}
+	else
+	{
+		out.sigmaIntersection = NAN;
+		out.sigmaPhi = NAN;
+	}
+
+
+	// 7) Ergebnis & ausgabe
 	out.intersection      = x_D;
 	out.phi               = phi_layer;
-	out.sigmaPhi          = NAN;
-	out.sigmaIntersection = NAN;
+	out.SSE               = SSE;
 	out.valid             = true;
 
 	return out;
 }
 
+
+
+
+IntersectionResult TQClamTrackProc::ComputeRegressionWithCandidateSearch(
+    const IntersectionInput& in) const
+{
+    if(in.nHits < 2)
+    {
+        IntersectionResult out;
+        out.valid = false;
+        return out;
+    }
+
+    // --------------------------------------------------
+    // 1. Hit mit kleinstem Driftweg suchen
+    // --------------------------------------------------
+
+    int iMin = 0;
+
+    for(int i = 1; i < static_cast<int>(in.nHits); ++i)
+    {
+        if(in.zOffsets[i] < in.zOffsets[iMin])
+            iMin = i;
+    }
+
+	
+    //std::cout << "ComputeRegreesionWith..." << std::endl;
+
+    // --------------------------------------------------
+    // 2. Mittelpunkt / zentrale Referenz:
+    //
+    //    Grenze zwischen Draht links vom Minimum
+    //    und dem Minimum selbst
+    //
+    //    Beispiel:
+    //
+    //       43   44 | 45   46   47
+    //                ^
+    //              reference
+    // --------------------------------------------------
+
+    int centerBoundary = iMin - 1;
+
+
+    // --------------------------------------------------
+    // Randfall: Minimum ganz links
+    // --------------------------------------------------
+
+    if(centerBoundary < 0)
+    {
+        centerBoundary = 0;
+    }
+
+    // Randfall: Minimum ganz rechts
+    if(centerBoundary >= static_cast<int>(in.nHits) - 1)
+    {
+        centerBoundary = static_cast<int>(in.nHits) - 2;
+    }
+
+
+    // --------------------------------------------------
+    // Hilfsfunktion für reference zwischen zwei Drähten
+    // --------------------------------------------------
+
+    auto makeReference = [&](int boundary)
+    {
+        return 0.5 * (
+            in.normalCoords[boundary] +
+            in.normalCoords[boundary + 1]
+        );
+    };
+
+
+    // --------------------------------------------------
+    // 3. Zentralen Kandidaten testen
+    // --------------------------------------------------
+
+    auto candidateInput = in;
+
+    candidateInput.previousIntersection =
+        makeReference(centerBoundary);
+
+    candidateInput.hasPreviousIntersection = true;
+
+    IntersectionResult best =
+        ComputeRegression(candidateInput);
+
+
+    if(!best.valid)
+    {
+        return best;
+    }
+
+
+    // --------------------------------------------------
+    // 4. Zuerst eine Richtung testen
+    //
+    //    Hier: nach links
+    // --------------------------------------------------
+
+    int direction = -1;
+
+    int nextBoundary = centerBoundary + direction;
+
+
+    if(nextBoundary >= 0 &&
+       nextBoundary < static_cast<int>(in.nHits) - 1)
+    {
+        candidateInput = in;
+
+        candidateInput.previousIntersection =
+            makeReference(nextBoundary);
+
+        candidateInput.hasPreviousIntersection = true;
+
+        IntersectionResult candidate =
+            ComputeRegression(candidateInput);
+//	std::cout << "ComputeRegreesionWith... 1xLinks" << std::endl;
+
+
+        // --------------------------------------------------
+        // Wenn besser -> in dieser Richtung weiter
+        // --------------------------------------------------
+
+        if(candidate.valid && candidate.SSE < best.SSE)
+        {
+            best = candidate;
+
+            nextBoundary += direction;
+
+            if(nextBoundary >= 0 &&
+               nextBoundary < static_cast<int>(in.nHits) - 1)
+            {
+                candidateInput = in;
+
+                candidateInput.previousIntersection =
+                    makeReference(nextBoundary);
+
+                candidateInput.hasPreviousIntersection = true;
+
+                candidate =
+                    ComputeRegression(candidateInput);
+	
+//		std::cout << "ComputeRegreesionWith... 2xLinks" << std::endl;
+
+                if(candidate.valid && candidate.SSE < best.SSE)
+                {
+                    best = candidate;
+                }
+            }
+
+            return best;
+        }
+    }
+
+
+    // --------------------------------------------------
+    // 5. Links war nicht besser:
+    //    andere Richtung testen
+    // --------------------------------------------------
+
+    direction = +1;
+
+    nextBoundary = centerBoundary + direction;
+
+
+    if(nextBoundary >= 0 &&
+       nextBoundary < static_cast<int>(in.nHits) - 1)
+    {
+        candidateInput = in;
+
+        candidateInput.previousIntersection =
+            makeReference(nextBoundary);
+
+        candidateInput.hasPreviousIntersection = true;
+
+        IntersectionResult candidate =
+            ComputeRegression(candidateInput);
+//	std::cout << "ComputeRegreesionWith... 1xRechts" << std::endl;
+
+
+        // --------------------------------------------------
+        // Wenn besser -> in dieser Richtung weiter
+        // --------------------------------------------------
+
+        if(candidate.valid && candidate.SSE < best.SSE)
+        {
+            best = candidate;
+
+            nextBoundary += direction;
+
+            if(nextBoundary >= 0 &&
+               nextBoundary < static_cast<int>(in.nHits) - 1)
+            {
+                candidateInput = in;
+
+                candidateInput.previousIntersection =
+                    makeReference(nextBoundary);
+
+                candidateInput.hasPreviousIntersection = true;
+
+                candidate =
+                    ComputeRegression(candidateInput);
+	
+//		std::cout << "ComputeRegreesionWith... 2xRechts" << std::endl;
+
+                if(candidate.valid && candidate.SSE < best.SSE)
+                {
+                    best = candidate;
+                }
+            }
+        }
+    }
+
+
+    return best;
+}
 
 
 
@@ -3076,22 +3657,220 @@ void TQClamTrackProc::CalibrateSpectrum(TQClamTrackEvent* evt)
 
 
 //***********************************************************
+// Targetkoordinaten-Aufloesung
+void TQClamTrackProc::CalculateTargetResolution(
+        TQClamTrackEvent* evt) const
+{
+    if(!evt || !fImageMatrixParam)
+    {
+        return;
+    }
+
+    // ============================================================
+    // 1. DISPERSIVE EBENE
+    //
+    // [ x   ]   [ xx      xtheta ] [ x_t  ]
+    // [ phi ] = [ phix    phiphi ] [ Phi  ]
+    //
+    // zusaetzlich:
+    //
+    // x   += xdelta   * delta
+    // phi += phidelta * delta
+    //
+    // Fuer die Aufloesung werden die Unsicherheiten von x und phi
+    // betrachtet. delta wird hier zunaechst nicht propagiert.
+    // ============================================================
+
+    const double a = fImageMatrixParam->xx;
+    const double b = fImageMatrixParam->xtheta;
+    const double c = fImageMatrixParam->phix;
+    const double d = fImageMatrixParam->phiphi;
+
+    const double det = a*d - b*c;
+
+    if(std::abs(det) > 1e-12)
+    {
+        // Inverse Matrix
+        //
+        // [ x_t ]     1/det [  d  -b ] [ x   ]
+        // [ Phi ] =         [ -c   a ] [ phi ]
+
+        const double dx_dx   =  d / det;
+        const double dx_dphi = -b / det;
+
+        const double dPhi_dx   = -c / det;
+        const double dPhi_dphi =  a / det;
+
+
+        // --------------------------------------------------------
+        // 1a. Aufloesungen aus den geometrischen Rekonstruktions-
+        //     groessen
+        // --------------------------------------------------------
+
+        if(std::isfinite(evt->xResolution_X1) &&
+           std::isfinite(evt->phiResolution))
+        {
+            evt->xTargetResolution =
+                std::sqrt(
+                    std::pow(dx_dx * evt->xResolution_X1, 2)
+                  + std::pow(dx_dphi * evt->phiResolution, 2)
+                );
+
+            evt->phiTargetResolution =
+                std::sqrt(
+                    std::pow(dPhi_dx * evt->xResolution_X1, 2)
+                  + std::pow(dPhi_dphi * evt->phiResolution, 2)
+                );
+        }
+        else
+        {
+            evt->xTargetResolution = NAN;
+            evt->phiTargetResolution = NAN;
+        }
+
+
+        // --------------------------------------------------------
+        // 1b. Aufloesungen aus den Regressionsunsicherheiten
+        // --------------------------------------------------------
+
+        if(std::isfinite(evt->sigmaReg_xD_X1) &&
+           std::isfinite(evt->sigmaReg_phi))
+        {
+            evt->sigmaReg_xTarget =
+                std::sqrt(
+                    std::pow(dx_dx * evt->sigmaReg_xD_X1, 2)
+                  + std::pow(dx_dphi * evt->sigmaReg_phi, 2)
+                );
+
+            evt->sigmaReg_phiTarget =
+                std::sqrt(
+                    std::pow(dPhi_dx * evt->sigmaReg_xD_X1, 2)
+                  + std::pow(dPhi_dphi * evt->sigmaReg_phi, 2)
+                );
+        }
+        else
+        {
+            evt->sigmaReg_xTarget = NAN;
+            evt->sigmaReg_phiTarget = NAN;
+        }
+    }
+    else
+    {
+        evt->xTargetResolution = NAN;
+        evt->phiTargetResolution = NAN;
+
+        evt->sigmaReg_xTarget = NAN;
+        evt->sigmaReg_phiTarget = NAN;
+    }
+
+
+    // ============================================================
+    // 2. NICHT-DISPERSIVE EBENE
+    //
+    // [ y     ]   [ yy      ytheta     ] [ y_t   ]
+    // [ theta ] = [ thetay  thetatheta ] [ Theta ]
+    //
+    // ============================================================
+
+    const double e = fImageMatrixParam->yy;
+    const double f = fImageMatrixParam->ytheta;
+    const double g = fImageMatrixParam->thetay;
+    const double h = fImageMatrixParam->thetatheta;
+
+    const double detND = e*h - f*g;
+
+    if(std::abs(detND) > 1e-12)
+    {
+        // Inverse Matrix
+        //
+        // [ y_t   ]     1/det [  h  -f ] [ y     ]
+        // [ Theta ] =         [ -g   e ] [ theta ]
+
+        const double dy_dy     =  h / detND;
+        const double dy_dtheta = -f / detND;
+
+        const double dTheta_dy     = -g / detND;
+        const double dTheta_dtheta =  e / detND;
+
+
+        // --------------------------------------------------------
+        // 2a. Aufloesungen aus geometrischen Rekonstruktions-
+        //     groessen
+        // --------------------------------------------------------
+
+        if(std::isfinite(evt->yResolution_U)) // && std::isfinite(evt->thetaResolution))
+        {
+            evt->yTargetResolution =
+                std::sqrt(
+                    std::pow(dy_dy * evt->yResolution_U, 2) );
+                  //+ std::pow(dy_dtheta * evt->thetaResolution, 2)
+                //);
+
+            evt->thetaTargetResolution =
+                std::sqrt(
+                    std::pow(dTheta_dy * evt->yResolution_U, 2) );
+                  //+ std::pow(dTheta_dtheta * evt->thetaResolution, 2)
+                //);
+        }
+        else
+        {
+            evt->yTargetResolution = NAN;
+            evt->thetaTargetResolution = NAN;
+        }
+
+
+        // --------------------------------------------------------
+        // 2b. Aufloesungen aus den Regressionsunsicherheiten
+        // --------------------------------------------------------
+
+        if(std::isfinite(evt->sigmaReg_yD_U) &&
+           std::isfinite(evt->sigmaReg_theta))
+        {
+            evt->sigmaReg_yTarget =
+                std::sqrt(
+                    std::pow(dy_dy * evt->sigmaReg_yD_U, 2)
+                  + std::pow(dy_dtheta * evt->sigmaReg_theta, 2)
+                );
+
+            evt->sigmaReg_thetaTarget =
+                std::sqrt(
+                    std::pow(dTheta_dy * evt->sigmaReg_yD_U, 2)
+                  //+ std::pow(dTheta_dtheta * evt->sigmaReg_theta, 2)
+                );
+        }
+        else
+        {
+            evt->sigmaReg_yTarget = NAN;
+            evt->sigmaReg_thetaTarget = NAN;
+        }
+    }
+    else
+    {
+        evt->yTargetResolution = NAN;
+        evt->thetaTargetResolution = NAN;
+
+        evt->sigmaReg_yTarget = NAN;
+        evt->sigmaReg_thetaTarget = NAN;
+    }
+}
+
+
+
+
+
+
+
+
+
+//***********************************************************
 // Fuelle TrackEvent
 void TQClamTrackProc::FillFinalTrackParameters(TQClamTrackEvent* evt, const FitResults& R, const std::vector<LayerTrackingState>& states, ETrackingMode mode) const
 {
 	evt->trackAccepted = R.valid;
 
-	evt->phi = R.phi;
-	evt->phi_deg = R.phi * 180./M_PI;
-
-	evt->xResolution_X1 = evt->zResolution_X1 / std::abs(std::tan(evt->phi));
-	evt->xResolution_X2 = evt->zResolution_X2 / std::abs(std::tan(evt->phi));
-
-	evt->theta = R.theta;
-	evt->theta_deg = R.theta * 180./M_PI;
 
 	//--------------------------------------------------
-	// X-Ebenen suchen
+	// Ebenen suchen
 	//--------------------------------------------------
 
 	const LayerTrackingState* s_x1 = nullptr;
@@ -3129,13 +3908,38 @@ void TQClamTrackProc::FillFinalTrackParameters(TQClamTrackEvent* evt, const FitR
 		return;
 	}
 
-	double xD = s_x1->result.intersection;
-	double zD = s_x1->raw->zPosLayer;
 
+	double zD  = s_x1->raw->zPosLayer;
+	double zDX2 = s_x2->raw->zPosLayer;
+
+	double xD = s_x1->result.intersection;
 	double xDX2 = s_x2->result.intersection;
+	double d_xx = zDX2 - zD;
 
 	evt->xD_X1 = xD;
 	evt->xD_X2 = xDX2;
+
+
+
+	evt->phi = R.phi;
+	evt->phi_deg = R.phi * 180./M_PI;
+	evt->sigmaReg_phi = R.sigmaPhi * 180./M_PI;
+
+
+	// sicher gehen, dass nicht durch 0 teilen
+	if(evt->phi > 1e-12)
+	{
+		evt->xResolution_X1 = evt->zResolution_X1 / std::abs(std::tan(evt->phi_X1 * M_PI / 180.));
+		evt->xResolution_X2 = evt->zResolution_X2 / std::abs(std::tan(evt->phi_X2 * M_PI / 180.));
+
+		evt->phiResolution = std::abs(d_xx)/ (std::pow(d_xx,2) + std::pow(xD-xDX2,2)) * std::sqrt(std::pow(evt->xResolution_X1,2) + std::pow(evt->xResolution_X2,2)) * 180./M_PI;
+	}
+
+	evt->theta = R.theta;
+	evt->theta_deg = R.theta * 180./M_PI;
+	evt->sigmaReg_theta = R.sigmaTheta * 180./M_PI;
+
+
 
 	//--------------------------------------------------
 	// X1 + X2
@@ -3172,27 +3976,98 @@ void TQClamTrackProc::FillFinalTrackParameters(TQClamTrackEvent* evt, const FitR
 		return;
 	}
 
-	evt->fBX1 = kTRUE;
+	evt->fBU = kTRUE;
 
+
+
+
+
+
+	/** geometrie-groessen holen */
+	double gamma = s_u->raw->wireAngle;
+	double zDU  = s_u->raw->zPosLayer;
+
+	double d_xu = zDU - zD;
+	double lambda = d_xu/d_xx;
+
+
+
+
+	// sigma_Reg von xD_U
+	if(std::isfinite(evt->sigmaReg_xD_X1) &&
+			std::isfinite(evt->sigmaReg_xD_X2))
+	{
+		evt->sigmaReg_xD_U = std::sqrt(
+				std::pow(1.0 - lambda, 2)
+				* std::pow(evt->sigmaReg_xD_X1, 2)
+				+
+				std::pow(lambda, 2)
+				* std::pow(evt->sigmaReg_xD_X2, 2)
+				);
+	}
+	else
+	{
+		evt->sigmaReg_xD_U = NAN;
+	}
+
+
+	// sigma_Reg von yD_U
+	// keine Korrelation von xD_U und uD_U,
+	// denn:
+	// - xD_U aus X1 und X2 Cluster zusammengebaut,
+	// - uD_U komplett aus U-Cluster
+	// --> verschiedene Regressionen --> unabhaengig --> Kein Kovarianzterm
+	if(std::isfinite(evt->sigmaReg_xD_U) &&
+			std::isfinite(evt->sigmaReg_uD_U) &&
+			std::abs(std::sin(gamma)) > 1e-12)
+	{
+		evt->sigmaReg_yD_U =
+			std::sqrt(
+					std::pow(std::cos(gamma) * evt->sigmaReg_xD_U, 2)
+					+
+					std::pow(evt->sigmaReg_uD_U, 2)
+					)
+			/ std::abs(std::sin(gamma));
+	}
+	else
+	{
+		evt->sigmaReg_yD_U = NAN;
+	}
+
+
+
+
+
+
+	/** u-durchstosspkt */
 	double uD = s_u->result.intersection;
 
-	double gamma = s_u->raw->wireAngle;
 
-	evt->uResolution_U = evt->zResolution_U / std::abs(std::tan(evt->phi_U));
-	// ohne Beachtung der x-Aufloesung:
-	// sigma_y**2 = (dy/du)**2 * sigma_u**2 + (dy/dx)**2 * sigma_x**2
-	//            = sqrt(sigma_u**2 + cos(gamma)**2 * sigma_x**2) / sin(gamma)
-	// --> sigma_x nicht beachten:
-	// sigma_y    = sigma_u / sin(gamma)
-	evt->yResolution_U = evt->uResolution_U / std::abs(std::sin(gamma));
+	/** x unsicherheit in U abschaetzen ueber Unsicherheit in X1 und X2 mit lambda */
+	double phi_U = evt->phi_U;
 
-	double zDU  = s_u->raw->zPosLayer;
-	double zDX2 = s_x2->raw->zPosLayer;
+	if(std::isfinite(evt->xResolution_X1) && std::isfinite(evt->xResolution_X2) && std::abs(phi_U) > 1e-12)
+	{
+		// sigma_u 
+		evt->uResolution_U = evt->zResolution_U / std::abs(std::tan(evt->phi_U * M_PI / 180.));
 
-	double d_xx = zDX2 - zD;
-	double d_xu = zDU - zD;
+		// sigma_x
+		//
+		// x_U = (1-lambda) x_1 + lambda x_2
+		// --> gaussche fortpflanzung der unsicherheiten:
+		evt->xResolution_U = std::sqrt(
+				std::pow(1.0 - lambda, 2) * std::pow(evt->xResolution_X1, 2)
+				+ std::pow(lambda, 2) * std::pow(evt->xResolution_X2, 2) );
 
-	double xDU = (1.0 - d_xu/d_xx) * xD + (d_xu/d_xx) * xDX2;
+
+		// sigma_y**2 = (dy/du)**2 * sigma_u**2 + (dy/dx)**2 * sigma_x**2
+		//            = sqrt(sigma_u**2 + cos(gamma)**2 * sigma_x**2) / sin(gamma)
+		evt->yResolution_U = std::sqrt(
+				std::pow(std::cos(gamma) * evt->xResolution_U,2) + std::pow(evt->uResolution_U,2))
+			       	/ std::abs(std::sin(gamma));
+	}
+
+	double xDU = (1.0 - lambda) * xD + lambda * xDX2;
 
 
 	//double y_org = 175.;
@@ -3279,14 +4154,23 @@ void TQClamTrackProc::FillEventFromStates(TQClamTrackEvent* evt, const FitResult
 		{
 			case 0:
 				evt->phi_X1 = -S.result.phi*180./M_PI;
+
+				evt->sigmaReg_phi_X1 = S.result.sigmaPhi*180./M_PI;
+				evt->sigmaReg_xD_X1 = S.result.sigmaIntersection;
 				//TGo4Log::Info("phi_X1=%f",evt->phi_X1);
 				break;
 			case 1:
 				evt->phi_U = -S.result.phi*180./M_PI;
+
+				evt->sigmaReg_phi_U = S.result.sigmaPhi*180./M_PI;
+				evt->sigmaReg_uD_U = S.result.sigmaIntersection;
 				//TGo4Log::Info("phi_U=%f",evt->phi_U);
 				break;
 			case 2:
 				evt->phi_X2 = -S.result.phi*180./M_PI;
+
+				evt->sigmaReg_phi_X2 = S.result.sigmaPhi*180./M_PI;
+				evt->sigmaReg_xD_X2 = S.result.sigmaIntersection;
 				//TGo4Log::Info("phi_X2=%f",evt->phi_X2);
 				break;
 		}
@@ -3639,6 +4523,17 @@ void TQClamTrackProc::FillHistograms(const TQClamTrackEvent* evt)
 		fHScattYPos->Fill(evt->scatteringY);
 		fHScattXYPos->Fill(evt->scatteringX,evt->scatteringY);
 
+		// Aufloesung Streukoordinaten
+		fHXTargetResolution->Fill(evt->xTargetResolution);
+		fHYTargetResolution->Fill(evt->yTargetResolution);
+		fHPhiTargetResolution->Fill(evt->phiTargetResolution);
+		fHThetaTargetResolution->Fill(evt->thetaTargetResolution);
+
+		fHXTargetUncertReg->Fill(evt->sigmaReg_xTarget);
+		fHYTargetUncertReg->Fill(evt->sigmaReg_yTarget);
+		fHPhiTargetUncertReg->Fill(evt->sigmaReg_phiTarget);
+		fHThetaTargetUncertReg->Fill(evt->sigmaReg_thetaTarget);
+
 		// BeamPos fill
 		FillBeamPositionMonitor(evt);
 
@@ -3742,10 +4637,28 @@ void TQClamTrackProc::FillHistograms(const TQClamTrackEvent* evt)
 	fHZResolution_X2->Fill(evt->zResolution_X2);
 
 	fHXResolution_X1->Fill(evt->xResolution_X1);
+	fHXResolution_U->Fill(evt->xResolution_U);
 	fHXResolution_X2->Fill(evt->xResolution_X2);
 
 	fHUResolution_U->Fill(evt->uResolution_U);
 	fHYResolution_U->Fill(evt->yResolution_U);
+
+	fHPhiResolution->Fill(evt->phiResolution);
+
+	/// Regressions-Unsicherheiten
+	fHPhiUncertReg_X1->Fill(evt->sigmaReg_phi_X1);
+	fHPhiUncertReg_U->Fill(evt->sigmaReg_phi_U);
+	fHPhiUncertReg_X2->Fill(evt->sigmaReg_phi_X2);
+
+	fHXUncertReg_X1->Fill(evt->sigmaReg_xD_X1);
+	fHUUncertReg_U->Fill(evt->sigmaReg_uD_U);
+	fHXUncertReg_X2->Fill(evt->sigmaReg_xD_X2);
+
+	fHXUncertReg_U->Fill(evt->sigmaReg_xD_U);
+	fHYUncertReg_U->Fill(evt->sigmaReg_yD_U);
+
+	fHPhiUncertReg_Track->Fill(evt->sigmaReg_phi);
+	fHThetaUncertReg_Track->Fill(evt->sigmaReg_theta);
 
 	for(const auto& e : evt->residualEntries)
 	{

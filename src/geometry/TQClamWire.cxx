@@ -2,10 +2,6 @@
 
 #include <iostream>
 
-// --- Konstruktor ---
-
-
-/** ClassImp(TQClamWire) die geometrie eher nicht linken, ggf. entkommentieren */
 
 
 TQClamWire::TQClamWire(WirePlaneType type, double z_coordinate, double normal_coordinate, int globalID, int wireNumber, int layerID, double angle, double deltaN)

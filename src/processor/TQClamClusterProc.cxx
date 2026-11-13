@@ -2027,7 +2027,7 @@ void TQClamClusterProc::ComputeClusterMidpoint(TQClamCluster& cluster)
 		// gewichte Normalkoordinate mit inversen Drifzeiten zur Mittelpunktbestimmung.
 		sumNormalCoord += wire->GetNormalCoordinate()/hit->drifttime;
 
-		sumInvDrifttime += 1/hit->drifttime;
+		sumInvDrifttime += 1./hit->drifttime;
 	}
 
 	//const double n = static_cast<double>(cluster.numHits);
@@ -2043,6 +2043,22 @@ void TQClamClusterProc::ComputeClusterMidpoint(TQClamCluster& cluster)
 
 //***********************************************************
 // pruefe Multi-Wire-Hits
+void TQClamClusterProc::ProofMultiWireHits(TQClamCluster& cluster)
+{
+	if(cluster.wireNumbers.size() < 2) { return; }
+
+	for(size_t i = 1; i < cluster.wireNumbers.size(); ++i)
+	{
+		if(cluster.wireNumbers[i] == cluster.wireNumbers[i - 1])
+		{
+			cluster.numOfMultiWireHits++;
+		       	cluster.hasMultiWireHits = true;
+		}
+	}
+
+}
+
+/*
 void TQClamClusterProc::ProofMultiWireHits(TQClamCluster& cluster)
 {
 	std::unordered_map<int,int> count;
@@ -2061,6 +2077,7 @@ void TQClamClusterProc::ProofMultiWireHits(TQClamCluster& cluster)
 		}
 	}
 }
+*/
 
 
 
@@ -2073,9 +2090,10 @@ bool TQClamClusterProc::ProofVShape(TQClamCluster& cluster) const
 	size_t nHits = cluster.numHits;
 
 	/** driftzeiten extrahieren */
-	std::vector<double> drifttimes;
-	drifttimes.reserve(nHits);
-	for(auto* hit : cluster.hits) { drifttimes.push_back(hit->drifttime); }
+	//std::vector<double> drifttimes;
+	//drifttimes.reserve(nHits);
+	//for(auto* hit : cluster.hits) { drifttimes.push_back(hit->drifttime); }
+	const auto& drifttimes = cluster.drifttimes;
 
 	/** wenn < 3 hits --> V-Form unmoeglich */
 	if(nHits < 3)
@@ -2602,10 +2620,14 @@ bool TQClamClusterProc::CleanCluster(TQClamCluster& cluster)
 
 	std::vector<const TQClamHit*> hits = cluster.hits;
 
+	/*
+	 * bereits sortiert
+	 *
 	std::sort(hits.begin(),hits.end(),
 			[](const TQClamHit* a,const TQClamHit* b) {
 			return a->wireNum < b->wireNum;
 			});
+	*/
 
 	size_t totalRemoved = 0;
 

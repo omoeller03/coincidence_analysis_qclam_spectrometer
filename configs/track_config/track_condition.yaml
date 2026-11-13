@@ -37,8 +37,8 @@ condition:
   # TODO: evtl bergrenzung anzahl iterationen
   min_iter: 1
   max_iter: 30
-  epsilon_phi: 1.e-8 #5          # in rad
-  epsilon_rms: 1.5 #1.5
+  epsilon_phi: 1.e-5 #5          # in rad
+  epsilon_rms: 4. # 1.5 #1.5
 
   # falls sich phi zwischen Iterationen kam noch aendert (dphi < epsilon_stagnation_phi),
   # dann wird die Iteration abgebrochen.
@@ -59,9 +59,9 @@ condition:
 
   # |residuum/sigma_residuum| < limit
   # default: 3sigma-umgebung: outlier_rejection_limit = 3
-  use_outlier_rejection: true
+  use_outlier_rejection: false
   # aktuell: residual² < upper_outlier_rejection_limit
-  upper_outlier_rejection_limit: 4.0
+  upper_outlier_rejection_limit: 3.0
 
 
   max_rejected_hits_X1_per_iteration: 2

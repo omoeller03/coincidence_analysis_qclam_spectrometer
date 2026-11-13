@@ -138,7 +138,9 @@ struct IterationSummary
 	int iteration = 0;
 
 	double phi = 0.;
+	double sigmaReg_phi = NAN;
 	double theta = 0.;
+	double sigmaReg_theta = NAN;
 
 	double dPhi = NAN;
 	double rmsResidual = NAN;
@@ -217,10 +219,14 @@ class TQClamTrackEvent : public TGo4EventElement
 		Double_t zResolution_X2 = NAN;
 
 		Double_t xResolution_X1 = NAN;
+		Double_t xResolution_U = NAN;
 		Double_t xResolution_X2 = NAN;
 
 		Double_t uResolution_U = NAN;
 		Double_t yResolution_U = NAN;
+
+		Double_t phiResolution = NAN;
+		//Double_t thetaResolution = NAN; kann nicht berechnet werden.. kein phiUResolution
 
 		Bool_t fBX1 = kFALSE;
 		Bool_t fBU = kFALSE;
@@ -233,10 +239,16 @@ class TQClamTrackEvent : public TGo4EventElement
 		double phi_deg = NAN; /** dispersiv */
 		double theta = NAN; /** nicht-dispersiv */
 		double theta_deg = NAN; /** nicht-dispersiv */
+		double sigmaReg_theta = NAN; /** aus regression propagierte unsicherheit */
 
 		double phi_X1 = NAN;
 		double phi_U = NAN;
 		double phi_X2 = NAN;
+
+		/** unsicherheit aus regression */
+		double sigmaReg_phi_X1 = NAN;
+		double sigmaReg_phi_U = NAN;
+		double sigmaReg_phi_X2 = NAN;
 
 		/** Durchstosspkte X1 & X2 */
 		double xD_X1 = NAN;
@@ -247,15 +259,25 @@ class TQClamTrackEvent : public TGo4EventElement
 		double yD_U = NAN;
 		double yD_U_corr = NAN;
 
+		/** unsicherheiten aus regression */
+		double sigmaReg_xD_X1 = NAN;
+		double sigmaReg_uD_U = NAN;
+		double sigmaReg_xD_X2 = NAN;
+		double sigmaReg_xD_U = NAN;
+		double sigmaReg_yD_U = NAN;
+
 		/** X-Phi korrigierte werte */
 		double phi_corr = NAN;
-		double sigma_phi_corr = NAN;
+		double sigma_phi_corr = NAN; // nicht implementiert (gleichsetzen mit sigmaReg_phi???)
 		double x_corr = NAN;
-		double sigma_x_corr = NAN;
+		double sigma_x_corr = NAN; // nicht implementiert
+
+		/** unsicherheiten aus regression */
+		double sigmaReg_phi = NAN;
 		
 		/** Energiekalibrierung der X-Phi korrigierten Daten */
 		double e_MeV = NAN;
-		double sigma_e_MeV = NAN;
+		double sigma_e_MeV = NAN; // nicht implementiert 
 
 
 
@@ -279,7 +301,18 @@ class TQClamTrackEvent : public TGo4EventElement
 		double scatteringX = NAN;
 		double scatteringY = NAN;
 
+		/** Aufloesung streukoordinaten aus Residuenaufloesung */
+		double xTargetResolution = NAN;
+		double yTargetResolution = NAN;
+		double phiTargetResolution = NAN;
+		double thetaTargetResolution = NAN;
 
+
+		/** Aufloesung streukoordinaten aus Regressionsunsicherheit */
+		double sigmaReg_xTarget = NAN;
+		double sigmaReg_yTarget = NAN;
+		double sigmaReg_phiTarget = NAN;
+		double sigmaReg_thetaTarget = NAN;
 
 
 		/** Fit-Parameter? */

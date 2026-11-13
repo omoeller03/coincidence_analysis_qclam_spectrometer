@@ -1,7 +1,0 @@
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_124
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_125
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_126
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_127
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_128
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_129
-/d/d01-3/ag_pi/QCLAM_COMM_2026/raw/qclam_dago_130

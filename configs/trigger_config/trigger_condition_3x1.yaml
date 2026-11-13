@@ -4,7 +4,7 @@ condition:
   needTdcTrigger: true
 
   # Leading <-> Trailing (?)
-  invertSignalEdges: false
+  invertSignalEdges: true
 
 
 

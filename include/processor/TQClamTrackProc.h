@@ -27,6 +27,7 @@ class TQClamFitParameter;
 class TQClamClusterConditionParameter;
 class TQClamHistogramParameter;
 class TQClamSieveSlitCalibParameter;
+class TQClamImageMatrixParameter;
 
 class TGo4Fitter;
 
@@ -234,12 +235,27 @@ struct IntersectionResult
 	bool valid = false;
 
 	double intersection = NAN; /** normale Koordinate */
-	double sigmaIntersection = NAN;
+	double sigmaIntersection = NAN; /** unsicherheit aus regression */
 
 	double phi = NAN; /** x-z Winkel/rad */
-	double sigmaPhi = NAN;
+	double sigmaPhi = NAN; /** unsicherheit aus regression */
 
-	double quality = NAN;
+	/**
+	 * Summe der Residuenquadrate innerhalb der Clusterregression.
+	 *
+	 * -> SSE = sum_i (z_i - (a*x_i + b) )**2
+	 * -> mache regressionen fuer verschiedene sign-zuordnungen:
+	 *
+	 * ein draht links von x_mean
+	 * x >= x_mean -> +1 && x < x_mean -> -1
+	 * ein draht weiter rechts
+	 *
+	 * waehle regression mit geringster SSE
+	 * */
+	double SSE = NAN;
+
+
+	double quality = NAN; // aktuell nicht in verwendung
 };
 
 /**
@@ -293,7 +309,7 @@ struct FitQuality
 struct FitResults
 {
 	double phi, theta;
-	double sigmaPhi, sigmaTheta;
+	double sigmaPhi, sigmaTheta; /** unsicherheit aus regression */
 
 	double X1D, Y1D, Z1D;
 	double sigmaX1D, sigmaY1D, sigmaZ1D;
@@ -386,6 +402,7 @@ class TQClamTrackProc : public TGo4EventProcessor
 		TQClamFitParameter* fFitPar{nullptr};
 		TQClamHistogramParameter* fHistoPar{nullptr};
 		TQClamSieveSlitCalibParameter* fSieveSlitCalibParam{nullptr};
+		TQClamImageMatrixParameter* fImageMatrixParam{nullptr};
 
 		TQClamClusterConditionParameter* fClusterPar{nullptr}; // zum prüfen der Cluster-Groesse nach entfernen von outsider-hits
 
@@ -589,12 +606,40 @@ class TQClamTrackProc : public TGo4EventProcessor
 		TH1* fHZResolution_X2{nullptr};
 
 		TH1* fHXResolution_X1{nullptr};
+		TH1* fHXResolution_U{nullptr};
 		TH1* fHXResolution_X2{nullptr};
 
 		TH1* fHUResolution_U{nullptr};
 		TH1* fHYResolution_U{nullptr};
 
+		TH1* fHPhiResolution{nullptr};
 
+		// Unsicherheiten aus (propagieriert daraus) Regression
+		TH1* fHPhiUncertReg_X1{nullptr};
+		TH1* fHPhiUncertReg_U{nullptr};
+		TH1* fHPhiUncertReg_X2{nullptr};
+
+		TH1* fHXUncertReg_X1{nullptr};
+		TH1* fHUUncertReg_U{nullptr};
+		TH1* fHXUncertReg_X2{nullptr};
+
+		TH1* fHXUncertReg_U{nullptr};
+		TH1* fHYUncertReg_U{nullptr};
+
+		TH1* fHPhiUncertReg_Track{nullptr};
+		TH1* fHThetaUncertReg_Track{nullptr};
+
+
+		// Unsicherheiten/Aufloesungen auf Target via Matrix abgebildet
+		TH1* fHXTargetResolution{nullptr};
+		TH1* fHYTargetResolution{nullptr};
+		TH1* fHPhiTargetResolution{nullptr};
+		TH1* fHThetaTargetResolution{nullptr};
+
+		TH1* fHXTargetUncertReg{nullptr};
+		TH1* fHYTargetUncertReg{nullptr};
+		TH1* fHPhiTargetUncertReg{nullptr};
+		TH1* fHThetaTargetUncertReg{nullptr};
 
 
 
@@ -618,6 +663,9 @@ class TQClamTrackProc : public TGo4EventProcessor
 		TGo4Picture* fPTrackResidualsPhiBins{nullptr};
 		TGo4Picture* fPTrackResidualsDrifttimeBins{nullptr};
 		TGo4Picture* fPTrackResolution{nullptr};
+		TGo4Picture* fPRegressionUncertainty{nullptr};
+		TGo4Picture* fPTargetResolution{nullptr};
+		TGo4Picture* fPTargetRegressionUncertainty{nullptr};
 
 
 
@@ -652,12 +700,16 @@ class TQClamTrackProc : public TGo4EventProcessor
 		IntersectionResult ComputeMIT(const IntersectionInput& in) const;
 		IntersectionResult ComputeCross4(const IntersectionInput& in) const;
 		IntersectionResult ComputeRegression(const IntersectionInput& in) const;
+		IntersectionResult ComputeRegressionWithCandidateSearch(const IntersectionInput& in) const;
 
 		Bool_t PassTrackConditions(const TQClamTrackEvent* evt) const;
 
 		void DoProjection(TQClamTrackEvent* evt);
 
 		void CalibrateSpectrum(TQClamTrackEvent* evt);
+
+		void CalculateTargetResolution(TQClamTrackEvent* evt) const;
+
 
 		void FillEventFromStates(TQClamTrackEvent* evt, const FitResults& R, const std::vector<LayerTrackingState>& states) const;
 		void FillFinalTrackParameters(TQClamTrackEvent* evt, const FitResults& R, const std::vector<LayerTrackingState>& states, ETrackingMode mode) const;

@@ -124,7 +124,7 @@ Int_t TQClamTrackTestingStore::Store(TGo4EventElement* event)
 		fxTree->Branch("fBX1",&b_fBX1);
 		fxTree->Branch("fBU",&b_fBU);
 		fxTree->Branch("fBX2",&b_fBX2);
-		fxTree->Branch("converged", &b_converged);
+		//fxTree->Branch("converged", &b_converged);
 		fxTree->Branch("nConvergedTracks",&b_nConvergedTracks);
 		fxTree->Branch("nNotConvergedTracks",&b_nNotConvergedTracks);
 		fxTree->Branch("chi2", &b_chi2);
@@ -155,6 +155,30 @@ Int_t TQClamTrackTestingStore::Store(TGo4EventElement* event)
 		fxTree->Branch("focalZ", &b_focalPlaneZ);
 		fxTree->Branch("channel", &b_channel);
 		fxTree->Branch("energyMeVCali", &b_energyMeVCali);
+
+		fxTree->Branch("zResolution_X1", &b_zResolution_X1);
+		fxTree->Branch("zResolution_U", &b_zResolution_U);
+		fxTree->Branch("zResolution_X2", &b_zResolution_X2);
+		fxTree->Branch("xResolution_X1", &b_xResolution_X1);
+		fxTree->Branch("xResolution_U", &b_xResolution_U);
+		fxTree->Branch("xResolution_X2", &b_xResolution_X2);
+		fxTree->Branch("uResolution_U", &b_uResolution_U);
+		fxTree->Branch("yResolution_U", &b_yResolution_U);
+
+		fxTree->Branch("sigmaReg_xD_X1", &b_sigmaReg_xD_X1);
+		fxTree->Branch("sigmaReg_uD_U", &b_sigmaReg_uD_U);
+		fxTree->Branch("sigmaReg_xD_X2", &b_sigmaReg_xD_X2);
+		fxTree->Branch("sigmaReg_xD_U", &b_sigmaReg_xD_U);
+		fxTree->Branch("sigmaReg_yD_U", &b_sigmaReg_yD_U);
+
+		fxTree->Branch("sigmaReg_phi_X1", &b_sigmaReg_phi_X1);
+		fxTree->Branch("sigmaReg_phi_U", &b_sigmaReg_phi_U);
+		fxTree->Branch("sigmaReg_phi_X2", &b_sigmaReg_phi_X2);
+
+		fxTree->Branch("sigmaReg_phi", &b_sigmaReg_phi);
+		fxTree->Branch("sigmaReg_theta", &b_sigmaReg_theta);
+
+
 		fxTree->Branch("res_layerID", &b_res_layerID);
 		fxTree->Branch("res_wireNumber", &b_res_wireNumber);
 		fxTree->Branch("drifttimes", &b_drifttimes);
@@ -307,7 +331,7 @@ Int_t TQClamTrackTestingStore::Store(TGo4EventElement* event)
 	b_fBU = evt->fBU;
 	b_fBX2 = evt->fBX2;
 
-	b_converged = evt->trackAccepted;
+	//b_converged = evt->trackAccepted;
 	b_nConvergedTracks = evt->fConvergedTrackCounter;
 	b_nNotConvergedTracks = evt->fNotConvergedTrackCounter;
 
@@ -344,6 +368,31 @@ Int_t TQClamTrackTestingStore::Store(TGo4EventElement* event)
 
 	b_channel = evt->channel;
 	b_energyMeVCali = evt->energyMeVCali;
+
+
+	b_zResolution_X1 = evt->zResolution_X1;
+	b_zResolution_U = evt->zResolution_U;
+	b_zResolution_X2 = evt->zResolution_X2;
+	b_xResolution_X1 = evt->xResolution_X1;
+	b_xResolution_U = evt->xResolution_U;
+	b_xResolution_X2 = evt->xResolution_X2;
+	b_uResolution_U = evt->uResolution_U;
+	b_yResolution_U = evt->yResolution_U;
+
+	b_sigmaReg_phi_X1 = evt->sigmaReg_phi_X1;
+	b_sigmaReg_phi_U = evt->sigmaReg_phi_U;
+	b_sigmaReg_phi_X2 = evt->sigmaReg_phi_X2;
+
+	b_sigmaReg_xD_X1 = evt->sigmaReg_xD_X1;
+	b_sigmaReg_uD_U = evt->sigmaReg_uD_U;
+	b_sigmaReg_xD_X2 = evt->sigmaReg_xD_X2;
+	b_sigmaReg_xD_U = evt->sigmaReg_xD_U;
+	b_sigmaReg_yD_U = evt->sigmaReg_yD_U;
+
+	b_sigmaReg_phi = evt->sigmaReg_phi;
+	b_sigmaReg_theta = evt->sigmaReg_theta;
+
+
 
 	for(const auto& r : evt->residualEntries)
 	{

@@ -17,6 +17,7 @@ class TQClamSourceParameter : public TGo4UserSourceParameter
 		static const Int_t kQClamDagobertOfflineLmd = QCLAM_DAGOBERT_OFFLINE_LMD; // SourceType OfflineLmd: 3
 		static const Int_t kQClamDagobertMbsStream = QCLAM_DAGOBERT_MBS_STREAM; // SourceType MbsStream: 4
 
+		static const Int_t kQClamDagobertDabcStream = QCLAM_DAGOBERT_DABC_STREAM; // SourceType DabcStream: 5
 		/** nicht mehr benoetigt --> nicht mehr nutzbar*/
 		static const Int_t kQClamOfflineRootDebug = QCLAM_OFFLINE_ROOT_DEBUG; // SourceType OfflineRoot: 10
 		static const Int_t kQClamOfflineLmdDebug = QCLAM_OFFLINE_LMD_DEBUG; // SourceType OfflineLmd: 11

@@ -35,7 +35,7 @@ void StruckSis3316Unpacker::init()
 int StruckSis3316Unpacker::decode(const std::vector<uint32_t> &indata, size_t start, size_t end,
    // std::array<std::vector<StruckSis3316Unpacker::Sis3316Data>, StruckSis3316Unpacker::nChannels> &dataList,
    std::array<std::array<std::vector<StruckSis3316Unpacker::Sis3316Data>, StruckSis3316Unpacker::nChannels>,StruckSis3316Unpacker::nModules> &dataList,
-    bool verbose)
+    bool doTrace /** trace entpacken */, bool verbose /** verbose */)
 
 {
   if (indata.size() == 0)
@@ -123,11 +123,18 @@ int StruckSis3316Unpacker::decode(const std::vector<uint32_t> &indata, size_t st
       outEvent.nSamples = indata[di] & 0x3FFFFFF;
       if (verbose && outEvent.nSamples > 0)
         std::cout << "Sis3316_Unpacker::decode getting traces of length " << std::hex << outEvent.nSamples << std::endl;
+
       for (uint32_t t = 0; t < outEvent.nSamples; ++t)
       {
         SIS3316UNP_NEXTINDEX_WITHCHECK
+	if(doTrace)
+	{
+	/*
+	 * SPAETER EINEN BOOL BAUEN -> TRACE DATEN entpacken ja/nein!!!
         outEvent.samples1.push_back(indata[di] & 0xFFFF);
         outEvent.samples2.push_back((indata[di] >> 16) & 0xFFFF);
+	*/
+	}
       }
 
     }

@@ -113,6 +113,7 @@ class TQClamAnalysis : public TGo4Analysis
 		void InitStoreParameter();
 		void InitHistogramParameter();
 		void InitSieveSlitCalibParameter();
+		void InitImageMatrixParameter();
 
 #ifdef QCLAM_DAGOBERT
 		void InitTcpParameter();

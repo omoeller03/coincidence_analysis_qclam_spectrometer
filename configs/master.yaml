@@ -5,7 +5,7 @@ configs:
   trigger_mapping: "configs/tdc_mapping/trigger_3gen.yaml"
   trigger_condition: "configs/trigger_config/trigger_condition_4x1.yaml"
   signal_edge: "configs/tdc_mapping/signal_edge_3gen.yaml"
-  drifttime: "configs/timeCorrections/drifttime_offsets_3gen.yaml"
+  drifttime: "configs/timeCorrections/drifttime_offsets_3gen.yaml" #_3x1.yaml"
   time_walk_corr: "configs/timeCorrections/drifttime_timewalkcorr.yaml"
   hit_condition: "configs/hit_config/hit_condition.yaml"
   hitproc_debug_output: "configs/debug/hitproc_debug_output.yaml"
@@ -22,7 +22,7 @@ configs:
 
 
   tcp_connection: "configs/tcp/tcp_connection.yaml"
-  dagobert_calibration: "configs/calibration/dagobert_calibration.yaml"
+  dagobert_calibration: "configs/calibration/dagobert_calibration_EEPG_CE_140_2026.yaml" #   configs/calibration/dagobert_calibration.yaml"
 
   store: "configs/store/store.yaml"
   histogram_filling: "configs/display_settings/histogram_filling.yaml"

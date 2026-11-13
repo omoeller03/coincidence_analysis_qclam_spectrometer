@@ -2,7 +2,6 @@
 #ifndef TQCLAMDRIFTCHAM_h
 #define TQCLAMDRIFTCHAM_h
 
-/** #include "Rtypes.h" geometrie linken, ggf entkommentieren */
 #include <vector>
 #include <string>
 
@@ -30,7 +29,6 @@ class TQClamDriftcham
 		// --- Debug ---
 		void Print() const; // Kammerart ausgeben
 
-	// Variablen
 	private:
 		// Kammerspezifische ID
 		// 3Gen-Kammer -> 3
@@ -45,7 +43,6 @@ class TQClamDriftcham
 		// 4Gen-Kammer -> X1-U1-X2-U2
 		std::vector<TQClamWirePlane> wirePlanes;
 
-/*	ClassDef(TQClamDriftcham,1); geometrie linken, ggf. entkommentieren */
 
 };
 

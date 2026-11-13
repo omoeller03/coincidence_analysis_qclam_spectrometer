@@ -320,16 +320,34 @@ Bool_t TQClamDagobertUnpackProc::BuildEvent(TGo4EventElement* dest)
                                         }
 					case DAGOBERT_ID:
 					{
+						/*
 						std::array<std::array<std::vector<StruckSis3316Unpacker::Sis3316Data>,
 							StruckSis3316Unpacker::nChannels>,
 							StruckSis3316Unpacker::nModules> tmpDagobert;
-                                                StruckSis3316Unpacker fDagobertUnpacker;
+							*/
+                                                //StruckSis3316Unpacker fDagobertUnpacker;
+
+
+						// WICHTIG:
+						// tmpDagobert muss für das nächste Event geleert werden.
+						for(auto& module : tmpDagobert)
+						{
+							for(auto& channel : module)
+							{
+								channel.clear();
+							}
+						}
+
+
+
+
                                                 fDagobertUnpacker.decode(
                                                                 data,
                                                                 i_start-1,
                                                                 i_end,
                                                                 tmpDagobert,
-                                                                false);
+								false /** no trace */,
+                                                                false /** no verbose */);
                                                 for(int m=0; m<StruckSis3316Unpacker::nModules; ++m)
                                                 {
                                                         for(int ch=0; ch<StruckSis3316Unpacker::nChannels; ++ch)
@@ -400,112 +418,12 @@ Bool_t TQClamDagobertUnpackProc::BuildEvent(TGo4EventElement* dest)
 
 										out->dagobertScalers.push_back(rawScaler);
 
-
-										/*
-										 * ALT: Scaler noch nicht unabhaengig von GammaHits
-										const auto& sc = ev.scaler[m];
-
-
-										gh.scaler_raw = sc.raw;
-										gh.scaler_accepted = sc.accepted;
-										gh.scaler_deadtime = sc.deadtime;
-										gh.scaler_pileup = sc.pileup;
-										gh.scaler_veto = sc.veto;
-										gh.scaler_suppressed = sc.suppressed;
-
-										static int nPrint = 0;
-
-										if (nPrint < 30)
-										{
-											std::cout << "\n=== SCALER EVENT ===\n";
-											std::cout << "SIS module = " << m
-												<< "  SIS channel = " << ch
-												<< "  timestamp = " << ev.timestamp
-												<< std::endl;
-
-											for(size_t i=0;i<sc.raw.size();i++)
-											{
-												std::cout
-													<< "raw[" << i << "]=" << sc.raw[i]
-													<< " accepted=" << sc.accepted[i]
-													<< std::endl;
-											}
-
-											nPrint++;
-										}
-										*/
-
 									}
-
-									/*
-									if(true) //ev.hasScaler)
-									{	
-										for(const auto& sc : ev.scaler)
-										{
-										
-//											std::cout << "scaler_raw=" << sc.raw.end() << std::endl;
-											gh.scaler_raw.insert(
-													gh.scaler_raw.end(),
-													sc.raw.begin(),
-													sc.raw.end());
-											gh.scaler_accepted.insert(
-													gh.scaler_accepted.end(),
-													sc.accepted.begin(),
-													sc.accepted.end());
-											gh.scaler_deadtime.insert(
-													gh.scaler_deadtime.end(),
-													sc.deadtime.begin(),
-													sc.deadtime.end());
-											gh.scaler_pileup.insert(
-													gh.scaler_pileup.end(),
-													sc.pileup.begin(),
-													sc.pileup.end());
-											gh.scaler_veto.insert(
-													gh.scaler_veto.end(),
-													sc.veto.begin(),
-													sc.veto.end());
-											gh.scaler_suppressed.insert(
-													gh.scaler_suppressed.end(),
-													sc.suppressed.begin(),
-													sc.suppressed.end());
-
-										}
-									}
-									*/
-									/*
-									std::cout << "[SCALER COPY]"
-									<< " event module m=" << m
-									<< " channel ch=" << ch
-									<< " ev.scaler.size()=" << ev.scaler.size()
-									<< std::endl;
-
-									for(size_t i = 0; i < ev.scaler.size(); ++i)
-									{
-									std::cout << "    scaler[" << i << "]"
-									<< " raw=" << ev.scaler[i].raw.size()
-									<< " accepted=" << ev.scaler[i].accepted.size()
-									<< " deadtime=" << ev.scaler[i].deadtime.size()
-									<< std::endl;
-									}
-
-
-									if(ev.scaler.size() > 0)
-									{
-									const auto& sc = ev.scaler[0];
-
-									gh.scaler_raw = sc.raw;
-									gh.scaler_accepted = sc.accepted;
-									gh.scaler_deadtime = sc.deadtime;
-									gh.scaler_pileup = sc.pileup;
-									gh.scaler_veto = sc.veto;
-									gh.scaler_suppressed = sc.suppressed;
-									}
-									*/
-
 
                                                                 }
                                                         }
                                                 }
+
 						break;
 					}
                                         default: break;

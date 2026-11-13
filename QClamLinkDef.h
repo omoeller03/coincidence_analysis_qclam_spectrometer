@@ -57,6 +57,7 @@
 #pragma link C++ class TQClamStoreParameter+;
 #pragma link C++ class TQClamHistogramParameter+;
 #pragma link C++ class TQClamSieveSlitCalibParameter+;
+#pragma link C++ class TQClamImageMatrixParameter+;
 
 
 /** formeln fuer Fitter */

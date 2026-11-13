@@ -1,3 +1,5 @@
+// TQClamGeometry - Singleton
+
 #include "geometry/TQClamGeometry.h"
 
 #include "geometry/TQClamWirePlane.h"

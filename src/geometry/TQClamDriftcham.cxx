@@ -1,15 +1,10 @@
 // TQClamDriftchamber
 #include "geometry/TQClamDriftcham.h"
 
-// mussten bereis in Header inkludiert werden ...
-//#include "geometry/TQClamWirePlane.h"
-//#include "geometry/TQClamWire.h"
-
 #include "TGo4Log.h"
 #include <iostream>
 
 
-/** ClassImp(TQClamDriftcham) geometrie vmtl nicht linken, ggf entkommentieren */
 
 // Konstruktor
 TQClamDriftcham::TQClamDriftcham(int id, const std::string& gen)
@@ -69,20 +64,16 @@ const TQClamWire* TQClamDriftcham::GetWire(int layerID, int wireNumber) const
 
 
 
-/*
- * fuege der Driftkammer eine ebene hinzu
- */
+/// fuege der Driftkammer eine ebene hinzu
 void TQClamDriftcham::AddWirePlane(TQClamWirePlane layer)
 {
 	layer.BuildWires(); 			// ebene soll draehte bauen
-					     	// rufe it back() letztes element auf, damit draehte
-					     	// in kammer_ebenen gespeichert werden
 
 	wirePlanes.push_back(std::move(layer)); 	// speichere ebene in driftkammer
 }
 
 
-/** parameter printen */
+/** debug - parameter printen */
 void TQClamDriftcham::Print() const
 {
 	switch(driftchamID)

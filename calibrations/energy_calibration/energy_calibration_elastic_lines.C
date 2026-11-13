@@ -67,11 +67,10 @@ double soll_strahl_energie_MeV(double B_mT)
 
 void energy_calibration_elastic_lines(const char* data = "energy_calibration_data.txt",double beam_energy = 65.0)
 {
-	// ==== Parameter ====
-	double E_S = beam_energy; // Strahlenergie in MeV
+	const double E_S = beam_energy; // Strahlenergie in MeV
 	
 
-	// ==== Datei einlesen ====
+	// Datei einlesen
 	std::ifstream file(data);
 
 	std::vector<double> x_vals;
@@ -102,13 +101,13 @@ void energy_calibration_elastic_lines(const char* data = "energy_calibration_dat
 	gr->SetTitle("Energiekalibrierung; x; #Delta p / p_{0}");
 
 
-	// ==== Fit-Funktion ====
+	// Fit-Funktion
 	TF1* fit = new TF1("fit","[0] + [1] * x + [2] * x * x",0,1000);
 
 	gr->Fit(fit, "R");
 
 
-	// ==== Parameter ausgeben ====
+	// Parameter ausgeben
 	double a0 = fit->GetParameter(0);
 	double a1 = fit->GetParameter(1);
 	double a2 = fit->GetParameter(2);
@@ -122,7 +121,7 @@ void energy_calibration_elastic_lines(const char* data = "energy_calibration_dat
 		<< std::endl;
 
 
-	// ==== Plot ====
+	// Plot
 	TCanvas* c = new TCanvas("c","Kalibrierung",800,600);
 	gr->SetMarkerStyle(2);
 	gr->SetMarkerSize(3.5);

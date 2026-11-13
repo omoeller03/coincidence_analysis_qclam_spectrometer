@@ -6,7 +6,16 @@
 focalplane:
   use_quadratic_focal_plane: true
 
+    # fuer QDR = 1,25
+    #
+    #  quadratic_focal_plane_parameter:
+    #    a: -133.7 # -13.8495
+    #    b: 0.549 # 0.5537
+    #    c: -0.000438 #-0.0044
+
+    # QDR = 1,20
+
   quadratic_focal_plane_parameter:
-    a: -133.7 # -13.8495
-    b: 0.549 # 0.5537
+    a: -140.0 
+    b: 0.550365
     c: -0.000438 #-0.0044
